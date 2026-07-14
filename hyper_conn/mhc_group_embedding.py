@@ -4,32 +4,35 @@ from __future__ import annotations
 mHC-group-embedding
 ===================
 
-Group-wise feature read/write extension of the *full* Manifold-Constrained
+Group-wise feature read extension of the *full* Manifold-Constrained
 Hyper-Connections (mHC).
 
-In the original mHC every hidden channel shares a single set of stream
-read/write coefficients: H^pre in R^{1 x n} and H^post in R^{1 x n}.  Here the
-effective hidden dimension is split into ``groups`` channel groups::
+Only the H^pre branch-input read is group-wise.
+The H^post branch-output write-back remains the original mHC beta path.
+
+In the original mHC every hidden channel shares a single set of stream read
+coefficients H^pre in R^{1 x n}.  Here the effective hidden dimension is split
+into ``groups`` channel groups::
 
     X_grp in R^{streams x groups x group_dim}          (group_dim = eff_dim / groups)
 
-and each channel group gets its own 1 x n read (H^pre) and write (H^post)
-coefficients::
+and each channel group gets its own 1 x n read coefficients::
 
-    H_pre_grp, H_post_grp in R^{groups x streams}
+    H_pre_grp in R^{groups x streams}
 
 Group-wise read (per group q):
     u_{q,t} = sum_s H^pre_{q,s} X_grp_{s,q,t}
-Group-wise write (per group q):
-    dX_{s,q,t} = H^post_{q,s} h_{q,t}
 
-Only the H^pre branch-input read and the H^post branch-output write-back change.
+The write-back is unchanged from the original mHC:
+    dX_s = beta_s h            (beta = H^post via static_beta / dynamic_beta_fn)
+
 ``H_res`` / Sinkhorn / residual-stream mixing, the attention/FFN branch, and the
 whole width/depth plumbing are kept identical to the original mHC.
 
-The per-group logit generators are **group-local** (each group only reads its own
-slice ``X^(q) in R^{streams x group_dim}``), so the parameter cost is n^2 C, NOT
-the n^3 C of a dense ``Linear(streams*eff_dim, groups*streams)``.
+The per-group read generator is **group-local** (each group only reads its own
+slice ``X^(q) in R^{streams x group_dim}``), so the added parameter cost is
+n^2 C (from ``group_pre_weight`` alone), NOT the n^3 C of a dense
+``Linear(streams*eff_dim, groups*streams)``.
 
 This file does NOT modify mhc.py or MHC-Lite.  ``disable_group_embedding=True``
 falls back to the exact original mHC path.
@@ -51,7 +54,11 @@ from .mhc import (
 
 
 class ManifoldConstrainedHyperConnectionsGroupEmbedding(ManifoldConstrainedHyperConnections):
-    """Full mHC with group-wise (per channel-group) H^pre / H^post."""
+    """Full mHC with a group-wise (per channel-group) H^pre read.
+
+    The H^post write-back stays the original mHC beta path (static_beta /
+    dynamic_beta_fn / h_post_scale are kept and used unchanged).
+    """
 
     def __init__(
         self,
@@ -82,34 +89,24 @@ class ManifoldConstrainedHyperConnectionsGroupEmbedding(ManifoldConstrainedHyper
         self.group_dim = group_dim
         self.effective_dim = effective_dim
 
-        # group-local generators.  input slice per group is [streams, group_dim] -> flatten
-        in_feat = streams * group_dim                          # == effective_dim only when groups==1
-        # weight shape [groups, streams*group_dim, streams] -> numel == streams^2 * effective_dim
+        # group-local READ generator only.  input slice per group is
+        # [streams, group_dim] -> flatten.  weight shape [groups, streams*group_dim, streams]
+        # -> numel == streams^2 * effective_dim (== n^2 C when groups == streams).
+        in_feat = streams * group_dim
         self.group_pre_weight = nn.Parameter(torch.zeros(groups, in_feat, streams))
-        self.group_post_weight = nn.Parameter(torch.zeros(groups, in_feat, streams))
 
-        # static biases (analogue of static_alpha / static_beta): "home" stream per group
+        # static read bias (analogue of static_alpha): "home" stream per group
         pre_bias = torch.full((groups, streams), -1.0)
-        post_bias = torch.full((groups, streams), -1.0)
         for q in range(groups):
             pre_bias[q, q % streams] = 1.0
-            post_bias[q, q % streams] = 1.0
         self.group_pre_bias = nn.Parameter(pre_bias)
-        self.group_post_bias = nn.Parameter(post_bias)
 
         # optional gate capture for debugging (does not change forward outputs)
         self._capture_gates = False
         self._last_H_pre_grp = None
-        self._last_H_post_grp = None
 
-        # When the group path is active it fully replaces the original H^post
-        # (beta) generators, leaving `static_beta` / `dynamic_beta_fn` unused.
-        # Remove them so DDP does not complain about parameters with no gradient
-        # (the original H_res generators alpha are still used and kept intact).
-        if self._group_enabled and self.add_branch_out_to_residual:
-            for dead in ("static_beta", "dynamic_beta_fn"):
-                if hasattr(self, dead):
-                    delattr(self, dead)
+        # NOTE: the original mHC H^post generators (static_beta / dynamic_beta_fn /
+        # h_post_scale) are intentionally KEPT and used unchanged for write-back.
 
     @property
     def _group_enabled(self):
@@ -118,10 +115,10 @@ class ManifoldConstrainedHyperConnectionsGroupEmbedding(ManifoldConstrainedHyper
     # ---------------------------------------------------------------- gates
 
     def _compute_group_gates(self, normed):
-        """Generate per-group H_pre_grp / H_post_grp from normed residuals.
+        """Generate per-group H_pre_grp from normed residuals.
 
         normed : ``b ... f (s d)``  (RMSNorm output, same as parent)
-        returns H_pre_grp, H_post_grp : ``b ... f groups streams``
+        returns H_pre_grp : ``b ... f groups streams``
         """
         streams = self.num_residual_streams
         groups = self.group_embedding_groups
@@ -133,14 +130,9 @@ class ManifoldConstrainedHyperConnectionsGroupEmbedding(ManifoldConstrainedHyper
 
         # group-local dynamic logits (preserve the parent's scale style)
         H_pre_dyn = einsum(x_group_flat, self.group_pre_weight, "b ... q i, q i s -> b ... q s")
-        H_post_dyn = einsum(x_group_flat, self.group_post_weight, "b ... q i, q i s -> b ... q s")
-
         H_pre_raw = self.pre_branch_scale * H_pre_dyn + self.group_pre_bias
-        H_post_raw = self.h_post_scale * H_post_dyn + self.group_post_bias
-
         H_pre_grp = H_pre_raw.sigmoid()          # H^pre in [0, 1]
-        H_post_grp = H_post_raw.sigmoid() * 2     # H^post in [0, 2]  (same as original beta)
-        return H_pre_grp, H_post_grp
+        return H_pre_grp
 
     # ------------------------------------------------------- width connection
 
@@ -185,16 +177,27 @@ class ManifoldConstrainedHyperConnectionsGroupEmbedding(ManifoldConstrainedHyper
         residual_mix = einsum(alpha_residual, residuals,
                               '... f1 s f2 t, ... f1 s d -> ... f2 t d')
 
-        # ---- group-wise gates + read (the new logic) ----
-        H_pre_grp, H_post_grp = self._compute_group_gates(normed)  # b ... f q s
+        # ---- group-wise READ (the only new logic) ----
+        H_pre_grp = self._compute_group_gates(normed)     # b ... f q s
         if self._capture_gates:
             self._last_H_pre_grp = H_pre_grp
-            self._last_H_post_grp = H_post_grp
 
         residuals_grp = rearrange(residuals, 'b ... s (q d) -> b ... s q d', q=groups)
         u_grp = einsum(H_pre_grp, residuals_grp,
                        'b ... f q s, b ... f s q d -> b ... f q d')
         branch_input = rearrange(u_grp, 'b ... f q d -> b ... f (q d)')
+
+        # ---- H^post (beta): ORIGINAL mHC write-back generator, unchanged ----
+        beta = None
+        if self.add_branch_out_to_residual:
+            dc_weight = normed @ self.dynamic_beta_fn
+            dc_weight = rearrange(dc_weight, '... (s f) -> ... s f', s=streams)
+
+            dynamic_beta = dc_weight * self.h_post_scale
+            static_beta = rearrange(self.static_beta, '... (s f) -> ... s f', s=streams)
+
+            beta = dynamic_beta + static_beta
+            beta = beta.sigmoid() * 2
 
         # ---- tail: identical shape handling to the original mHC ----
         if self.channel_first:
@@ -206,47 +209,19 @@ class ManifoldConstrainedHyperConnectionsGroupEmbedding(ManifoldConstrainedHyper
             residuals_out = rearrange(residuals_out, 'b ... d -> b d ...')
         residuals_out = self.merge_fracs(residuals_out)
 
-        return branch_input, residuals_out, dict(H_post_grp=H_post_grp, group_embedding=True)
+        return branch_input, residuals_out, dict(beta=beta)
 
-    # ------------------------------------------------------- depth connection
-
-    def depth_connection(self, branch_output, residuals, *, beta=None,
-                         H_post_grp=None, group_embedding=False):
-        if not group_embedding:
-            return super().depth_connection(branch_output, residuals, beta=beta)
-
-        assert self.add_branch_out_to_residual
-        groups = self.group_embedding_groups
-
-        branch_output = self.split_fracs(branch_output)          # b ... f d
-
-        if self.channel_first:
-            branch_output = rearrange(branch_output, 'b d ... -> b ... d')
-
-        # group-wise write-back: dX_{s,q,t} = H^post_{q,s} h_{q,t}
-        branch_output_grp = rearrange(branch_output, 'b ... f (q d) -> b ... f q d', q=groups)
-        output_grp = einsum(H_post_grp, branch_output_grp,
-                            'b ... f1 q s, b ... f1 q d -> b ... f1 s q d')
-        output = rearrange(output_grp, 'b ... f s q d -> b ... f s (q d)')
-
-        # identical tail to original mHC depth connection
-        output = rearrange(output, 'b ... s d -> (b s) ... d')
-        output = self.merge_fracs(output)
-
-        if self.channel_first:
-            output = rearrange(output, 'b ... d -> b d ...')
-
-        residuals = self.depth_residual_fn(output, residuals)
-        return self.dropout(residuals)
+    # depth_connection is inherited unchanged from ManifoldConstrainedHyperConnections
+    # (original beta write-back: dX_s = beta_s h).
 
     # ---------------------------------------------------- debug interface
 
     @torch.no_grad()
     def get_group_gates(self, residuals):
-        """Return (H_pre_grp, H_post_grp) actually generated for ``residuals``
-        without changing the default forward return values.
+        """Return H_pre_grp actually generated for ``residuals`` without changing
+        the default forward return values.
 
-        Each has shape ``[batch, ..., num_fracs, groups, streams]``.
+        Shape: ``[batch, ..., num_fracs, groups, streams]``.
         """
         prev = self._capture_gates
         self._capture_gates = True
@@ -254,7 +229,7 @@ class ManifoldConstrainedHyperConnectionsGroupEmbedding(ManifoldConstrainedHyper
             self.width_connection(residuals)
         finally:
             self._capture_gates = prev
-        return self._last_H_pre_grp, self._last_H_post_grp
+        return self._last_H_pre_grp
 
 
 # convenience factory
