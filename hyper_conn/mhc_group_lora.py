@@ -14,9 +14,11 @@ as in their standalone files, fused into one module:
             u_{q,t} = sum_s H^pre_{q,s} X_grp_{s,q,t}
 
   * WRITE side (from mhc_lora_residual.py):
-        original mHC beta write-back PLUS an independent per-stream LoRA (A_s, B_s):
-            u_s = beta_s * h + (h @ A_s) @ B_s
-        (A_s kaiming-uniform, B_s zero-init -> LoRA term is 0 at init)
+        original mHC beta write-back PLUS an independent per-stream LoRA (A_s, B_s),
+        damped by a learnable scalar ``lora_scale`` (init 0.1):
+            u_s = beta_s * h + lora_scale * (h @ A_s) @ B_s
+        (A_s kaiming-uniform, B_s zero-init -> LoRA term is 0 at init; the scale
+         keeps delta from dominating beta*h and blowing up ||A_s B_s||)
 
 Everything else is untouched and reused verbatim from the original mHC:
   * H_res / Sinkhorn / residual-stream mixing
@@ -59,6 +61,7 @@ class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConne
         disable_group_embedding: bool = False,
         # --- per-stream LoRA write (mhc_lora_residual) ---
         lora_rank: int = 8,
+        lora_scale: float = 0.1,
         disable_lora_branch: bool = False,
         **kwargs,
     ):
@@ -97,6 +100,9 @@ class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConne
         self.stream_down_weight = nn.Parameter(torch.empty(streams, effective_dim, lora_rank))  # A_s
         self.stream_up_weight = nn.Parameter(torch.zeros(streams, lora_rank, effective_dim))     # B_s (zero)
         nn.init.kaiming_uniform_(self.stream_down_weight, a=math.sqrt(5))
+        # damping scale on the LoRA delta (learnable, init 0.1) -- keeps delta from
+        # dominating the beta write-back and blowing up ||A_s B_s|| (grad-spike fix).
+        self.lora_scale = nn.Parameter(torch.tensor(float(lora_scale)))
 
         # debug capture (does not change forward outputs)
         self._capture_gates = False
@@ -132,13 +138,13 @@ class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConne
     # ------------------------------------------------ per-stream LoRA
 
     def compute_lora(self, branch_output):
-        """delta_s = (h @ A_s) @ B_s per stream (batched einsum, no loop).
+        """delta_s = lora_scale * (h @ A_s) @ B_s per stream (batched einsum, no loop).
 
         branch_output : ``b ... f d``  -> returns ``b ... f s d``
         """
         down = einsum(branch_output, self.stream_down_weight, "b ... f d, s d r -> b ... f s r")
         delta = einsum(down, self.stream_up_weight, "b ... f s r, s r e -> b ... f s e")
-        return delta
+        return self.lora_scale * delta
 
     # ------------------------------------------------------- width connection
 

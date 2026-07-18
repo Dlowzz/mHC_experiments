@@ -54,7 +54,7 @@ def test_disable_both_matches_original_mhc():
                        disable_group_embedding=True, disable_lora_branch=True).eval()
     missing = var.load_state_dict(ref.state_dict(), strict=False)
     assert set(missing.missing_keys) <= {
-        "group_pre_weight", "group_pre_bias", "stream_down_weight", "stream_up_weight"
+        "group_pre_weight", "group_pre_bias", "stream_down_weight", "stream_up_weight", "lora_scale"
     }, f"unexpected missing keys: {missing.missing_keys}"
     x = _expand(torch.randn(b, seq, d), s)
     with torch.no_grad():
