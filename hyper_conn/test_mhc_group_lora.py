@@ -54,7 +54,7 @@ def test_disable_both_matches_original_mhc():
                        disable_group_embedding=True, disable_lora_branch=True).eval()
     missing = var.load_state_dict(ref.state_dict(), strict=False)
     assert set(missing.missing_keys) <= {
-        "group_pre_weight", "group_pre_bias", "stream_down_weight", "stream_up_weight", "lora_scale"
+        "group_pre_weight", "group_pre_bias", "stream_down_weight", "stream_up_weight"
     }, f"unexpected missing keys: {missing.missing_keys}"
     x = _expand(torch.randn(b, seq, d), s)
     with torch.no_grad():
@@ -148,6 +148,56 @@ def test_gradients_flow_everywhere():
     print("[ok] group read gen + LoRA (A_s,B_s) + original beta all get non-zero gradients")
 
 
+def test_output_rmsnorm_dim_is_hidden():
+    # after B_s!=0, compute_lora applies RMSNorm on dim=-1 -> each [.,s,d] row has RMS~1
+    b, seq, d, s = 2, 4, 64, 4
+    torch.manual_seed(7)
+    m = MHCGroupLoRA(s, dim=d, branch=nn.Linear(d, d))
+    m.stream_up_weight.data.normal_()
+    with torch.no_grad():
+        delta = m.compute_lora(m.split_fracs(torch.randn(b, seq, d)))  # b seq f s d
+        rms = delta.pow(2).mean(dim=-1).sqrt()                          # over hidden dim
+    assert torch.allclose(rms, torch.ones_like(rms), atol=1e-3), "output RMSNorm not on hidden dim"
+    # magnitude-invariance: scaling B by 10 keeps the normed delta ~unchanged
+    with torch.no_grad():
+        d1 = m.compute_lora(m.split_fracs(torch.ones(1, 1, d)))
+        m.stream_up_weight.data.mul_(10.0)
+        d2 = m.compute_lora(m.split_fracs(torch.ones(1, 1, d)))
+    assert torch.allclose(d1, d2, atol=1e-4), "output RMSNorm not scale-invariant to ||B||"
+    print("[ok] output RMSNorm normalises the hidden dim (=-1) to unit RMS")
+
+
+def test_no_nan_inf_fwd_bwd():
+    b, seq, d, s = 2, 4, 64, 4
+    torch.manual_seed(8)
+    m = MHCGroupLoRA(s, dim=d, branch=nn.Linear(d, d))
+    m.stream_up_weight.data.normal_(std=0.5)
+    x = _expand(torch.randn(b, seq, d), s)
+    out = m(x)
+    assert torch.isfinite(out).all(), "forward produced NaN/Inf"
+    out.sum().backward()
+    for p in m.parameters():
+        if p.grad is not None:
+            assert torch.isfinite(p.grad).all(), "backward produced NaN/Inf"
+    print("[ok] forward/backward finite (no NaN/Inf)")
+
+
+def test_state_dict_roundtrip():
+    b, seq, d, s = 2, 4, 64, 4
+    torch.manual_seed(9)
+    m = MHCGroupLoRA(s, dim=d, branch=nn.Linear(d, d)).eval()
+    m.stream_up_weight.data.normal_(std=0.3)
+    x = _expand(torch.randn(b, seq, d), s)
+    with torch.no_grad():
+        o1 = m(x)
+    m2 = MHCGroupLoRA(s, dim=d, branch=nn.Linear(d, d)).eval()
+    m2.load_state_dict(m.state_dict())
+    with torch.no_grad():
+        o2 = m2(x)
+    assert torch.allclose(o1, o2, atol=1e-6), "state_dict round-trip changed output"
+    print("[ok] state_dict save/load reproduces output")
+
+
 def test_indivisible_raises():
     try:
         MHCGroupLoRA(4, dim=64, branch=nn.Linear(64, 64), group_embedding_groups=3)
@@ -167,6 +217,9 @@ def main():
     test_param_shapes()
     test_group_read_einsum_matches_explicit()
     test_lora_is_additive_and_off_at_init()
+    test_output_rmsnorm_dim_is_hidden()
+    test_no_nan_inf_fwd_bwd()
+    test_state_dict_roundtrip()
     test_equivalent_to_group_embedding_when_lora_off()
     test_gradients_flow_everywhere()
     test_indivisible_raises()

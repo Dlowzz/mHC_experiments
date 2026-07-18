@@ -11,7 +11,13 @@ the effective scaling is absorbed into the per-stream B_s initialisation.
 
 Depth connection formula (per residual stream s):
 
-    u_s = beta_s * h  +  (h @ A_s) @ B_s
+    delta_s = (h @ A_s) @ B_s
+    delta_s = rmsnorm(delta_s, dim=-1)      # parameter-free, no affine, eps=1e-6
+    u_s     = beta_s * h + delta_s
+
+RMSNorm is applied on the hidden feature dim (dim=-1), after B_s and before the
+beta write-back adds delta_s.  Since B_s is zero-initialised, delta_s == 0 at init
+and rmsnorm(0) == 0, so the module is identical to the original mHC at init.
 
 where
   * A_s in R^{C x r}  –  independent per stream, kaiming-uniform init
@@ -45,6 +51,21 @@ from .mhc import (
     get_expand_reduce_stream_functions,
     default,
 )
+
+# fixed epsilon for the parameter-free LoRA RMSNorm
+LORA_RMSNORM_EPS = 1e-6
+
+
+def rmsnorm_lastdim(x, eps=LORA_RMSNORM_EPS):
+    """Parameter-free RMSNorm over the last dim (no affine, fixed eps).
+
+    rmsnorm(0) == 0, so a zero-initialised LoRA stays exactly zero at init.
+    Computed in fp32 for stable norms, cast back to the input dtype.
+    """
+    dtype = x.dtype
+    x = x.float()
+    x = x * torch.rsqrt(x.pow(2).mean(dim=-1, keepdim=True) + eps)
+    return x.to(dtype)
 
 
 class ManifoldConstrainedHyperConnectionsLoRAResidual(ManifoldConstrainedHyperConnections):
@@ -84,10 +105,10 @@ class ManifoldConstrainedHyperConnectionsLoRAResidual(ManifoldConstrainedHyperCo
         nn.init.zeros_(self.stream_up_weight)
 
     def compute_lora(self, branch_output):
-        """delta_s = (h @ A_s) @ B_s for every stream at once (batched einsum).
+        """delta_s = rmsnorm_{-1}((h @ A_s) @ B_s) for every stream (batched einsum).
 
-        branch_output : ``b ... f d``  (already split into fractions)
-        returns delta : ``b ... f s d``
+        RMSNorm is applied on the hidden feature dim (dim=-1) AFTER B_s and before
+        the beta write-back adds it.  branch_output : ``b ... f d`` -> ``b ... f s d``
         """
         # down: [b ... f s r]
         down = einsum(
@@ -99,7 +120,7 @@ class ManifoldConstrainedHyperConnectionsLoRAResidual(ManifoldConstrainedHyperCo
             down, self.stream_up_weight,
             "b ... f s r, s r e -> b ... f s e",
         )
-        return delta
+        return rmsnorm_lastdim(delta)   # RMSNorm on hidden dim (=-1); rmsnorm(0)=0 at init
 
     def depth_connection(
         self,

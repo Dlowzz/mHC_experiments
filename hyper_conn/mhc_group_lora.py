@@ -15,10 +15,15 @@ as in their standalone files, fused into one module:
 
   * WRITE side (from mhc_lora_residual.py):
         original mHC beta write-back PLUS an independent per-stream LoRA (A_s, B_s),
-        damped by a learnable scalar ``lora_scale`` (init 0.1):
-            u_s = beta_s * h + lora_scale * (h @ A_s) @ B_s
-        (A_s kaiming-uniform, B_s zero-init -> LoRA term is 0 at init; the scale
-         keeps delta from dominating beta*h and blowing up ||A_s B_s||)
+        with the LoRA output passed through a parameter-free RMSNorm on the hidden
+        feature dim (dim=-1) *after B_s* and *before* adding to the beta write-back:
+            delta_s = (h @ A_s) @ B_s
+            delta_s = rmsnorm(delta_s, dim=-1)            # no affine, eps=1e-6
+            u_s     = beta_s * h + delta_s
+        (A_s kaiming-uniform, B_s zero-init -> delta_s == 0 at init, and
+         rmsnorm(0) == 0, so the write is identical to the original mHC at init.
+         The RMSNorm removes the unbounded magnitude d.o.f. that blew up
+         ||A_s B_s|| at L scale.  No lora_scale / alpha / (alpha/r) factor.)
 
 Everything else is untouched and reused verbatim from the original mHC:
   * H_res / Sinkhorn / residual-stream mixing
@@ -45,6 +50,21 @@ from .mhc import (
     default,
 )
 
+# fixed epsilon for the parameter-free LoRA RMSNorm
+LORA_RMSNORM_EPS = 1e-6
+
+
+def rmsnorm_lastdim(x, eps=LORA_RMSNORM_EPS):
+    """Parameter-free RMSNorm over the last dim (no affine, fixed eps).
+
+    rmsnorm(0) == 0, so a zero-initialised LoRA stays exactly zero at init.
+    Computed in fp32 for stable norms, cast back to the input dtype.
+    """
+    dtype = x.dtype
+    x = x.float()
+    x = x * torch.rsqrt(x.pow(2).mean(dim=-1, keepdim=True) + eps)
+    return x.to(dtype)
+
 
 class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConnections):
     """Full mHC with group-wise H^pre read (mhc_group_embedding) AND per-stream
@@ -61,7 +81,6 @@ class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConne
         disable_group_embedding: bool = False,
         # --- per-stream LoRA write (mhc_lora_residual) ---
         lora_rank: int = 8,
-        lora_scale: float = 0.1,
         disable_lora_branch: bool = False,
         **kwargs,
     ):
@@ -100,9 +119,8 @@ class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConne
         self.stream_down_weight = nn.Parameter(torch.empty(streams, effective_dim, lora_rank))  # A_s
         self.stream_up_weight = nn.Parameter(torch.zeros(streams, lora_rank, effective_dim))     # B_s (zero)
         nn.init.kaiming_uniform_(self.stream_down_weight, a=math.sqrt(5))
-        # damping scale on the LoRA delta (learnable, init 0.1) -- keeps delta from
-        # dominating the beta write-back and blowing up ||A_s B_s|| (grad-spike fix).
-        self.lora_scale = nn.Parameter(torch.tensor(float(lora_scale)))
+        # NOTE: no lora_scale / alpha factor -- the LoRA output is instead passed
+        # through a parameter-free RMSNorm (see compute_lora).
 
         # debug capture (does not change forward outputs)
         self._capture_gates = False
@@ -138,13 +156,14 @@ class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConne
     # ------------------------------------------------ per-stream LoRA
 
     def compute_lora(self, branch_output):
-        """delta_s = lora_scale * (h @ A_s) @ B_s per stream (batched einsum, no loop).
+        """delta_s = rmsnorm_{-1}((h @ A_s) @ B_s) per stream (batched einsum, no loop).
 
-        branch_output : ``b ... f d``  -> returns ``b ... f s d``
+        RMSNorm is applied on the hidden feature dim (dim=-1) AFTER B_s and before
+        the beta write-back adds it.  branch_output : ``b ... f d`` -> ``b ... f s d``
         """
         down = einsum(branch_output, self.stream_down_weight, "b ... f d, s d r -> b ... f s r")
         delta = einsum(down, self.stream_up_weight, "b ... f s r, s r e -> b ... f s e")
-        return self.lora_scale * delta
+        return rmsnorm_lastdim(delta)   # RMSNorm on hidden dim (=-1); rmsnorm(0)=0 at init
 
     # ------------------------------------------------------- width connection
 
