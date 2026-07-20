@@ -16,9 +16,18 @@ A_s and B_s (mid-norm), instead of on the hidden feature dim after B_s.
 Since B_s is zero-initialised, ``delta_s == 0`` at init regardless of ``down_s``,
 so the module is identical to the group_lora baseline at init.
 
-Only ``compute_lora`` differs from ``mhc_group_lora``; everything else (group
-read, depth_connection, beta generator, H_res/Sinkhorn, attn/FFN) is inherited
-unchanged.  No lora_scale / alpha factor.
+Only ``compute_lora`` and the A_s init differ from ``mhc_group_lora``; everything
+else (group read, depth_connection, beta generator, H_res/Sinkhorn, attn/FFN) is
+inherited unchanged.  No lora_scale / alpha factor.
+
+A_s init fix: the parent's ``kaiming_uniform_`` on the 3D ``[s, d, r]`` tensor
+uses fan_in = d * r (conv convention), sqrt(r) too small; we re-init with the
+correct per-matrix fan_in (= d) via ``init_lora_A_per_stream_``.
+
+Weight-decay note: with the rank-dim RMSNorm right after ``h @ A_s``, A_s is
+scale-invariant -- decaying it only shrinks ||A_s|| without changing the forward
+pass (silently inflating its effective LR).  ``GPT.configure_optimizers``
+therefore excludes ``stream_down_weight`` from weight decay for midnorm variants.
 """
 
 from functools import partial
@@ -27,10 +36,20 @@ from einops import einsum
 
 from .mhc import Residual, get_expand_reduce_stream_functions, default
 from .mhc_group_lora import ManifoldConstrainedHyperConnectionsGroupLoRA, rmsnorm_lastdim
+from .mhc_lora_residual_midnorm import init_lora_A_per_stream_
 
 
 class ManifoldConstrainedHyperConnectionsGroupLoRAMidNorm(ManifoldConstrainedHyperConnectionsGroupLoRA):
     """group-LoRA with RMSNorm on the LoRA rank dim (between A_s and B_s)."""
+
+    def __init__(self, num_residual_streams, *, dim, **kwargs):
+        super().__init__(num_residual_streams, dim=dim, **kwargs)
+        # re-init A_s with the correct per-stream fan_in (= d, not d*r);
+        # B_s stays zero so the module is still identical to baseline at init.
+        init_lora_A_per_stream_(self.stream_down_weight)
+        # A_s is scale-invariant under the rank-dim RMSNorm -> exclude from weight
+        # decay (picked up by GPT.configure_optimizers via this flag).
+        self.stream_down_weight._no_weight_decay = True
 
     def compute_lora(self, branch_output):
         """delta_s = (rmsnorm_{-1}(h @ A_s)) @ B_s per stream (batched einsum, no loop).

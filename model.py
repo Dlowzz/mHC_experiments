@@ -317,8 +317,11 @@ class GPT(nn.Module):
         # Exception: LoRA affine-RMSNorm params (name contains 'lora_rmsnorm') get their own
         # group with weight_decay=0 and no_lr_decay=True (constant LR, no cosine decay/warmup).
         rmsnorm_ids = {id(p) for n, p in param_dict.items() if 'lora_rmsnorm' in n}
-        decay_params = [p for n, p in param_dict.items() if p.dim() >= 2 and id(p) not in rmsnorm_ids]
-        nodecay_params = [p for n, p in param_dict.items() if p.dim() < 2 and id(p) not in rmsnorm_ids]
+        # params explicitly flagged _no_weight_decay (e.g. scale-invariant LoRA A_s
+        # in the midnorm variants) go to the no-decay group regardless of dim.
+        flagged_nodecay_ids = {id(p) for p in param_dict.values() if getattr(p, '_no_weight_decay', False)}
+        decay_params = [p for n, p in param_dict.items() if p.dim() >= 2 and id(p) not in rmsnorm_ids and id(p) not in flagged_nodecay_ids]
+        nodecay_params = [p for n, p in param_dict.items() if (p.dim() < 2 or id(p) in flagged_nodecay_ids) and id(p) not in rmsnorm_ids]
         rmsnorm_params = [p for n, p in param_dict.items() if id(p) in rmsnorm_ids]
         optim_groups = [
             {'params': decay_params, 'weight_decay': weight_decay},
