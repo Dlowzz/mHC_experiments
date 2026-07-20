@@ -314,8 +314,12 @@ class GPT(nn.Module):
         param_dict = {pn: p for pn, p in param_dict.items() if p.requires_grad}
         # create optim groups. Any parameters that is 2D will be weight decayed, otherwise no.
         # i.e. all weight tensors in matmuls + embeddings decay, all biases and layernorms don't.
-        decay_params = [p for n, p in param_dict.items() if p.dim() >= 2]
-        nodecay_params = [p for n, p in param_dict.items() if p.dim() < 2]
+        # Exception: LoRA norm-affine params (lora_gamma / lora_bias) are norm parameters and
+        # must NOT be weight-decayed even though they are 2D [streams, dim].
+        no_decay_names = ("lora_gamma", "lora_bias")
+        is_no_decay = lambda n, p: p.dim() < 2 or any(k in n for k in no_decay_names)
+        decay_params = [p for n, p in param_dict.items() if not is_no_decay(n, p)]
+        nodecay_params = [p for n, p in param_dict.items() if is_no_decay(n, p)]
         optim_groups = [
             {'params': decay_params, 'weight_decay': weight_decay},
             {'params': nodecay_params, 'weight_decay': 0.0}

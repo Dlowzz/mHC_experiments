@@ -97,6 +97,12 @@ def hyper_conn_init_func(hyper_conn_type: str, hyper_conn_n: int):
         return mhc_orthogonal_diff_get_init_and_expand_reduce_stream_functions(hyper_conn_n)
     elif hyper_conn_type == "mhc_lora_residual":
         return mhc_lora_residual_get_init_and_expand_reduce_stream_functions(hyper_conn_n)
+    elif hyper_conn_type == "mhc_lora_residual_scalar":
+        return mhc_lora_residual_get_init_and_expand_reduce_stream_functions(hyper_conn_n, lora_norm_mode="scalar")
+    elif hyper_conn_type == "mhc_lora_residual_affine":
+        return mhc_lora_residual_get_init_and_expand_reduce_stream_functions(hyper_conn_n, lora_norm_mode="affine_rmsnorm")
+    elif hyper_conn_type == "mhc_lora_residual_affine_nobias":
+        return mhc_lora_residual_get_init_and_expand_reduce_stream_functions(hyper_conn_n, lora_norm_mode="affine_rmsnorm_no_bias")
     elif hyper_conn_type == "mhc_lora_residual_midnorm":
         return mhc_lora_residual_midnorm_get_init_and_expand_reduce_stream_functions(hyper_conn_n)
     elif hyper_conn_type == "mhc_group_embedding":

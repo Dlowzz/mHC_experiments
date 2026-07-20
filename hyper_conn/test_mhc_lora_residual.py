@@ -112,6 +112,56 @@ def test_state_dict_roundtrip():
     print("[ok] state_dict save/load reproduces output")
 
 
+def test_all_modes_init_equal_original_mhc():
+    b, seq, d, s = 2, 4, 64, 4
+    modes = {
+        "rmsnorm": set(),
+        "scalar": {"lora_stream_scale"},
+        "affine_rmsnorm": {"lora_gamma", "lora_bias"},
+        "affine_rmsnorm_no_bias": {"lora_gamma"},
+    }
+    all_mode_params = {"lora_stream_scale", "lora_gamma", "lora_bias"}
+    for mode, extra in modes.items():
+        torch.manual_seed(1)
+        ref = ManifoldConstrainedHyperConnections(s, dim=d, branch=nn.Linear(d, d)).eval()
+        m = MHCLoRA(s, dim=d, branch=nn.Linear(d, d), lora_norm_mode=mode).eval()
+        names = {n for n, _ in m.named_parameters()}
+        for e in extra:
+            assert any(e in n for n in names), f"{mode}: missing param {e}"
+        for other in all_mode_params - extra:
+            assert not any(other in n for n in names), f"{mode}: unexpected param {other}"
+        m.load_state_dict(ref.state_dict(), strict=False)
+        x = _expand(torch.randn(b, seq, d), s)
+        with torch.no_grad():
+            err = (m(x) - ref(x)).abs().max().item()
+        assert err <= 1e-6, f"{mode}: init not equal to mHC (max abs err {err})"
+        # activate B_s and confirm finite fwd/bwd
+        m.stream_up_weight.data.normal_(std=0.5)
+        out = m(x)
+        assert torch.isfinite(out).all()
+        out.sum().backward()
+        for p in m.parameters():
+            if p.grad is not None:
+                assert torch.isfinite(p.grad).all()
+        print(f"[ok] mode={mode}: init==mHC (err {err:.1e}), params={sorted(extra) or 'none'}, fwd/bwd finite")
+
+
+def test_affine_norm_params_no_weight_decay():
+    from model import GPT, GPTConfig
+    cfg = GPTConfig(block_size=32, vocab_size=64, n_layer=2, n_head=2, n_embd=32,
+                    dropout=0.0, bias=False, hyper_conn_n=4,
+                    hyper_conn_type="mhc_lora_residual_affine")
+    m = GPT(cfg)
+    optim = m.configure_optimizers(weight_decay=0.1, learning_rate=1e-3,
+                                   betas=(0.9, 0.95), device_type="cpu")
+    id2wd = {id(p): g["weight_decay"] for g in optim.param_groups for p in g["params"]}
+    bad = [n for n, p in m.named_parameters()
+           if ("lora_gamma" in n or "lora_bias" in n) and id2wd.get(id(p)) != 0.0]
+    n_affine = sum(1 for n, _ in m.named_parameters() if "lora_gamma" in n or "lora_bias" in n)
+    assert n_affine > 0 and not bad, f"affine-norm params weight-decayed: {bad}"
+    print(f"[ok] all {n_affine} lora_gamma/lora_bias tensors excluded from weight decay")
+
+
 def main():
     test_runs_and_shape()
     test_init_equals_original_mhc()
@@ -120,6 +170,8 @@ def main():
     test_per_stream_independent_AB()
     test_no_nan_inf_fwd_bwd()
     test_state_dict_roundtrip()
+    test_all_modes_init_equal_original_mhc()
+    test_affine_norm_params_no_weight_decay()
     print("\nALL TESTS PASSED")
 
 
