@@ -133,7 +133,10 @@ if wandb_log and master_process:
 tokens_per_iter = gradient_accumulation_steps * ddp_world_size * batch_size * block_size
 print(f"tokens per iteration will be: {tokens_per_iter:,}")
 
-out_dir = f"out-{out_prefix_dataset}-{out_prefix_model}-{out_prefix_method}"
+out_dir = os.path.join(
+    os.environ.get("CKPT_ROOT", "."),
+    f"out-{out_prefix_dataset}-{out_prefix_model}-{out_prefix_method}-bs{batch_size}-{max_iters}step",
+)
 if master_process:
     os.makedirs(out_dir, exist_ok=True)
 torch.manual_seed(seed + seed_offset)
@@ -312,7 +315,12 @@ while True:
     # determine and set the learning rate for this iteration
     lr = get_lr(iter_num) if decay_lr else learning_rate
     for param_group in optimizer.param_groups:
-        param_group['lr'] = lr
+        # groups flagged no_lr_decay (e.g. LoRA affine-RMSNorm params) keep a
+        # constant LR (no cosine decay / no warmup); everything else follows get_lr.
+        if param_group.get('no_lr_decay', False):
+            param_group['lr'] = learning_rate
+        else:
+            param_group['lr'] = lr
 
     # evaluate the loss on train/val sets and write checkpoints
     if iter_num % eval_interval == 0 and master_process:

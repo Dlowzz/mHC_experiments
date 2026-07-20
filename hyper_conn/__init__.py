@@ -75,6 +75,12 @@ from .mhc_group_lora_midnorm import (
     get_init_and_expand_reduce_stream_functions as mhc_group_lora_midnorm_get_init_and_expand_reduce_stream_functions
 )
 
+from .mhc_lora_residual_affinemidnorm import (
+    ManifoldConstrainedHyperConnectionsLoRAResidualAffineMidNorm,
+    MHCLoRAResidualAffineMidNorm,
+    get_init_and_expand_reduce_stream_functions as mhc_lora_residual_affinemidnorm_get_init_and_expand_reduce_stream_functions
+)
+
 flag = False
 
 def hyper_conn_init_func(hyper_conn_type: str, hyper_conn_n: int):
@@ -99,6 +105,8 @@ def hyper_conn_init_func(hyper_conn_type: str, hyper_conn_n: int):
         return mhc_lora_residual_get_init_and_expand_reduce_stream_functions(hyper_conn_n)
     elif hyper_conn_type == "mhc_lora_residual_midnorm":
         return mhc_lora_residual_midnorm_get_init_and_expand_reduce_stream_functions(hyper_conn_n)
+    elif hyper_conn_type == "mhc_lora_residual_affinemidnorm":
+        return mhc_lora_residual_affinemidnorm_get_init_and_expand_reduce_stream_functions(hyper_conn_n)
     elif hyper_conn_type == "mhc_group_embedding":
         return mhc_group_embedding_get_init_and_expand_reduce_stream_functions(hyper_conn_n)
     elif hyper_conn_type == "mhc_group_lora":
