@@ -6,7 +6,7 @@ Run from the repo root (mhc-lite) with:
 
 import torch
 from torch import nn
-from einops import repeat, einsum
+from einops import repeat, einsum, rearrange
 
 from .mhc import ManifoldConstrainedHyperConnections
 from .mhc_group_embedding import ManifoldConstrainedHyperConnectionsGroupEmbedding as MHCGroup
@@ -149,6 +149,54 @@ def test_state_dict_roundtrip():
     print("[ok] state_dict save/load reproduces output")
 
 
+def test_inside_beta_formula_consistency():
+    # depth write must equal  einsum(h, beta) + lora_lambda * einsum(delta, beta)
+    # (LoRA moved INSIDE beta).  depth_connection is exercised directly with
+    # fabricated inputs, which also covers num_fracs=2 (base-mHC width_connection
+    # RMSNorm is separately mis-sized for num_fracs>1 -- out of scope here).
+    b, seq, d, s = 2, 4, 64, 4
+    for nf in (1, 2):
+        torch.manual_seed(10 + nf)
+        m = MHCMid(s, dim=d, num_fracs=nf, branch=nn.Linear(d, d)).eval()
+        with torch.no_grad():
+            m.stream_up_weight.normal_(std=0.5)   # non-zero delta so the LoRA term matters
+            bo = torch.randn(b, seq, d)                     # branch output (pre-split)
+            res = torch.randn(b * s, seq, d)                # residual streams
+            beta = torch.rand(b, seq, nf, s, nf) * 2.0      # [b, seq, f1, s, f2] in (0,2)
+            actual = m.depth_connection(bo, res, beta=beta)
+            # manual reconstruction of u_s = beta_s (h + lambda * delta_s)
+            h = m.split_fracs(bo)
+            main = einsum(h, beta, 'b ... f1 d, b ... f1 s f2 -> b ... f2 s d')
+            delta = m.compute_lora(h)
+            dwrite = einsum(delta, beta, 'b ... f1 s d, b ... f1 s f2 -> b ... f2 s d')
+            write = main + m.lora_lambda * dwrite
+            write = m.merge_fracs(rearrange(write, 'b ... s d -> (b s) ... d'))
+            expected = write + res
+        err = (actual - expected).abs().max().item()
+        assert err <= 1e-5, f"num_fracs={nf}: depth write != einsum(h,beta)+lambda*einsum(delta,beta) (err {err:.2e})"
+    print("[ok] inside-beta formula: actual == einsum(h,beta) + lambda*einsum(delta,beta) (num_fracs 1,2)")
+
+
+def test_beta_mask_zeros_stream_write():
+    # zeroing beta for one stream must zero BOTH its main write and its LoRA write.
+    b, seq, d, s = 2, 4, 64, 4
+    for nf in (1, 2):
+        torch.manual_seed(20 + nf)
+        m = MHCMid(s, dim=d, num_fracs=nf, branch=nn.Linear(d, d)).eval()
+        with torch.no_grad():
+            m.stream_up_weight.normal_(std=0.5)   # LoRA write would be non-zero if not masked
+            bo = torch.randn(b, seq, d)
+            res = torch.randn(b * s, seq, d)
+            beta = torch.rand(b, seq, nf, s, nf) * 2.0
+            s0 = 1
+            beta[..., s0, :] = 0.0                 # beta[.., f1, s0, f2] = 0  (stream axis = -2)
+            out = m.depth_connection(bo, res, beta=beta)
+            write = rearrange(out, '(b s) ... -> b s ...', s=s) - rearrange(res, '(b s) ... -> b s ...', s=s)
+        err = write[:, s0].abs().max().item()
+        assert err < 1e-6, f"num_fracs={nf}: masked stream write not zero (max {err:.2e})"
+    print("[ok] beta=0 for a stream -> that stream's main AND LoRA write are exactly 0 (num_fracs 1,2)")
+
+
 def main():
     test_runs_and_shape_matches_mhc()
     test_disable_both_equals_original_mhc()
@@ -159,6 +207,8 @@ def main():
     test_lora_off_and_group_off_reverts()
     test_no_nan_inf_and_grads()
     test_state_dict_roundtrip()
+    test_inside_beta_formula_consistency()
+    test_beta_mask_zeros_stream_write()
     print("\nALL TESTS PASSED")
 
 
