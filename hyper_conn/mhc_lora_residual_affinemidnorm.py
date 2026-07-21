@@ -22,9 +22,10 @@ Init (mirrors the parameter-free version at init):
      zero-initialised, delta_s == 0 => identical to mhc_lora_residual_midnorm /
      original mHC at init.
 
-The affine parameters are named ``lora_rmsnorm_*`` so that
-``GPT.configure_optimizers`` places them in a dedicated optimizer group with
-weight_decay=0 and ``no_lr_decay=True`` (constant LR, no cosine decay / warmup).
+The affine parameters (``lora_rmsnorm_weight`` / ``lora_rmsnorm_bias``) are
+flagged ``_no_weight_decay`` so ``GPT.configure_optimizers`` puts them in the
+no-weight-decay group (like other norm affine params).  They follow the normal
+LR schedule (cosine + warmup), identical to every other parameter.
 
 Only ``__init__`` and ``compute_lora`` differ from
 ``mhc_lora_residual_midnorm``; everything else (depth_connection, beta generator,
@@ -55,6 +56,10 @@ class ManifoldConstrainedHyperConnectionsLoRAResidualAffineMidNorm(
         # (=> affine RMSNorm == parameter-free RMSNorm at init).
         self.lora_rmsnorm_weight = nn.Parameter(torch.ones(num_residual_streams, lora_rank))
         self.lora_rmsnorm_bias = nn.Parameter(torch.zeros(num_residual_streams, lora_rank))
+        # norm affine params: exclude from weight decay (like other norm params);
+        # they follow the normal LR schedule (same as every other parameter).
+        self.lora_rmsnorm_weight._no_weight_decay = True
+        self.lora_rmsnorm_bias._no_weight_decay = True
 
     def compute_lora(self, branch_output):
         """delta_s = (affine_rmsnorm_{-1}(h @ A_s)) @ B_s per stream (batched einsum).

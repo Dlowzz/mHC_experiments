@@ -315,12 +315,7 @@ while True:
     # determine and set the learning rate for this iteration
     lr = get_lr(iter_num) if decay_lr else learning_rate
     for param_group in optimizer.param_groups:
-        # groups flagged no_lr_decay (e.g. LoRA affine-RMSNorm params) keep a
-        # constant LR (no cosine decay / no warmup); everything else follows get_lr.
-        if param_group.get('no_lr_decay', False):
-            param_group['lr'] = learning_rate
-        else:
-            param_group['lr'] = lr
+        param_group['lr'] = lr
 
     # evaluate the loss on train/val sets and write checkpoints
     if iter_num % eval_interval == 0 and master_process:

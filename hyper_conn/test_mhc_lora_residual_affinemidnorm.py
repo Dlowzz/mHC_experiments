@@ -85,23 +85,26 @@ def test_gradients_flow_to_affine_params():
     print("[ok] gradients flow to lora_rmsnorm_weight/bias and stream_up/down_weight")
 
 
-def test_optimizer_group_no_lr_decay():
-    # affine RMSNorm params must land in a dedicated group: weight_decay=0 + no_lr_decay=True
+def test_optimizer_group_affine_params_nowd_normal_lr():
+    # affine RMSNorm params must be in the no-weight-decay group (wd=0) and follow
+    # the normal LR schedule -> there must be NO 'no_lr_decay' group at all.
     from model import GPTConfig, GPT
     cfg = GPTConfig(block_size=64, vocab_size=256, n_layer=2, n_head=4, n_embd=64,
                     hyper_conn_type='mhc_lora_residual_affinemidnorm', hyper_conn_n=4)
     m = GPT(cfg)
     opt = m.configure_optimizers(weight_decay=0.1, learning_rate=6e-4, betas=(0.9, 0.95), device_type='cpu')
-    nd_groups = [g for g in opt.param_groups if g.get('no_lr_decay', False)]
-    assert len(nd_groups) == 1, f"expected exactly 1 no_lr_decay group, got {len(nd_groups)}"
-    g = nd_groups[0]
-    assert g['weight_decay'] == 0.0, "no_lr_decay group must have weight_decay=0"
-    n_rms = sum(1 for name, _ in m.named_parameters() if 'lora_rmsnorm' in name)
-    assert len(g['params']) == n_rms and n_rms > 0, "not all lora_rmsnorm params in the group"
-    # and they must NOT be in the (decayed) first group
-    decay_ids = {id(p) for p in opt.param_groups[0]['params']}
-    assert all(id(p) not in decay_ids for p in g['params']), "rmsnorm params leaked into decay group"
-    print(f"[ok] configure_optimizers: {n_rms} lora_rmsnorm tensors in a no_lr_decay/wd=0 group")
+    assert not any(g.get('no_lr_decay', False) for g in opt.param_groups), \
+        "no_lr_decay groups must no longer exist (affine LR must match other params)"
+    assert len(opt.param_groups) == 2, f"expected exactly 2 groups (decay/nodecay), got {len(opt.param_groups)}"
+    rms_ids = {id(p) for name, p in m.named_parameters() if 'lora_rmsnorm' in name}
+    assert len(rms_ids) > 0
+    decay_group, nodecay_group = opt.param_groups[0], opt.param_groups[1]
+    decay_ids = {id(p) for p in decay_group['params']}
+    nodecay_ids = {id(p) for p in nodecay_group['params']}
+    assert rms_ids <= nodecay_ids, "affine rmsnorm params must be in the no-weight-decay group"
+    assert rms_ids.isdisjoint(decay_ids), "affine rmsnorm params must NOT be weight-decayed"
+    assert nodecay_group['weight_decay'] == 0.0
+    print(f"[ok] {len(rms_ids)} lora_rmsnorm tensors -> no-wd group, normal LR (no no_lr_decay group)")
 
 
 def test_disable_lora_equals_mhc_write():
@@ -125,7 +128,7 @@ def main():
     test_affine_reduces_to_paramfree_at_init_scale()
     test_affine_is_active_when_params_move()
     test_gradients_flow_to_affine_params()
-    test_optimizer_group_no_lr_decay()
+    test_optimizer_group_affine_params_nowd_normal_lr()
     test_disable_lora_equals_mhc_write()
     print("\nALL TESTS PASSED")
 

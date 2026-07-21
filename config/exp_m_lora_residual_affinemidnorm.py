@@ -1,5 +1,5 @@
 # M-scale LoRA-residual-affine-midnorm (rank-dim AFFINE RMSNorm), SINGLE GPU
-# affine RMSNorm scale/bias get NO cosine LR decay (constant LR).
+# affine RMSNorm scale/bias: no weight decay, normal LR schedule (same as other params).
 # bs=16, grad_accum=8 -> effective batch 131,072 tokens/iter (== dual-card M), 10000 steps
 # combine with: config/train_owt.py config/medium_model.py config/with_mhc_lora_residual_affinemidnorm.py
 

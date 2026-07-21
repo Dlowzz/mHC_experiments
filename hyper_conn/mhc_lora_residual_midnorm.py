@@ -45,8 +45,10 @@ from .mhc_lora_residual import ManifoldConstrainedHyperConnectionsLoRAResidual, 
 def init_lora_A_per_stream_(stream_down_weight):
     """Kaiming-uniform init of A_s ([s, d, r]) with the correct per-matrix fan_in (= d).
 
-    Equivalent to ``nn.init.kaiming_uniform_(A_s, a=sqrt(5))`` applied to each
-    stream's 2D ``[d, r]`` matrix, whose bound reduces to 1/sqrt(d).
+    Equivalent to ``nn.init.kaiming_uniform_(A_s.T, a=sqrt(5))`` per stream: A_s is
+    ``[d, r]`` and the matmul is ``h @ A_s`` (fan_in = d), but kaiming on a 2D tensor
+    takes fan_in from dim 1 (= r here), so it must be applied to the transpose
+    ``[r, d]`` to use fan_in = d; the resulting bound is 1/sqrt(d).
     """
     fan_in = stream_down_weight.shape[1]  # effective hidden dim d
     bound = 1.0 / math.sqrt(fan_in)

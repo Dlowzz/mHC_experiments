@@ -314,28 +314,20 @@ class GPT(nn.Module):
         param_dict = {pn: p for pn, p in param_dict.items() if p.requires_grad}
         # create optim groups. Any parameters that is 2D will be weight decayed, otherwise no.
         # i.e. all weight tensors in matmuls + embeddings decay, all biases and layernorms don't.
-        # Exception: LoRA affine-RMSNorm params (name contains 'lora_rmsnorm') get their own
-        # group with weight_decay=0 and no_lr_decay=True (constant LR, no cosine decay/warmup).
-        rmsnorm_ids = {id(p) for n, p in param_dict.items() if 'lora_rmsnorm' in n}
-        # params explicitly flagged _no_weight_decay (e.g. scale-invariant LoRA A_s
-        # in the midnorm variants) go to the no-decay group regardless of dim.
+        # Exception: params explicitly flagged _no_weight_decay (e.g. scale-invariant LoRA A_s
+        # in the midnorm variants, and LoRA affine-RMSNorm scale/bias) go to the no-decay group
+        # regardless of dim.  All groups share the same LR schedule.
         flagged_nodecay_ids = {id(p) for p in param_dict.values() if getattr(p, '_no_weight_decay', False)}
-        decay_params = [p for n, p in param_dict.items() if p.dim() >= 2 and id(p) not in rmsnorm_ids and id(p) not in flagged_nodecay_ids]
-        nodecay_params = [p for n, p in param_dict.items() if (p.dim() < 2 or id(p) in flagged_nodecay_ids) and id(p) not in rmsnorm_ids]
-        rmsnorm_params = [p for n, p in param_dict.items() if id(p) in rmsnorm_ids]
+        decay_params = [p for n, p in param_dict.items() if p.dim() >= 2 and id(p) not in flagged_nodecay_ids]
+        nodecay_params = [p for n, p in param_dict.items() if p.dim() < 2 or id(p) in flagged_nodecay_ids]
         optim_groups = [
             {'params': decay_params, 'weight_decay': weight_decay},
             {'params': nodecay_params, 'weight_decay': 0.0}
         ]
-        if rmsnorm_params:
-            optim_groups.append({'params': rmsnorm_params, 'weight_decay': 0.0, 'no_lr_decay': True})
         num_decay_params = sum(p.numel() for p in decay_params)
         num_nodecay_params = sum(p.numel() for p in nodecay_params)
         print(f"num decayed parameter tensors: {len(decay_params)}, with {num_decay_params:,} parameters")
         print(f"num non-decayed parameter tensors: {len(nodecay_params)}, with {num_nodecay_params:,} parameters")
-        if rmsnorm_params:
-            num_rmsnorm_params = sum(p.numel() for p in rmsnorm_params)
-            print(f"num lora-rmsnorm (no wd, no lr decay) parameter tensors: {len(rmsnorm_params)}, with {num_rmsnorm_params:,} parameters")
         # Create AdamW optimizer and use the fused version if it is available
         fused_available = 'fused' in inspect.signature(torch.optim.AdamW).parameters
         use_fused = fused_available and device_type == 'cuda'

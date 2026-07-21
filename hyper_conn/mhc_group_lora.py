@@ -118,7 +118,7 @@ class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConne
         self.disable_lora_branch = disable_lora_branch
         self.stream_down_weight = nn.Parameter(torch.empty(streams, effective_dim, lora_rank))  # A_s
         self.stream_up_weight = nn.Parameter(torch.zeros(streams, lora_rank, effective_dim))     # B_s (zero)
-        nn.init.kaiming_uniform_(self.stream_down_weight, a=math.sqrt(5))
+        self._reset_lora_parameters()
         # NOTE: no lora_scale / alpha factor -- the LoRA output is instead passed
         # through a parameter-free RMSNorm (see compute_lora).
 
@@ -128,6 +128,12 @@ class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConne
 
         # NOTE: original mHC beta generators (static_beta / dynamic_beta_fn /
         # h_post_scale) are KEPT and used unchanged.
+
+    def _reset_lora_parameters(self):
+        # hook so subclasses (e.g. group-midnorm) can override the LoRA init
+        # without double-initialising (parent init then re-init).
+        nn.init.kaiming_uniform_(self.stream_down_weight, a=math.sqrt(5))
+        nn.init.zeros_(self.stream_up_weight)
 
     @property
     def _group_read_enabled(self):
