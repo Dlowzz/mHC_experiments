@@ -81,6 +81,7 @@ class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConne
         disable_group_embedding: bool = False,
         # --- per-stream LoRA write (mhc_lora_residual) ---
         lora_rank: int = 8,
+        lora_lambda: float = 1.0,         # lambda in u_s = beta_s (h + lambda * delta_s)
         disable_lora_branch: bool = False,
         **kwargs,
     ):
@@ -115,6 +116,7 @@ class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConne
 
         # ---------- per-stream LoRA WRITE params ----------
         self.lora_rank = lora_rank
+        self.lora_lambda = lora_lambda
         self.disable_lora_branch = disable_lora_branch
         self.stream_down_weight = nn.Parameter(torch.empty(streams, effective_dim, lora_rank))  # A_s
         self.stream_up_weight = nn.Parameter(torch.zeros(streams, lora_rank, effective_dim))     # B_s (zero)
@@ -248,7 +250,7 @@ class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConne
     # ------------------------------------------------------- depth connection
 
     def depth_connection(self, branch_output, residuals, *, beta):
-        # original beta write-back + per-stream LoRA (mhc_lora_residual)
+        # original beta write-back + per-stream LoRA INSIDE beta: u_s = beta_s (h + lambda * delta_s)
         assert self.add_branch_out_to_residual
 
         branch_output = self.split_fracs(branch_output)
@@ -259,8 +261,9 @@ class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConne
         output = einsum(branch_output, beta, 'b ... f1 d, b ... f1 s f2 -> b ... f2 s d')
 
         if self._lora_enabled:
-            delta = self.compute_lora(branch_output)     # b ... f s d
-            output = output + delta
+            delta = self.compute_lora(branch_output)     # b ... f1 s d
+            delta_write = einsum(delta, beta, 'b ... f1 s d, b ... f1 s f2 -> b ... f2 s d')
+            output = output + self.lora_lambda * delta_write
 
         output = rearrange(output, 'b ... s d -> (b s) ... d')
         output = self.merge_fracs(output)

@@ -77,6 +77,7 @@ class ManifoldConstrainedHyperConnectionsLoRAResidual(ManifoldConstrainedHyperCo
         *,
         dim,
         lora_rank: int = 8,               # rank r  (ablation knob)
+        lora_lambda: float = 1.0,         # lambda in u_s = beta_s (h + lambda * delta_s)
         disable_lora_branch: bool = False,
         **kwargs,
     ):
@@ -87,6 +88,7 @@ class ManifoldConstrainedHyperConnectionsLoRAResidual(ManifoldConstrainedHyperCo
         eff_dim = dim // num_fracs
 
         self.lora_rank = lora_rank
+        self.lora_lambda = lora_lambda
         self.disable_lora_branch = disable_lora_branch
 
         # independent A_s : [s, C, r]  –  kaiming-uniform
@@ -139,10 +141,13 @@ class ManifoldConstrainedHyperConnectionsLoRAResidual(ManifoldConstrainedHyperCo
         # --- original beta path ---
         output = einsum(branch_output, beta, "b ... f1 d, b ... f1 s f2 -> b ... f2 s d")
 
-        # --- per-stream LoRA branch, OUTSIDE beta ---
+        # --- per-stream LoRA branch, INSIDE beta:  u_s = beta_s (h + lambda * delta_s) ---
+        # equivalently  output += lambda * beta_s * delta_s  (gate delta by the same
+        # per-stream beta write gate, summing over input fractions f1).
         if not self.disable_lora_branch:
-            delta = self.compute_lora(branch_output)   # b ... f s d
-            output = output + delta
+            delta = self.compute_lora(branch_output)   # b ... f1 s d
+            delta_write = einsum(delta, beta, "b ... f1 s d, b ... f1 s f2 -> b ... f2 s d")
+            output = output + self.lora_lambda * delta_write
 
         output = rearrange(output, "b ... s d -> (b s) ... d")
         output = self.merge_fracs(output)

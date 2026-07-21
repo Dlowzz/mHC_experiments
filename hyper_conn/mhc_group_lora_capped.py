@@ -101,7 +101,9 @@ class ManifoldConstrainedHyperConnectionsGroupLoRACapped(ManifoldConstrainedHype
             )
             delta = (delta_f * delta_scale).to(delta.dtype)
 
-            output = output + delta
+            # move the (capped) LoRA write inside beta: u_s = beta_s (h + lambda * delta_s)
+            delta_write = einsum(delta, beta, 'b ... f1 s d, b ... f1 s f2 -> b ... f2 s d')
+            output = output + self.lora_lambda * delta_write
 
         output = rearrange(output, 'b ... s d -> (b s) ... d')
         output = self.merge_fracs(output)

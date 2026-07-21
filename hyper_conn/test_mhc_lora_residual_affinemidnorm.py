@@ -122,6 +122,29 @@ def test_disable_lora_equals_mhc_write():
     print("[ok] disable_lora_branch=True removes the LoRA write")
 
 
+def test_lora_inside_beta_lambda_scaling():
+    # write is now u_s = beta_s (h + lambda * delta_s): lambda=0 kills the LoRA,
+    # and the LoRA contribution is linear in lambda (delta gated by the beta write).
+    b, seq, d, s = 2, 4, 16, 4
+    torch.manual_seed(6)
+    m = Affine(s, dim=d, branch=nn.Linear(d, d)).eval()
+    with torch.no_grad():
+        m.stream_up_weight.normal_(std=0.5)  # activate LoRA path
+        x = _expand(torch.randn(b, seq, d), s)
+        m.disable_lora_branch = True
+        out_disable = m(x)
+        m.disable_lora_branch = False
+        m.lora_lambda = 0.0; out_l0 = m(x)
+        m.lora_lambda = 1.0; out_l1 = m(x)
+        m.lora_lambda = 2.0; out_l2 = m(x)
+    assert torch.allclose(out_l0, out_disable, atol=1e-5), "lambda=0 must equal disabled LoRA"
+    c1 = out_l1 - out_disable
+    c2 = out_l2 - out_disable
+    assert c1.abs().max() > 1e-4, "lambda=1 had no effect"
+    assert torch.allclose(c2, 2 * c1, atol=1e-4), "LoRA contribution not linear in lambda"
+    print("[ok] LoRA inside beta: lambda=0 == disabled, contribution linear in lambda")
+
+
 def main():
     test_runs_and_shape_matches_mhc()
     test_init_weight1_bias0()
@@ -130,6 +153,7 @@ def main():
     test_gradients_flow_to_affine_params()
     test_optimizer_group_affine_params_nowd_normal_lr()
     test_disable_lora_equals_mhc_write()
+    test_lora_inside_beta_lambda_scaling()
     print("\nALL TESTS PASSED")
 
 
