@@ -14,7 +14,7 @@ nanoGPT 派生的 mHC (Manifold-constrained Hyper-Connections) 消融实验代�
 | S  | 6 / 512 / 8   | ~30M  | 1e-3 | 24 / - | 10k |
 | M  | 12 / 768 / 12 | ~124M | 6e-4 | 16 / - | 10k |
 | L  | 24 / 1024 / 16| ~350M | 3e-4 | 8 / -  | 20k |
-| XL | 28 / 1280 / 20| ~620M | 2e-4 | 4 / 16 | 15k |
+| XL | 28 / 1280 / 20| ~620M | 2e-4 | 4 / 16 | 30k |
 
 ## 二、实验变体 `config/with_<method>.py`（主实验 4 类）
 | 类别 | config | hyper_conn_type | 说明 |
@@ -41,7 +41,7 @@ WANDB_MODE=online CUDA_VISIBLE_DEVICES=2,3 torchrun --standalone --nproc_per_nod
 XL mhc 示例（当前正在跑）：
 ```bash
 ... torchrun ... train.py config/train_owt.py config/xl_model.py config/with_mhc.py \
-  --compile=True --wandb_run_name=XL-mhc-owt-bs4ga16-15kstep
+  --compile=True --wandb_run_name=XL-mhc-owt-bs4ga16-30kstep
 ```
 
 ## 四、评测 `eval/`（不需重训，读 ckpt 评测）
