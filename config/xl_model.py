@@ -8,8 +8,8 @@ dropout = 0.0
 
 learning_rate = 2e-4
 min_lr = 2e-5
-max_iters = 15000
-lr_decay_iters = 15000
+max_iters = 30000
+lr_decay_iters = 30000
 warmup_iters = 200
 weight_decay = 0.1
 beta1 = 0.9
