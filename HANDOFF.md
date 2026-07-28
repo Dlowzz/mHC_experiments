@@ -58,6 +58,24 @@
 
 > 个别显存重的变体（如 L 档 group-lora）会把 bs 再降到 4，逐 run 的准确 bs 以 `eval/experiment_commit_map.md` 为准。
 
+### XL 第二轮：~5B token 预算（`config/xl_model_5b.py`）
+
+- 四个 XL 主实验**从头重训**，统一用 `config/xl_model_5b.py`：`batch_size=6`、`gradient_accumulation_steps=10`、`max_iters=80000` → 61,440 tokens/iter → **4.92B tokens**（30k 那轮是 2.0B）。
+- lr：`warmup_iters=1000`，之后余弦 `2.5e-4 → 2.5e-5`，`lr_decay_iters=80000`。
+- **bs=8 不可用**：配 ga=8 虽然能保持 65,536 tokens/iter，但在 2×L20 上 OOM（已分配 42.9 GiB / 可用 44.4 GiB，仍差约 0.8 GiB），所以 micro-batch 定在 6。只需 XL 档内部对齐，不与 S/M/L 对齐。
+- 这一轮跑在 `perf` 分支的优化实现上（与 `final` 数学等价，见 `tests/test_gate_packing.py`、`tests/test_model_equiv.py`），XL 峰值显存比原实现低 2.2–4.4 GiB、单步快 5–8%。
+- 30k 那轮的 ckpt 与评测结果仍在 `data/test/`，但 token 预算与 lr schedule 都不同，**不可与本轮混比**。
+
+启动命令（`<method>` 见第五节）：
+
+```bash
+WANDB_MODE=online CUDA_VISIBLE_DEVICES=2,3 torchrun --standalone --nproc_per_node=2 train.py \
+  config/train_owt.py config/xl_model_5b.py config/with_<method>.py \
+  --compile=True --wandb_run_name=XL-<method>-owt-bs6ga10-80kstep
+```
+
+输出目录：`out-owt-xl-<method>-bs6-80000step/`（`ckpt.pt` = best-val，`ckpt_last.pt` = 最新一次 eval）。
+
 ## 四、启动命令（config 顺序：train_owt → size → method）
 
 统一模板见 `TRAIN_EVAL.md` 第三节；下面给**与初版一致**的可复现命令（`<method>` 见第五节）：
