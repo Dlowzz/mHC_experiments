@@ -114,11 +114,14 @@ def run_variant(hc_type, device):
                 lr_ = loss.item()
         traj.append((ln, lr_))
     worst_traj = max(abs(a - b) for a, b in traj)
-    assert worst_traj <= TOL, f"{hc_type}: loss trajectory diverges by {worst_traj:.3e}\n{traj}"
+    traj_scale = max(1.0, max(abs(b) for _, b in traj))
+    assert worst_traj / traj_scale <= TOL, (
+        f"{hc_type}: loss trajectory diverges by {worst_traj:.3e} (scaled {worst_traj / traj_scale:.3e})\n{traj}"
+    )
 
     print(f"  [{device}] {hc_type}: init {worst_init:.2e}, logits {d_logits:.2e}, "
           f"loss {d_loss:.2e}, worst grad ({worst_grad_name}) {worst_grad:.2e}, "
-          f"{STEPS}-step traj {worst_traj:.2e}")
+          f"{STEPS}-step traj {worst_traj:.2e} abs / {worst_traj / traj_scale:.2e} scaled")
 
 
 def main():

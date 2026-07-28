@@ -249,6 +249,15 @@ class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConne
 
     # ------------------------------------------------------- depth connection
 
+    def lora_write(self, branch_output, beta):
+        """beta-gated LoRA delta: ``b ... f1 d`` -> ``b ... f2 s d``.
+
+        Here the RMSNorm sits *after* B_s, so the gate must be applied after the
+        up-projection: RMSNorm is scale-invariant, moving beta_s in front of B_s
+        would cancel the gate entirely.  The midnorm subclass overrides this.
+        """
+        return self.beta_write_per_stream(self.compute_lora(branch_output), beta)
+
     def depth_connection(self, branch_output, residuals, *, beta):
         # original beta write-back + per-stream LoRA INSIDE beta: u_s = beta_s (h + lambda * delta_s)
         assert self.add_branch_out_to_residual
@@ -261,9 +270,7 @@ class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConne
         output = einsum(branch_output, beta, 'b ... f1 d, b ... f1 s f2 -> b ... f2 s d')
 
         if self._lora_enabled:
-            delta = self.compute_lora(branch_output)     # b ... f1 s d
-            delta_write = einsum(delta, beta, 'b ... f1 s d, b ... f1 s f2 -> b ... f2 s d')
-            output = output + self.lora_lambda * delta_write
+            output = output + self.lora_lambda * self.lora_write(branch_output, beta)
 
         output = rearrange(output, 'b ... s d -> (b s) ... d')
         output = self.merge_fracs(output)

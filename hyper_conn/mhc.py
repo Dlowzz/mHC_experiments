@@ -419,6 +419,10 @@ class ManifoldConstrainedHyperConnections(Module):
         residuals = self.merge_fracs(residuals)
         return branch_input, residuals, dict(beta = beta)
 
+    def beta_write_per_stream(self, x, beta):
+        """beta write gate on an already per-stream tensor: `b ... f1 s k` -> `b ... f2 s k`."""
+        return einsum(x, beta, 'b ... f1 s k, b ... f1 s f2 -> b ... f2 s k')
+
     def depth_connection(
         self,
         branch_output,

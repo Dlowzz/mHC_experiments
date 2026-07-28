@@ -66,22 +66,43 @@ class ManifoldConstrainedHyperConnectionsLoRAResidualMidNorm(ManifoldConstrained
         # decay (picked up by GPT.configure_optimizers via this flag).
         self.stream_down_weight._no_weight_decay = True
 
+    def lora_down(self, branch_output):
+        """``rmsnorm_r(h @ A_s)`` : ``b ... f d`` -> ``b ... f s r`` (norm on the rank dim)."""
+        down = einsum(
+            branch_output, self.stream_down_weight,
+            "b ... f d, s d r -> b ... f s r",
+        )
+        return rmsnorm_lastdim(down)   # RMSNorm on rank dim (=-1 = r)
+
+    def lora_up(self, down):
+        """``down @ B_s`` : ``b ... f s r`` -> ``b ... f s d``."""
+        return einsum(
+            down, self.stream_up_weight,
+            "b ... f s r, s r e -> b ... f s e",
+        )
+
     def compute_lora(self, branch_output):
         """delta_s = (rmsnorm_{-1}(h @ A_s)) @ B_s for every stream (batched einsum).
 
         RMSNorm is applied on the rank dim r (dim=-1 of ``down``), between A_s and B_s.
         branch_output : ``b ... f d`` -> ``b ... f s d``
         """
-        down = einsum(
-            branch_output, self.stream_down_weight,
-            "b ... f d, s d r -> b ... f s r",
-        )
-        down = rmsnorm_lastdim(down)   # RMSNorm on rank dim (=-1 = r)
-        delta = einsum(
-            down, self.stream_up_weight,
-            "b ... f s r, s r e -> b ... f s e",
-        )
-        return delta                    # B_s zero-init -> delta == 0 at init
+        return self.lora_up(self.lora_down(branch_output))   # B_s zero-init -> delta == 0 at init
+
+    def lora_write(self, branch_output, beta):
+        """beta-gated LoRA delta with the gate applied in the LoRA rank space.
+
+        beta_s is a per-stream scalar and B_s maps r -> d inside one stream and is
+        shared across fractions, so
+
+            (sum_f1 down[f1,s] beta[f1,s,f2]) B_s == sum_f1 (down[f1,s] B_s) beta[f1,s,f2]
+
+        which is exactly the parent's result -- but the gate multiplies a
+        ``[.. s r]`` tensor instead of a ``[.. s d]`` one and the intermediate
+        ``[b ... f s d]`` delta is never materialised (r=8 vs d=1280 at XL).
+        Valid only because the RMSNorm sits *before* B_s in this variant.
+        """
+        return self.lora_up(self.beta_write_per_stream(self.lora_down(branch_output), beta))
 
 
 # convenience factory

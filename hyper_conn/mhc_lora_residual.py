@@ -124,6 +124,15 @@ class ManifoldConstrainedHyperConnectionsLoRAResidual(ManifoldConstrainedHyperCo
         )
         return rmsnorm_lastdim(delta)   # RMSNorm on hidden dim (=-1); rmsnorm(0)=0 at init
 
+    def lora_write(self, branch_output, beta):
+        """beta-gated LoRA delta: ``b ... f1 d`` -> ``b ... f2 s d``.
+
+        Here the RMSNorm sits *after* B_s, so the gate must be applied after the
+        up-projection: RMSNorm is scale-invariant, moving beta_s in front of B_s
+        would cancel the gate entirely.  The midnorm subclass overrides this.
+        """
+        return self.beta_write_per_stream(self.compute_lora(branch_output), beta)
+
     def depth_connection(
         self,
         branch_output,
@@ -145,9 +154,7 @@ class ManifoldConstrainedHyperConnectionsLoRAResidual(ManifoldConstrainedHyperCo
         # equivalently  output += lambda * beta_s * delta_s  (gate delta by the same
         # per-stream beta write gate, summing over input fractions f1).
         if not self.disable_lora_branch:
-            delta = self.compute_lora(branch_output)   # b ... f1 s d
-            delta_write = einsum(delta, beta, "b ... f1 s d, b ... f1 s f2 -> b ... f2 s d")
-            output = output + self.lora_lambda * delta_write
+            output = output + self.lora_lambda * self.lora_write(branch_output, beta)
 
         output = rearrange(output, "b ... s d -> (b s) ... d")
         output = self.merge_fracs(output)
