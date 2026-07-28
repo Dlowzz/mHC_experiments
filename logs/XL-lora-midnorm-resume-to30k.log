@@ -294,3 +294,54 @@ using fused AdamW: True
 [iter 29510]loss: 2.9332, tokens/sec: 9786.51 ± 42.53, tokens seen: 1933967360, grad norm: 0.7566
 [iter 29520]loss: 3.0313, tokens/sec: 9786.45 ± 42.41, tokens seen: 1934622720, grad norm: 0.7366
 [iter 29530]loss: 2.7033, tokens/sec: 9786.33 ± 42.32, tokens seen: 1935278080, grad norm: 0.7757
+[iter 29540]loss: 3.0225, tokens/sec: 9786.33 ± 42.22, tokens seen: 1935933440, grad norm: 0.7828
+[iter 29550]loss: 3.3937, tokens/sec: 9786.39 ± 42.11, tokens seen: 1936588800, grad norm: 0.7550
+[iter 29560]loss: 2.7167, tokens/sec: 9786.58 ± 42.09, tokens seen: 1937244160, grad norm: 0.7902
+[iter 29570]loss: 2.7573, tokens/sec: 9786.77 ± 42.25, tokens seen: 1937899520, grad norm: 0.7975
+[iter 29580]loss: 2.8401, tokens/sec: 9787.08 ± 42.31, tokens seen: 1938554880, grad norm: 0.7409
+[iter 29590]loss: 2.9733, tokens/sec: 9787.38 ± 42.38, tokens seen: 1939210240, grad norm: 0.7661
+[iter 29600]loss: 2.8914, tokens/sec: 9787.77 ± 42.55, tokens seen: 1939865600, grad norm: 0.7613
+[iter 29610]loss: 2.9852, tokens/sec: 9787.94 ± 42.51, tokens seen: 1940520960, grad norm: 0.7846
+[iter 29620]loss: 2.9324, tokens/sec: 9787.16 ± 46.00, tokens seen: 1941176320, grad norm: 0.7870
+[iter 29630]loss: 2.9986, tokens/sec: 9787.04 ± 46.20, tokens seen: 1941831680, grad norm: 0.7630
+[iter 29640]loss: 3.4180, tokens/sec: 9787.09 ± 46.44, tokens seen: 1942487040, grad norm: 0.8209
+[iter 29650]loss: 3.1790, tokens/sec: 9787.28 ± 46.41, tokens seen: 1943142400, grad norm: 0.7486
+[iter 29660]loss: 3.2738, tokens/sec: 9787.56 ± 46.45, tokens seen: 1943797760, grad norm: 0.7660
+[iter 29670]loss: 3.2265, tokens/sec: 9787.90 ± 46.53, tokens seen: 1944453120, grad norm: 0.7905
+[iter 29680]loss: 3.2973, tokens/sec: 9788.09 ± 46.51, tokens seen: 1945108480, grad norm: 0.7484
+[iter 29690]loss: 3.1078, tokens/sec: 9788.13 ± 46.41, tokens seen: 1945763840, grad norm: 0.7893
+[iter 29700]loss: 2.8040, tokens/sec: 9788.33 ± 46.37, tokens seen: 1946419200, grad norm: 0.7915
+[iter 29710]loss: 3.2624, tokens/sec: 9788.58 ± 46.36, tokens seen: 1947074560, grad norm: 0.7593
+[iter 29720]loss: 3.0389, tokens/sec: 9788.75 ± 46.58, tokens seen: 1947729920, grad norm: 0.8542
+[iter 29730]loss: 2.6850, tokens/sec: 9788.99 ± 46.56, tokens seen: 1948385280, grad norm: 0.7784
+[iter 29740]loss: 2.9814, tokens/sec: 9789.21 ± 46.53, tokens seen: 1949040640, grad norm: 0.7232
+[iter 29750]loss: 2.8581, tokens/sec: 9789.39 ± 46.47, tokens seen: 1949696000, grad norm: 0.7497
+[iter 29760]loss: 3.0593, tokens/sec: 9789.58 ± 46.42, tokens seen: 1950351360, grad norm: 0.7493
+[iter 29770]loss: 2.8874, tokens/sec: 9789.78 ± 46.38, tokens seen: 1951006720, grad norm: 0.7550
+[iter 29780]loss: 3.1991, tokens/sec: 9789.90 ± 46.37, tokens seen: 1951662080, grad norm: 0.7826
+[iter 29790]loss: 3.0824, tokens/sec: 9790.02 ± 46.50, tokens seen: 1952317440, grad norm: 0.7660
+[iter 29800]loss: 2.9018, tokens/sec: 9790.28 ± 46.53, tokens seen: 1952972800, grad norm: 0.7849
+[iter 29810]loss: 3.2775, tokens/sec: 9790.16 ± 46.80, tokens seen: 1953628160, grad norm: 0.7333
+[iter 29820]loss: 3.1261, tokens/sec: 9790.35 ± 46.77, tokens seen: 1954283520, grad norm: 0.8038
+[iter 29830]loss: 2.9007, tokens/sec: 9790.61 ± 46.80, tokens seen: 1954938880, grad norm: 0.7658
+[iter 29840]loss: 3.1436, tokens/sec: 9790.87 ± 46.82, tokens seen: 1955594240, grad norm: 0.7773
+[iter 29850]loss: 2.8813, tokens/sec: 9790.88 ± 46.79, tokens seen: 1956249600, grad norm: 0.7609
+[iter 29860]loss: 2.9159, tokens/sec: 9790.83 ± 46.69, tokens seen: 1956904960, grad norm: 0.7749
+[iter 29870]loss: 2.9766, tokens/sec: 9790.72 ± 46.86, tokens seen: 1957560320, grad norm: 0.7426
+[iter 29880]loss: 3.1274, tokens/sec: 9790.72 ± 46.78, tokens seen: 1958215680, grad norm: 0.8345
+[iter 29890]loss: 3.0896, tokens/sec: 9790.81 ± 46.69, tokens seen: 1958871040, grad norm: 0.7518
+[iter 29900]loss: 3.1374, tokens/sec: 9790.83 ± 46.63, tokens seen: 1959526400, grad norm: 0.7477
+[iter 29910]loss: 2.9617, tokens/sec: 9790.97 ± 46.59, tokens seen: 1960181760, grad norm: 0.7388
+[iter 29920]loss: 2.6647, tokens/sec: 9791.33 ± 46.74, tokens seen: 1960837120, grad norm: 0.7413
+[iter 29930]loss: 3.1104, tokens/sec: 9791.45 ± 46.68, tokens seen: 1961492480, grad norm: 0.7559
+[iter 29940]loss: 3.1536, tokens/sec: 9791.67 ± 46.91, tokens seen: 1962147840, grad norm: 0.7515
+[iter 29950]loss: 3.2427, tokens/sec: 9791.76 ± 46.88, tokens seen: 1962803200, grad norm: 0.7942
+[iter 29960]loss: 3.2293, tokens/sec: 9792.08 ± 46.97, tokens seen: 1963458560, grad norm: 0.7594
+[iter 29970]loss: 3.0936, tokens/sec: 9792.08 ± 46.92, tokens seen: 1964113920, grad norm: 0.7273
+[iter 29980]loss: 3.0895, tokens/sec: 9792.10 ± 46.86, tokens seen: 1964769280, grad norm: 0.7723
+[iter 29990]loss: 3.3049, tokens/sec: 9792.10 ± 46.80, tokens seen: 1965424640, grad norm: 0.7765
+[step 30000]train loss: 3.0377, val loss: 3.0468, (avg train loss: 0.3747 ± 0.0253), (avg grad norm: 0.7704 ± 0.0413)
+[iter 30000]loss: 2.8500, tokens/sec: 9792.21 ± 46.87, tokens seen: 1966080000, grad norm: 0.8111
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mowt-XL-lora-res-midnorm-inbeta-resume-8517[0m at: [34mhttps://wandb.ai/guotzzz-peking-university/mhc-lite/runs/28m7seuk[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20260728_123514-28m7seuk/logs[0m

@@ -1,0 +1,161 @@
+W0728 16:30:34.038000 1425040 torch/distributed/run.py:766] 
+W0728 16:30:34.038000 1425040 torch/distributed/run.py:766] *****************************************
+W0728 16:30:34.038000 1425040 torch/distributed/run.py:766] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0728 16:30:34.038000 1425040 torch/distributed/run.py:766] *****************************************
+Overriding config with config/train_owt.py:
+eval_interval = 500
+eval_iters = 200
+log_interval = 10
+always_save_checkpoint = False
+
+wandb_log = True
+wandb_project = 'mhc-lite'
+out_prefix_dataset = "owt"
+
+dataset = 'openwebtext'
+gradient_accumulation_steps = 8  
+batch_size = 16
+block_size = 1024
+
+dtype = 'bfloat16'
+
+Overriding config with config/xl_model.py:
+wandb_group = "xl"
+out_prefix_model = "xl"
+
+n_layer = 28
+n_head = 20
+n_embd = 1280
+dropout = 0.0
+
+learning_rate = 2e-4
+min_lr = 2e-5
+max_iters = 30000
+lr_decay_iters = 30000
+warmup_iters = 200
+weight_decay = 0.1
+beta1 = 0.9
+beta2 = 0.95
+grad_clip = 1.0
+
+# ~600M target on 2xL20: micro-batch 4 x grad_accum 16 -> 65,536 tokens/iter
+batch_size = 4
+gradient_accumulation_steps = 16
+
+Overriding config with config/with_mhc_group_lora_midnorm.py:
+hyper_conn_type = "mhc_group_lora_midnorm"
+hyper_conn_n = 4
+
+wandb_notes = "mhc-group-lora-midnorm (RMSNorm on LoRA rank dim, between A and B)"
+out_prefix_method = "mhc-group-lora-midnorm"
+
+Overriding: init_from = resume
+Overriding: compile = False
+Overriding: wandb_run_name = XL-group-lora-midnorm-inbeta-resume
+Overriding config with config/train_owt.py:
+eval_interval = 500
+eval_iters = 200
+log_interval = 10
+always_save_checkpoint = False
+
+wandb_log = True
+wandb_project = 'mhc-lite'
+out_prefix_dataset = "owt"
+
+dataset = 'openwebtext'
+gradient_accumulation_steps = 8  
+batch_size = 16
+block_size = 1024
+
+dtype = 'bfloat16'
+
+Overriding config with config/xl_model.py:
+wandb_group = "xl"
+out_prefix_model = "xl"
+
+n_layer = 28
+n_head = 20
+n_embd = 1280
+dropout = 0.0
+
+learning_rate = 2e-4
+min_lr = 2e-5
+max_iters = 30000
+lr_decay_iters = 30000
+warmup_iters = 200
+weight_decay = 0.1
+beta1 = 0.9
+beta2 = 0.95
+grad_clip = 1.0
+
+# ~600M target on 2xL20: micro-batch 4 x grad_accum 16 -> 65,536 tokens/iter
+batch_size = 4
+gradient_accumulation_steps = 16
+
+Overriding config with config/with_mhc_group_lora_midnorm.py:
+hyper_conn_type = "mhc_group_lora_midnorm"
+hyper_conn_n = 4
+
+wandb_notes = "mhc-group-lora-midnorm (RMSNorm on LoRA rank dim, between A and B)"
+out_prefix_method = "mhc-group-lora-midnorm"
+
+Overriding: init_from = resume
+Overriding: compile = False
+Overriding: wandb_run_name = XL-group-lora-midnorm-inbeta-resume
+tokens per iteration will be: 65,536
+Resuming training from /home/work/data/guotianzizhe/data/resume_xl/out-owt-xl-mhc-group-lora-midnorm-bs4-30000step
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/home/work/data/guotianzizhe/project/mhc-lite/train.py", line 221, in <module>
+[rank1]:     checkpoint = torch.load(ckpt_path, map_location=device)
+[rank1]:   File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/serialization.py", line 1479, in load
+[rank1]:     with _open_file_like(f, "rb") as opened_file:
+[rank1]:          ~~~~~~~~~~~~~~~^^^^^^^^^
+[rank1]:   File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/serialization.py", line 759, in _open_file_like
+[rank1]:     return _open_file(name_or_buffer, mode)
+[rank1]:   File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/serialization.py", line 740, in __init__
+[rank1]:     super().__init__(open(name, mode))
+[rank1]:                      ~~~~^^^^^^^^^^^^
+[rank1]: FileNotFoundError: [Errno 2] No such file or directory: '/home/work/data/guotianzizhe/data/resume_xl/out-owt-xl-mhc-group-lora-midnorm-bs4-30000step/ckpt.pt'
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /root/.netrc.
+W0728 16:30:36.886000 1425040 torch/distributed/elastic/multiprocessing/api.py:900] Sending process 1425118 closing signal SIGTERM
+E0728 16:30:36.950000 1425040 torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 1 (pid: 1425119) of binary: /home/work/data/guotianzizhe/venv/bin/python3.13
+Traceback (most recent call last):
+  File "/home/work/data/guotianzizhe/venv/bin/torchrun", line 6, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+  File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/distributed/run.py", line 892, in main
+    run(args)
+    ~~~^^^^^^
+  File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/distributed/run.py", line 883, in run
+    elastic_launch(
+    ~~~~~~~~~~~~~~~
+        config=config,
+        ~~~~~~~~~~~~~~
+        entrypoint=cmd,
+        ~~~~~~~~~~~~~~~
+    )(*cmd_args)
+    ~^^^^^^^^^^^
+  File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/distributed/launcher/api.py", line 270, in launch_agent
+    raise ChildFailedError(
+    ...<2 lines>...
+    )
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+train.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-07-28_16:30:36
+  host      : instance-9xos2u6k-1
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 1425119)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
