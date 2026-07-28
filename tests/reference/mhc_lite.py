@@ -12,6 +12,7 @@ from torch.utils._pytree import tree_flatten, tree_unflatten
 
 from einops import rearrange, repeat, reduce, einsum
 from einops.layers.torch import Rearrange, Reduce
+import itertools
 
 """
 ein notation:
@@ -45,24 +46,21 @@ def add(x, y):
 def l1norm(t, dim):
     return F.normalize(t, p = 1, dim = dim)
 
-# def sinkhorn_knopps(log_alpha, iters = 20):
-#     log_alpha = log_alpha - log_alpha.amax(dim = -2, keepdim = True).detach()
 
-#     alpha = log_alpha.exp()
+def get_all_permutations(n: int):
+    """
+    生成所有 n × n 的排列矩阵，并按 (n!, n, n) 的形状返回
+    """
 
-#     for _ in range(iters):
-#         alpha = l1norm(alpha, dim = -2)
-#         alpha = l1norm(alpha, dim = -1)
+    assert n >= 1, "n 必须为正整数"
 
-#     return alpha
+    perms = list(itertools.permutations(range(n)))
+    index = torch.tensor(perms, dtype=torch.long)
 
-def sinkhorn_knopps(log_alpha, iters=20):
+    eye = torch.eye(n, dtype=torch.float32)
+    perm_mats = eye[index]  # (n!, n, n)
 
-    for _ in range(iters):
-        log_alpha = log_alpha - torch.logsumexp(log_alpha, dim=-2, keepdim=True)
-        log_alpha = log_alpha - torch.logsumexp(log_alpha, dim=-1, keepdim=True)
-
-    return log_alpha.exp()
+    return perm_mats
 
 # main functions
 
@@ -92,14 +90,13 @@ def get_init_and_expand_reduce_stream_functions(
     dim = None,
     add_stream_embed = False,
     disable = None,
-    sinkhorn_iters = 20,
     **kwargs
 ):
     disable = default(disable, num_streams == 1 and num_fracs == 1)
 
-    hyper_conn_klass = ManifoldConstrainedHyperConnections if not disable else Residual
+    hyper_conn_klass = MHCLite if not disable else Residual
 
-    init_hyper_conn_fn = partial(hyper_conn_klass, num_streams, num_fracs = num_fracs, sinkhorn_iters = sinkhorn_iters, **kwargs)
+    init_hyper_conn_fn = partial(hyper_conn_klass, num_streams, num_fracs = num_fracs, **kwargs)
     expand_reduce_fns = get_expand_reduce_stream_functions(num_streams, add_stream_embed = add_stream_embed, dim = dim, disable = disable)
 
     if exists(dim):
@@ -190,7 +187,9 @@ class Residual(Module):
 
 # hyper connection residual streams
 
-class ManifoldConstrainedHyperConnections(Module):
+perm_mats = {}
+
+class MHCLite(Module):
     def __init__(
         self,
         num_residual_streams,
@@ -205,7 +204,6 @@ class ManifoldConstrainedHyperConnections(Module):
         num_input_views = 1,                # allow for the branch module to receive multiple input views, dimension placed on the very left (before batch)
         depth_residual_fn = add,
         num_fracs = 1,                      # https://arxiv.org/abs/2503.14125
-        sinkhorn_iters = 20
     ):
         """
         Appendix J, Algorithm2 in - https://arxiv.org/abs/2409.19606
@@ -230,6 +228,8 @@ class ManifoldConstrainedHyperConnections(Module):
 
         # they used layernorm in paper, but rmsnorm is fine given what we know now
 
+        # self.norm = RMSNorm(dim * num_residual_streams * num_fracs)
+
         assert num_residual_streams > 0, '`num_residual_streams` must be greater than 0'
 
         self.num_residual_streams = num_residual_streams
@@ -243,29 +243,38 @@ class ManifoldConstrainedHyperConnections(Module):
         self.num_fracs = num_fracs
 
         # width num residual streams
+        self.norm = RMSNorm(dim * num_residual_streams_fracs)
 
         assert num_input_views >= 1
         self.num_input_views = num_input_views
 
         # width connection
-
-        self.norm = RMSNorm(dim * num_residual_streams_fracs)
+        # ------
+        # XXX MHC Lite impl. 
+        # H_res is from nC to n!
+        # ------
+        if (num_residual_streams, "cpu") not in perm_mats:
+            _perm_mats = get_all_permutations(num_residual_streams).to("cpu")
+            perm_mats[(num_residual_streams, "cpu")] = _perm_mats
+        perms = perm_mats[(num_residual_streams, "cpu")]
 
         init_alpha0 = torch.ones((num_residual_streams_fracs, num_input_views_fracs)) * -1
         init_alpha0[init_residual_index, :] = 1.
-        init_alpha1 = torch.ones((num_residual_streams_fracs, num_residual_streams_fracs)) * -8
-        init_alpha1.fill_diagonal_(0.)
-        self.static_alpha = nn.Parameter(cat((init_alpha0, init_alpha1), dim = 1))
+        init_alpha1 = torch.ones(len(perms) * num_fracs) * -8
+        init_alpha1[0] = 0.
 
-        # ------
-        # XXX we modified the original implementation here 
-        # H_res is from nC to n^2, instead of from (n, C) to (n, n) 
-        # ------
+        # (s*v + s!)
+        self.static_alpha = nn.Parameter(cat([
+            init_alpha0.view(-1) , 
+            init_alpha1
+        ], dim = -1))
+
+
         self.dynamic_alpha_fn = nn.Parameter(
             torch.zeros(
                 dim * num_residual_streams, 
-                num_fracs * ( num_residual_streams * num_residual_streams + num_residual_streams * num_input_views )
-            ) 
+                num_fracs * ( len(perms) + num_residual_streams * num_input_views )
+            )
         )
 
         self.pre_branch_scale = nn.Parameter(torch.ones(1) * 1e-2)
@@ -292,10 +301,6 @@ class ManifoldConstrainedHyperConnections(Module):
 
             self.h_post_scale = nn.Parameter(torch.ones(()) * 1e-2)
 
-        # sinkhorn related
-
-        self.sinkhorn_iters = sinkhorn_iters
-
         # dropouts
 
         self.dropout = nn.Dropout(dropout)
@@ -313,20 +318,6 @@ class ManifoldConstrainedHyperConnections(Module):
         # needed for memory lanes a la RMT / LMM
 
         self.depth_residual_fn = depth_residual_fn
-
-    def gate_logits(self, normed):
-        """alpha (and beta) gate logits from a single packed GEMM.
-
-        Both projections read the same `normed`, and
-        `normed @ [W_alpha | W_beta] == [normed @ W_alpha | normed @ W_beta]`,
-        so they are computed as one matmul and split again.
-        """
-        if not self.add_branch_out_to_residual:
-            return normed @ self.dynamic_alpha_fn, None
-
-        splits = (self.dynamic_alpha_fn.shape[-1], self.dynamic_beta_fn.shape[-1])
-        gate = normed @ cat((self.dynamic_alpha_fn, self.dynamic_beta_fn), dim = -1)
-        return gate.split(splits, dim = -1)
 
     def width_connection(
         self,
@@ -356,32 +347,28 @@ class ManifoldConstrainedHyperConnections(Module):
         # normed = F.normalize(normed, dim = -1)
         normed = self.norm(normed)
 
-        # alpha for weighted sum of residuals going into branch (packed with the beta projection)
-        wc_weight, dc_weight = self.gate_logits(normed) # ... f (s v+s) / ... (s f)
-        wc_weight = rearrange(wc_weight, '... (s t) -> ... s t', s = streams)
+        # alpha for weighted sum of residuals going into branch
+        wc_weight = normed @ self.dynamic_alpha_fn # ... f (s*v + s!)
+        psize = self.num_input_views * streams
+        dynamic_pre, dynamic_residual = wc_weight[..., :psize], wc_weight[..., psize:]
+        static_pre  , static_residual   = self.static_alpha[:psize], self.static_alpha[psize:]
 
-        pre_branch_scale = repeat(self.pre_branch_scale, '1 -> v', v = self.num_input_views * self.num_fracs)
-        residual_scale   = repeat(self.residual_scale  , '1 -> s', s = self.num_fracs * streams)
-        alpha_scale      = cat((pre_branch_scale, residual_scale))
-
-        dynamic_alpha = wc_weight * alpha_scale
-
-        static_alpha = rearrange(self.static_alpha, '(f s) t -> f s t', s = streams)
-
-        alpha = dynamic_alpha + static_alpha
-
-        alpha = self.split_fracs(alpha) # (batch, seq, fracs1, streams, fracs2, input + residual streams)
+        dev = str(wc_weight.device)
+        if (streams, dev) not in perm_mats:
+            _perm_mats = get_all_permutations(streams).to(dev)
+            perm_mats[(streams, dev)] = _perm_mats
+        perms = perm_mats[(streams, dev)]
+        res_coeff = self.residual_scale * dynamic_residual + static_residual
+        res_coeff = torch.softmax(res_coeff, dim = -1)
+        alpha_residual = einsum(res_coeff, perms, '... r, r i j-> ... i j') # (..., s, s)
+        alpha_residual = self.split_fracs(alpha_residual) # (..., f, s, f, s)
+        
+        # (..., f, s, f, v)
+        alpha_pre = self.pre_branch_scale * dynamic_pre + static_pre  # (..., s*v)
+        alpha_pre = rearrange(alpha_pre, '... (f s v) -> ... s f v', v = self.num_input_views, f = self.num_fracs)
+        alpha_pre = alpha_pre.sigmoid()
 
         # the alpha is now split and "manifold constrained" with sinkhorn and sigmoid
-
-        # (..., 1, s, 1, v) / (..., 1, s, 1, s)
-        alpha_pre, alpha_residual = alpha[..., :self.num_input_views], alpha[..., self.num_input_views:]
-
-        alpha_pre = alpha_pre.sigmoid() 
-
-        alpha_residual = rearrange(alpha_residual, '... f s g t -> ... f g s t')
-        alpha_residual = sinkhorn_knopps(alpha_residual, self.sinkhorn_iters)
-        alpha_residual = rearrange(alpha_residual, '... f g s t -> ... f s g t')
 
         alpha = cat((alpha_pre, alpha_residual), dim = -1) # (..., f, s, f, s+v)
 
@@ -389,6 +376,7 @@ class ManifoldConstrainedHyperConnections(Module):
 
         beta = None
         if self.add_branch_out_to_residual:
+            dc_weight = normed @ self.dynamic_beta_fn # ... (s f)
             dc_weight = rearrange(dc_weight, '... (s f) -> ... s f', s = streams)
 
             dynamic_beta = dc_weight * self.h_post_scale
@@ -412,7 +400,7 @@ class ManifoldConstrainedHyperConnections(Module):
         # maybe merge fractions back
 
         branch_input = self.merge_fracs(branch_input)
-
+        
         residuals = rearrange(residuals, 'b ... s d -> (b s) ... d')
         if self.channel_first:
             residuals = rearrange(residuals, 'b ... d -> b d ...')
@@ -498,8 +486,8 @@ class ManifoldConstrainedHyperConnections(Module):
 
         return add_residual_fn(branch_output)
 
-ManifoldConstrainedHyperConnections.get_expand_reduce_stream_functions = staticmethod(get_expand_reduce_stream_functions)
-ManifoldConstrainedHyperConnections.get_init_and_expand_reduce_stream_functions = staticmethod(get_init_and_expand_reduce_stream_functions)
+MHCLite.get_expand_reduce_stream_functions = staticmethod(get_expand_reduce_stream_functions)
+MHCLite.get_init_and_expand_reduce_stream_functions = staticmethod(get_init_and_expand_reduce_stream_functions)
 
 # stream embed
 
