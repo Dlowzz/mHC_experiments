@@ -1,0 +1,17 @@
+{
+  "dir": "out-owt-small-mhc-group-lora-bs24-10000step",
+  "tier": "S",
+  "branch": "inbeta",
+  "ckpt": "/home/work/data/guotianzizhe/data/test/out-owt-small-mhc-group-lora-bs24-10000step/ckpt.pt",
+  "hyper_conn_type": "mhc_group_lora",
+  "n_layer": 6,
+  "n_embd": 512,
+  "iter": 9500,
+  "owt_val_ce": 9.457209,
+  "owt_val_ppl": 12800.1129,
+  "owt_val_tokens": 4433920,
+  "owt_val_windows": 4330,
+  "wt103_ce": 9.891448,
+  "wt103_ppl": 19760.6446,
+  "wt103_tokens": 287643
+}

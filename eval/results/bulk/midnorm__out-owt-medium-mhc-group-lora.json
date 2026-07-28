@@ -1,0 +1,18 @@
+{
+  "dir": "out-owt-medium-mhc-group-lora",
+  "tier": null,
+  "branch": "midnorm",
+  "ckpt": "/home/work/data/guotianzizhe/data/test/out-owt-medium-mhc-group-lora/ckpt.pt",
+  "hyper_conn_type": "mhc_group_lora",
+  "n_layer": 12,
+  "n_embd": 768,
+  "iter": 9500,
+  "block_size": 1024,
+  "owt_val_ce": 11.443187,
+  "owt_val_ppl": 93263.7275,
+  "owt_val_tokens": 4433920,
+  "owt_val_windows": 4330,
+  "wt103_ce": 10.92313,
+  "wt103_ppl": 55444.0586,
+  "wt103_tokens": 287643
+}

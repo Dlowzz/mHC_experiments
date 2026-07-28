@@ -101,13 +101,15 @@ WANDB_MODE=online CUDA_VISIBLE_DEVICES=2,3 torchrun --standalone --nproc_per_nod
 
 > LoRA 系变体前向**依赖分支代码**：`final`(=in-beta) 上训的 ckpt 必须在 in-beta 代码下评测；老 ckpt 按其训练 commit 评测。详见 `eval/experiment_commit_map.md`。
 
-## 六、当前进行中的实验（起始 2026-07-24）
+## 六、XL 实验与评测状态（更新于 2026-07-28）
 
-- **XL-mhc**：`config/xl_model.py` + `config/with_mhc.py`，30k 步，bs4 / ga16，GPU 2,3。
-  - tmux 会话：`xl-mhc`；日志：`logs/XL-mhc-bs4ga16-30kstep.log`
-  - wandb run：`XL-mhc-owt-bs4ga16-30kstep`（id `pdk227z5`）
-  - 参数量 622.13M，`tokens/iter=65,536`，输出目录 `out-owt-xl-mhc-bs4-30000step/`
-- 后续 XL 其余 3 类变体（group / lora-midnorm / group-lora-midnorm）待 mhc 跑完按第四节 XL 命令依次启动。
+- 四个 XL 主实验 checkpoint 已集中到 `/home/work/data/guotianzizhe/data/test/` 并完成统一评测：OWT-val、WikiText-103 以及 8 个 lm-eval 0-shot 任务。
+- **XL-mhc**：`out-owt-xl-mhc-bs4-30000step`，best-val checkpoint 保存于 28500 step；OWT PPL 21.1896，WT103 PPL 33.5740。
+- **XL-mhc-group**：`out-owt-xl-mhc-group-embedding-bs8-30000step`，**bs8×ga8**（有效 batch 65,536 与其它 XL 一致），跑满 30000 step；OWT PPL 21.0420，WT103 PPL 32.6361。
+- **XL-mhc-lora**：`out-owt-xl-mhc-lora-residual-midnorm-bs4-30000step`，in-beta，保存于 28000 step；OWT PPL 21.0796，WT103 PPL 32.8556。
+- **XL-mhc-group-lora**：`out-owt-xl-mhc-group-lora-midnorm-bs4-30000step`，in-beta，保存于 28000 step；OWT PPL 21.4107，WT103 PPL 33.6073。
+- ⚠️ 跨 XL 比较时注意：只有 group 跑满 30k，其余三个 best-val 停在 28–28.5k，PPL 差距含训练量因素。
+- L 档 `mhc-group-lora-midnorm-ffn` 是效果不佳后中途停止的中间实验，不纳入评测。
 
 ## 七、参考文档（本文件不重复其内容）
 

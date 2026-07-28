@@ -1,0 +1,7 @@
+{
+  "dir": "out-owt-medium-mhc-lora-residual-scalar",
+  "tier": "M",
+  "branch": "inbeta",
+  "ckpt": "/home/work/data/guotianzizhe/data/test/out-owt-medium-mhc-lora-residual-scalar/ckpt.pt",
+  "error": "ValueError: Invalid hyper connection type: mhc_lora_residual_scalar"
+}

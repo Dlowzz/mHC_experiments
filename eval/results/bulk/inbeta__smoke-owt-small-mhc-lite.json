@@ -1,0 +1,17 @@
+{
+  "dir": "smoke-owt-small-mhc-lite",
+  "tier": "S",
+  "branch": "inbeta",
+  "ckpt": "/home/work/data/guotianzizhe/data/test/smoke-owt-small-mhc-lite/ckpt.pt",
+  "hyper_conn_type": "mhc_lite",
+  "n_layer": 6,
+  "n_embd": 512,
+  "iter": 20,
+  "owt_val_ce": 8.481753,
+  "owt_val_ppl": 4825.9042,
+  "owt_val_tokens": 4433920,
+  "owt_val_windows": 4330,
+  "wt103_ce": 9.717538,
+  "wt103_ppl": 16606.312,
+  "wt103_tokens": 287643
+}

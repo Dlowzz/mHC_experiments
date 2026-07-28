@@ -1,0 +1,15 @@
+{
+  "ckpt": "out-owt-medium-mhc-group-lora-midnorm-inbeta-bs16-10000step/ckpt.pt",
+  "iter": 9500,
+  "hyper_conn_type": "mhc_group_lora_midnorm",
+  "n_layer": 12,
+  "n_embd": 768,
+  "num_fewshot": 0,
+  "limit": 200,
+  "lambada_openai::perplexity": 81.8082,
+  "lambada_openai::acc": 0.245,
+  "piqa::acc": 0.6,
+  "piqa::acc_norm": 0.555,
+  "lambada_acc": 0.245,
+  "lambada_ppl": 81.8082
+}

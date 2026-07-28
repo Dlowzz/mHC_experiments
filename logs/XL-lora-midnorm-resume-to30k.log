@@ -1,0 +1,296 @@
+W0728 12:35:10.915000 1356088 torch/distributed/run.py:766] 
+W0728 12:35:10.915000 1356088 torch/distributed/run.py:766] *****************************************
+W0728 12:35:10.915000 1356088 torch/distributed/run.py:766] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0728 12:35:10.915000 1356088 torch/distributed/run.py:766] *****************************************
+Overriding config with config/train_owt.py:
+eval_interval = 500
+eval_iters = 200
+log_interval = 10
+always_save_checkpoint = False
+
+wandb_log = True
+wandb_project = 'mhc-lite'
+out_prefix_dataset = "owt"
+
+dataset = 'openwebtext'
+gradient_accumulation_steps = 8  
+batch_size = 16
+block_size = 1024
+
+dtype = 'bfloat16'
+
+Overriding config with config/xl_model.py:
+wandb_group = "xl"
+out_prefix_model = "xl"
+
+n_layer = 28
+n_head = 20
+n_embd = 1280
+dropout = 0.0
+
+learning_rate = 2e-4
+min_lr = 2e-5
+max_iters = 30000
+lr_decay_iters = 30000
+warmup_iters = 200
+weight_decay = 0.1
+beta1 = 0.9
+beta2 = 0.95
+grad_clip = 1.0
+
+# ~600M target on 2xL20: micro-batch 4 x grad_accum 16 -> 65,536 tokens/iter
+batch_size = 4
+gradient_accumulation_steps = 16
+
+Overriding config with config/with_mhc_lora_residual_midnorm.py:
+hyper_conn_type = "mhc_lora_residual_midnorm"
+hyper_conn_n = 4
+
+wandb_notes = "mhc-lora-residual-midnorm (RMSNorm on LoRA rank dim, between A and B)"
+out_prefix_method = "mhc-lora-residual-midnorm"
+
+Overriding: init_from = resume
+Overriding: compile = False
+Overriding: wandb_run_name = owt-XL-lora-res-midnorm-inbeta-resume
+Overriding config with config/train_owt.py:
+eval_interval = 500
+eval_iters = 200
+log_interval = 10
+always_save_checkpoint = False
+
+wandb_log = True
+wandb_project = 'mhc-lite'
+out_prefix_dataset = "owt"
+
+dataset = 'openwebtext'
+gradient_accumulation_steps = 8  
+batch_size = 16
+block_size = 1024
+
+dtype = 'bfloat16'
+
+Overriding config with config/xl_model.py:
+wandb_group = "xl"
+out_prefix_model = "xl"
+
+n_layer = 28
+n_head = 20
+n_embd = 1280
+dropout = 0.0
+
+learning_rate = 2e-4
+min_lr = 2e-5
+max_iters = 30000
+lr_decay_iters = 30000
+warmup_iters = 200
+weight_decay = 0.1
+beta1 = 0.9
+beta2 = 0.95
+grad_clip = 1.0
+
+# ~600M target on 2xL20: micro-batch 4 x grad_accum 16 -> 65,536 tokens/iter
+batch_size = 4
+gradient_accumulation_steps = 16
+
+Overriding config with config/with_mhc_lora_residual_midnorm.py:
+hyper_conn_type = "mhc_lora_residual_midnorm"
+hyper_conn_n = 4
+
+wandb_notes = "mhc-lora-residual-midnorm (RMSNorm on LoRA rank dim, between A and B)"
+out_prefix_method = "mhc-lora-residual-midnorm"
+
+Overriding: init_from = resume
+Overriding: compile = False
+Overriding: wandb_run_name = owt-XL-lora-res-midnorm-inbeta-resume
+tokens per iteration will be: 65,536
+Resuming training from /home/work/data/guotianzizhe/data/resume_xl/out-owt-xl-mhc-lora-residual-midnorm-bs4-30000step
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /root/.netrc.
+wandb: Currently logged in as: guotzzz (guotzzz-peking-university) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 28m7seuk
+wandb: Tracking run with wandb version 0.28.0
+wandb: Run data is saved locally in /home/work/data/guotianzizhe/project/mhc-lite/wandb/run-20260728_123514-28m7seuk
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run owt-XL-lora-res-midnorm-inbeta-resume-8517
+wandb: ⭐️ View project at https://wandb.ai/guotzzz-peking-university/mhc-lite
+wandb: 🚀 View run at https://wandb.ai/guotzzz-peking-university/mhc-lite/runs/28m7seuk
+tokens per iteration will be: 65,536
+====================================================================================================
+n_layer = 28
+n_head = 20
+n_embd = 1280
+block_size = 1024
+bias = False
+vocab_size = None
+dropout = 0.0
+hyper_conn_n = 4
+hyper_conn_type = mhc_lora_residual_midnorm
+====================================================================================================
+Resuming training from /home/work/data/guotianzizhe/data/resume_xl/out-owt-xl-mhc-lora-residual-midnorm-bs4-30000step
+HYPER_CONN: USING mhc_lora_residual_midnorm with 4 streams
+HYPER_CONN: USING mhc_lora_residual_midnorm with 4 streams
+number of parameters: 626.72M
+num decayed parameter tensors: 338, with 625,378,400 parameters
+num non-decayed parameter tensors: 393, with 2,653,832 parameters
+using fused AdamW: True
+number of parameters: 626.72M
+num decayed parameter tensors: 338, with 625,378,400 parameters
+num non-decayed parameter tensors: 393, with 2,653,832 parameters
+using fused AdamW: True
+[step 28000]train loss: 3.0331, val loss: 3.0399, (avg train loss: 0.0000 ± 0.0000), (avg grad norm: 0.0000 ± 0.0000)
+[iter 28000]loss: 3.0189, tokens/sec: 9385.94 ± 0.00, tokens seen: 1835008000, grad norm: 0.7942
+[iter 28010]loss: 2.9189, tokens/sec: 9742.65 ± 141.83, tokens seen: 1835663360, grad norm: 0.7438
+[iter 28020]loss: 3.0647, tokens/sec: 9794.51 ± 116.46, tokens seen: 1836318720, grad norm: 0.7549
+[iter 28030]loss: 2.8221, tokens/sec: 9797.64 ± 96.37, tokens seen: 1836974080, grad norm: 0.7617
+[iter 28040]loss: 3.0252, tokens/sec: 9797.13 ± 84.14, tokens seen: 1837629440, grad norm: 0.7437
+[iter 28050]loss: 3.2252, tokens/sec: 9797.28 ± 75.64, tokens seen: 1838284800, grad norm: 0.7281
+[iter 28060]loss: 3.1372, tokens/sec: 9796.77 ± 72.01, tokens seen: 1838940160, grad norm: 0.7256
+[iter 28070]loss: 3.1980, tokens/sec: 9797.13 ± 67.00, tokens seen: 1839595520, grad norm: 0.7600
+[iter 28080]loss: 2.7911, tokens/sec: 9797.34 ± 63.24, tokens seen: 1840250880, grad norm: 0.8308
+[iter 28090]loss: 3.3473, tokens/sec: 9794.32 ± 64.47, tokens seen: 1840906240, grad norm: 0.7626
+[iter 28100]loss: 3.1484, tokens/sec: 9793.97 ± 61.47, tokens seen: 1841561600, grad norm: 0.7635
+[iter 28110]loss: 3.3205, tokens/sec: 9793.76 ± 58.74, tokens seen: 1842216960, grad norm: 0.7858
+[iter 28120]loss: 3.1039, tokens/sec: 9792.23 ± 57.32, tokens seen: 1842872320, grad norm: 0.7911
+[iter 28130]loss: 3.5285, tokens/sec: 9790.17 ± 56.84, tokens seen: 1843527680, grad norm: 0.7902
+[iter 28140]loss: 3.0657, tokens/sec: 9790.31 ± 54.85, tokens seen: 1844183040, grad norm: 0.7588
+[iter 28150]loss: 2.8674, tokens/sec: 9789.97 ± 53.19, tokens seen: 1844838400, grad norm: 0.7550
+[iter 28160]loss: 2.8196, tokens/sec: 9788.44 ± 53.76, tokens seen: 1845493760, grad norm: 0.8309
+[iter 28170]loss: 3.0637, tokens/sec: 9788.15 ± 52.31, tokens seen: 1846149120, grad norm: 0.7586
+[iter 28180]loss: 2.7690, tokens/sec: 9787.52 ± 51.68, tokens seen: 1846804480, grad norm: 0.7556
+[iter 28190]loss: 3.2774, tokens/sec: 9787.59 ± 50.44, tokens seen: 1847459840, grad norm: 0.7342
+[iter 28200]loss: 2.9317, tokens/sec: 9788.30 ± 49.32, tokens seen: 1848115200, grad norm: 0.7292
+[iter 28210]loss: 2.9004, tokens/sec: 9787.90 ± 48.42, tokens seen: 1848770560, grad norm: 0.7650
+[iter 28220]loss: 2.8448, tokens/sec: 9787.96 ± 47.37, tokens seen: 1849425920, grad norm: 0.7846
+[iter 28230]loss: 3.2271, tokens/sec: 9787.24 ± 46.84, tokens seen: 1850081280, grad norm: 0.7705
+[iter 28240]loss: 3.0226, tokens/sec: 9786.02 ± 48.50, tokens seen: 1850736640, grad norm: 0.7645
+[iter 28250]loss: 3.0244, tokens/sec: 9786.03 ± 47.56, tokens seen: 1851392000, grad norm: 0.7868
+[iter 28260]loss: 3.2532, tokens/sec: 9786.04 ± 46.75, tokens seen: 1852047360, grad norm: 0.7476
+[iter 28270]loss: 3.3869, tokens/sec: 9786.01 ± 46.31, tokens seen: 1852702720, grad norm: 0.7734
+[iter 28280]loss: 2.9801, tokens/sec: 9786.63 ± 45.61, tokens seen: 1853358080, grad norm: 0.8275
+[iter 28290]loss: 2.8803, tokens/sec: 9786.62 ± 46.01, tokens seen: 1854013440, grad norm: 0.7260
+[iter 28300]loss: 3.0280, tokens/sec: 9786.99 ± 45.44, tokens seen: 1854668800, grad norm: 0.8211
+[iter 28310]loss: 3.1013, tokens/sec: 9785.74 ± 46.74, tokens seen: 1855324160, grad norm: 0.7437
+[iter 28320]loss: 3.1966, tokens/sec: 9786.08 ± 46.09, tokens seen: 1855979520, grad norm: 0.7218
+[iter 28330]loss: 3.0100, tokens/sec: 9786.50 ± 45.49, tokens seen: 1856634880, grad norm: 0.7203
+[iter 28340]loss: 2.9495, tokens/sec: 9787.19 ± 45.04, tokens seen: 1857290240, grad norm: 0.7553
+[iter 28350]loss: 2.9365, tokens/sec: 9787.36 ± 45.15, tokens seen: 1857945600, grad norm: 0.7538
+[iter 28360]loss: 3.1311, tokens/sec: 9788.08 ± 44.91, tokens seen: 1858600960, grad norm: 0.7701
+[iter 28370]loss: 3.0006, tokens/sec: 9788.81 ± 44.54, tokens seen: 1859256320, grad norm: 0.7484
+[iter 28380]loss: 2.6058, tokens/sec: 9789.32 ± 44.12, tokens seen: 1859911680, grad norm: 0.7410
+[iter 28390]loss: 3.2477, tokens/sec: 9788.75 ± 45.33, tokens seen: 1860567040, grad norm: 0.8181
+[iter 28400]loss: 3.0294, tokens/sec: 9788.76 ± 44.92, tokens seen: 1861222400, grad norm: 0.7661
+[iter 28410]loss: 3.4246, tokens/sec: 9788.63 ± 44.93, tokens seen: 1861877760, grad norm: 0.7603
+[iter 28420]loss: 3.1776, tokens/sec: 9788.99 ± 44.49, tokens seen: 1862533120, grad norm: 0.7502
+[iter 28430]loss: 2.6702, tokens/sec: 9789.44 ± 44.13, tokens seen: 1863188480, grad norm: 0.7713
+[iter 28440]loss: 2.7207, tokens/sec: 9789.76 ± 43.77, tokens seen: 1863843840, grad norm: 0.7654
+[iter 28450]loss: 3.1642, tokens/sec: 9790.12 ± 43.37, tokens seen: 1864499200, grad norm: 0.7349
+[iter 28460]loss: 3.0708, tokens/sec: 9789.74 ± 44.13, tokens seen: 1865154560, grad norm: 0.7547
+[iter 28470]loss: 3.0199, tokens/sec: 9790.21 ± 43.81, tokens seen: 1865809920, grad norm: 0.7146
+[iter 28480]loss: 3.0268, tokens/sec: 9790.57 ± 43.46, tokens seen: 1866465280, grad norm: 0.7432
+[iter 28490]loss: 3.0262, tokens/sec: 9790.96 ± 43.14, tokens seen: 1867120640, grad norm: 0.7980
+[step 28500]train loss: 3.0295, val loss: 3.0313, (avg train loss: 0.3792 ± 0.0251), (avg grad norm: 0.7598 ± 0.0260)
+[iter 28500]loss: 3.2079, tokens/sec: 9791.17 ± 42.82, tokens seen: 1867776000, grad norm: 0.8030
+[iter 28510]loss: 3.1008, tokens/sec: 9790.91 ± 42.49, tokens seen: 1868431360, grad norm: 0.7973
+[iter 28520]loss: 2.7827, tokens/sec: 9790.61 ± 42.18, tokens seen: 1869086720, grad norm: 0.7390
+[iter 28530]loss: 2.9156, tokens/sec: 9789.90 ± 43.28, tokens seen: 1869742080, grad norm: 0.7509
+[iter 28540]loss: 3.0809, tokens/sec: 9789.56 ± 43.13, tokens seen: 1870397440, grad norm: 0.7563
+[iter 28550]loss: 3.3951, tokens/sec: 9789.69 ± 43.04, tokens seen: 1871052800, grad norm: 0.7437
+[iter 28560]loss: 3.0357, tokens/sec: 9789.96 ± 42.76, tokens seen: 1871708160, grad norm: 0.7621
+[iter 28570]loss: 3.0077, tokens/sec: 9790.16 ± 42.56, tokens seen: 1872363520, grad norm: 0.9027
+[iter 28580]loss: 2.9108, tokens/sec: 9789.91 ± 42.64, tokens seen: 1873018880, grad norm: 0.7652
+[iter 28590]loss: 2.8048, tokens/sec: 9789.89 ± 42.31, tokens seen: 1873674240, grad norm: 0.7911
+[iter 28600]loss: 2.8347, tokens/sec: 9789.46 ± 42.93, tokens seen: 1874329600, grad norm: 0.7424
+[iter 28610]loss: 3.2362, tokens/sec: 9789.81 ± 42.76, tokens seen: 1874984960, grad norm: 0.8381
+[iter 28620]loss: 2.9183, tokens/sec: 9790.00 ± 42.54, tokens seen: 1875640320, grad norm: 0.7813
+[iter 28630]loss: 2.7186, tokens/sec: 9790.25 ± 42.36, tokens seen: 1876295680, grad norm: 0.7296
+[iter 28640]loss: 3.0331, tokens/sec: 9790.50 ± 42.56, tokens seen: 1876951040, grad norm: 0.7652
+[iter 28650]loss: 2.7372, tokens/sec: 9791.04 ± 42.48, tokens seen: 1877606400, grad norm: 0.7530
+[iter 28660]loss: 3.0745, tokens/sec: 9791.46 ± 42.35, tokens seen: 1878261760, grad norm: 0.8352
+[iter 28670]loss: 3.0063, tokens/sec: 9792.07 ± 42.35, tokens seen: 1878917120, grad norm: 0.7757
+[iter 28680]loss: 2.6325, tokens/sec: 9792.22 ± 42.85, tokens seen: 1879572480, grad norm: 0.7415
+[iter 28690]loss: 2.9319, tokens/sec: 9792.31 ± 43.04, tokens seen: 1880227840, grad norm: 0.7325
+[iter 28700]loss: 2.8340, tokens/sec: 9792.99 ± 43.11, tokens seen: 1880883200, grad norm: 0.7553
+[iter 28710]loss: 2.9159, tokens/sec: 9793.54 ± 43.06, tokens seen: 1881538560, grad norm: 0.7514
+[iter 28720]loss: 3.1633, tokens/sec: 9794.02 ± 42.97, tokens seen: 1882193920, grad norm: 0.8253
+[iter 28730]loss: 2.6291, tokens/sec: 9794.45 ± 42.86, tokens seen: 1882849280, grad norm: 0.7335
+[iter 28740]loss: 3.1303, tokens/sec: 9794.84 ± 42.73, tokens seen: 1883504640, grad norm: 0.7868
+[iter 28750]loss: 3.0543, tokens/sec: 9794.82 ± 43.21, tokens seen: 1884160000, grad norm: 0.7425
+[iter 28760]loss: 3.0200, tokens/sec: 9795.33 ± 43.17, tokens seen: 1884815360, grad norm: 0.7661
+[iter 28770]loss: 3.1849, tokens/sec: 9795.85 ± 43.15, tokens seen: 1885470720, grad norm: 0.7407
+[iter 28780]loss: 3.0420, tokens/sec: 9796.24 ± 43.09, tokens seen: 1886126080, grad norm: 0.7567
+[iter 28790]loss: 2.9356, tokens/sec: 9796.68 ± 43.01, tokens seen: 1886781440, grad norm: 0.7426
+[iter 28800]loss: 3.0626, tokens/sec: 9796.89 ± 42.90, tokens seen: 1887436800, grad norm: 0.7615
+[iter 28810]loss: 3.1748, tokens/sec: 9797.14 ± 42.86, tokens seen: 1888092160, grad norm: 0.7434
+[iter 28820]loss: 3.0850, tokens/sec: 9797.37 ± 42.71, tokens seen: 1888747520, grad norm: 0.7710
+[iter 28830]loss: 2.9223, tokens/sec: 9796.97 ± 43.16, tokens seen: 1889402880, grad norm: 0.7606
+[iter 28840]loss: 3.1612, tokens/sec: 9797.12 ± 42.93, tokens seen: 1890058240, grad norm: 0.7358
+[iter 28850]loss: 3.1582, tokens/sec: 9797.18 ± 42.69, tokens seen: 1890713600, grad norm: 0.8328
+[iter 28860]loss: 3.1208, tokens/sec: 9797.08 ± 42.68, tokens seen: 1891368960, grad norm: 0.7320
+[iter 28870]loss: 3.2194, tokens/sec: 9797.14 ± 42.47, tokens seen: 1892024320, grad norm: 0.7282
+[iter 28880]loss: 3.2322, tokens/sec: 9797.18 ± 42.25, tokens seen: 1892679680, grad norm: 0.7353
+[iter 28890]loss: 3.1577, tokens/sec: 9797.24 ± 42.06, tokens seen: 1893335040, grad norm: 0.7677
+[iter 28900]loss: 2.9368, tokens/sec: 9796.92 ± 42.68, tokens seen: 1893990400, grad norm: 0.7727
+[iter 28910]loss: 2.8675, tokens/sec: 9796.72 ± 42.51, tokens seen: 1894645760, grad norm: 0.7788
+[iter 28920]loss: 3.0290, tokens/sec: 9796.40 ± 42.49, tokens seen: 1895301120, grad norm: 0.7242
+[iter 28930]loss: 3.3030, tokens/sec: 9796.21 ± 42.33, tokens seen: 1895956480, grad norm: 0.8088
+[iter 28940]loss: 3.2399, tokens/sec: 9796.03 ± 42.15, tokens seen: 1896611840, grad norm: 0.7570
+[iter 28950]loss: 3.2804, tokens/sec: 9795.77 ± 42.02, tokens seen: 1897267200, grad norm: 0.7931
+[iter 28960]loss: 3.1846, tokens/sec: 9795.44 ± 41.98, tokens seen: 1897922560, grad norm: 0.7461
+[iter 28970]loss: 3.2129, tokens/sec: 9795.68 ± 41.85, tokens seen: 1898577920, grad norm: 0.7717
+[iter 28980]loss: 2.7013, tokens/sec: 9795.15 ± 42.51, tokens seen: 1899233280, grad norm: 0.7207
+[iter 28990]loss: 2.8375, tokens/sec: 9795.22 ± 42.31, tokens seen: 1899888640, grad norm: 0.7871
+[step 29000]train loss: 3.0477, val loss: 3.0519, (avg train loss: 0.3783 ± 0.0264), (avg grad norm: 0.7638 ± 0.0279)
+[iter 29000]loss: 2.9851, tokens/sec: 9795.15 ± 42.19, tokens seen: 1900544000, grad norm: 0.7600
+[iter 29010]loss: 2.7727, tokens/sec: 9795.13 ± 42.00, tokens seen: 1901199360, grad norm: 0.7679
+[iter 29020]loss: 2.8574, tokens/sec: 9795.09 ± 41.81, tokens seen: 1901854720, grad norm: 0.7307
+[iter 29030]loss: 3.1614, tokens/sec: 9795.17 ± 41.63, tokens seen: 1902510080, grad norm: 0.7534
+[iter 29040]loss: 2.9091, tokens/sec: 9795.01 ± 41.54, tokens seen: 1903165440, grad norm: 0.7876
+[iter 29050]loss: 3.0297, tokens/sec: 9794.73 ± 41.89, tokens seen: 1903820800, grad norm: 0.7376
+[iter 29060]loss: 2.9958, tokens/sec: 9794.59 ± 41.74, tokens seen: 1904476160, grad norm: 0.7522
+[iter 29070]loss: 3.1592, tokens/sec: 9794.43 ± 41.68, tokens seen: 1905131520, grad norm: 0.7452
+[iter 29080]loss: 3.1264, tokens/sec: 9794.36 ± 41.50, tokens seen: 1905786880, grad norm: 0.7649
+[iter 29090]loss: 2.9547, tokens/sec: 9794.21 ± 41.35, tokens seen: 1906442240, grad norm: 0.7793
+[iter 29100]loss: 2.9454, tokens/sec: 9794.02 ± 41.24, tokens seen: 1907097600, grad norm: 0.7934
+[iter 29110]loss: 3.1010, tokens/sec: 9793.70 ± 41.20, tokens seen: 1907752960, grad norm: 0.7643
+[iter 29120]loss: 2.9151, tokens/sec: 9793.40 ± 41.74, tokens seen: 1908408320, grad norm: 0.7477
+[iter 29130]loss: 3.0768, tokens/sec: 9793.59 ± 41.61, tokens seen: 1909063680, grad norm: 0.7726
+[iter 29140]loss: 2.9745, tokens/sec: 9793.71 ± 41.48, tokens seen: 1909719040, grad norm: 0.7386
+[iter 29150]loss: 3.0606, tokens/sec: 9793.89 ± 41.38, tokens seen: 1910374400, grad norm: 0.8045
+[iter 29160]loss: 3.0051, tokens/sec: 9793.97 ± 41.35, tokens seen: 1911029760, grad norm: 0.7664
+[iter 29170]loss: 2.9439, tokens/sec: 9793.95 ± 41.19, tokens seen: 1911685120, grad norm: 0.8177
+[iter 29180]loss: 3.2503, tokens/sec: 9793.95 ± 41.03, tokens seen: 1912340480, grad norm: 0.7609
+[iter 29190]loss: 2.8827, tokens/sec: 9793.85 ± 40.94, tokens seen: 1912995840, grad norm: 0.7248
+[iter 29200]loss: 3.0095, tokens/sec: 9793.64 ± 41.35, tokens seen: 1913651200, grad norm: 0.7359
+[iter 29210]loss: 3.1305, tokens/sec: 9793.65 ± 41.20, tokens seen: 1914306560, grad norm: 0.7581
+[iter 29220]loss: 2.8130, tokens/sec: 9793.53 ± 41.14, tokens seen: 1914961920, grad norm: 0.7356
+[iter 29230]loss: 3.0394, tokens/sec: 9793.29 ± 41.06, tokens seen: 1915617280, grad norm: 0.7478
+[iter 29240]loss: 3.0396, tokens/sec: 9792.97 ± 41.07, tokens seen: 1916272640, grad norm: 0.7406
+[iter 29250]loss: 3.1868, tokens/sec: 9792.66 ± 41.07, tokens seen: 1916928000, grad norm: 0.7889
+[iter 29260]loss: 2.9120, tokens/sec: 9792.31 ± 41.14, tokens seen: 1917583360, grad norm: 0.8249
+[iter 29270]loss: 2.9946, tokens/sec: 9791.88 ± 41.78, tokens seen: 1918238720, grad norm: 0.7513
+[iter 29280]loss: 2.5644, tokens/sec: 9791.64 ± 41.75, tokens seen: 1918894080, grad norm: 0.7494
+[iter 29290]loss: 2.6892, tokens/sec: 9791.46 ± 41.66, tokens seen: 1919549440, grad norm: 0.7653
+[iter 29300]loss: 3.0102, tokens/sec: 9791.29 ± 41.56, tokens seen: 1920204800, grad norm: 0.7446
+[iter 29310]loss: 3.1365, tokens/sec: 9791.09 ± 41.47, tokens seen: 1920860160, grad norm: 0.7274
+[iter 29320]loss: 2.9190, tokens/sec: 9790.84 ± 41.49, tokens seen: 1921515520, grad norm: 0.7349
+[iter 29330]loss: 2.8714, tokens/sec: 9790.56 ± 41.49, tokens seen: 1922170880, grad norm: 0.7296
+[iter 29340]loss: 3.2218, tokens/sec: 9790.36 ± 41.41, tokens seen: 1922826240, grad norm: 0.7749
+[iter 29350]loss: 3.1806, tokens/sec: 9790.01 ± 41.88, tokens seen: 1923481600, grad norm: 0.7888
+[iter 29360]loss: 3.3156, tokens/sec: 9789.86 ± 42.01, tokens seen: 1924136960, grad norm: 0.8097
+[iter 29370]loss: 2.9151, tokens/sec: 9789.76 ± 41.91, tokens seen: 1924792320, grad norm: 0.7621
+[iter 29380]loss: 3.3849, tokens/sec: 9789.56 ± 41.86, tokens seen: 1925447680, grad norm: 0.7655
+[iter 29390]loss: 2.9955, tokens/sec: 9789.37 ± 41.78, tokens seen: 1926103040, grad norm: 0.7560
+[iter 29400]loss: 2.8865, tokens/sec: 9789.17 ± 41.71, tokens seen: 1926758400, grad norm: 0.7729
+[iter 29410]loss: 2.8215, tokens/sec: 9788.92 ± 41.70, tokens seen: 1927413760, grad norm: 0.7509
+[iter 29420]loss: 2.9311, tokens/sec: 9788.50 ± 42.22, tokens seen: 1928069120, grad norm: 0.8138
+[iter 29430]loss: 2.8852, tokens/sec: 9788.30 ± 42.18, tokens seen: 1928724480, grad norm: 0.7809
+[iter 29440]loss: 2.8713, tokens/sec: 9788.09 ± 42.12, tokens seen: 1929379840, grad norm: 0.7080
+[iter 29450]loss: 3.0489, tokens/sec: 9788.00 ± 42.00, tokens seen: 1930035200, grad norm: 0.7526
+[iter 29460]loss: 3.0308, tokens/sec: 9787.77 ± 42.03, tokens seen: 1930690560, grad norm: 0.7926
+[iter 29470]loss: 2.9551, tokens/sec: 9787.56 ± 41.99, tokens seen: 1931345920, grad norm: 0.8054
+[iter 29480]loss: 3.0438, tokens/sec: 9787.30 ± 42.08, tokens seen: 1932001280, grad norm: 0.7891
+[iter 29490]loss: 3.0994, tokens/sec: 9787.07 ± 42.05, tokens seen: 1932656640, grad norm: 0.7617
+[step 29500]train loss: 3.0226, val loss: 3.0596, (avg train loss: 0.3773 ± 0.0212), (avg grad norm: 0.7645 ± 0.0246)
+[iter 29500]loss: 3.0658, tokens/sec: 9786.60 ± 42.65, tokens seen: 1933312000, grad norm: 0.7805
+[iter 29510]loss: 2.9332, tokens/sec: 9786.51 ± 42.53, tokens seen: 1933967360, grad norm: 0.7566
+[iter 29520]loss: 3.0313, tokens/sec: 9786.45 ± 42.41, tokens seen: 1934622720, grad norm: 0.7366
+[iter 29530]loss: 2.7033, tokens/sec: 9786.33 ± 42.32, tokens seen: 1935278080, grad norm: 0.7757

@@ -1,0 +1,17 @@
+{
+  "dir": "out-owt-medium-mhc-lite",
+  "tier": "M",
+  "branch": "inbeta",
+  "ckpt": "/home/work/data/guotianzizhe/data/test/out-owt-medium-mhc-lite/ckpt.pt",
+  "hyper_conn_type": "mhc_lite",
+  "n_layer": 12,
+  "n_embd": 768,
+  "iter": 10000,
+  "owt_val_ce": 3.253082,
+  "owt_val_ppl": 25.87,
+  "owt_val_tokens": 4433920,
+  "owt_val_windows": 4330,
+  "wt103_ce": 3.852491,
+  "wt103_ppl": 47.1103,
+  "wt103_tokens": 287643
+}

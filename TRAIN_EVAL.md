@@ -21,8 +21,8 @@ nanoGPT 派生的 mHC (Manifold-constrained Hyper-Connections) 消融实验代�
 |---|---|---|---|
 | **mhc**（基线） | `with_mhc.py` | `mhc` | 标准 mHC |
 | **mhc-group** | `with_mhc_group_embedding.py` | `mhc_group_embedding` | 分组 H_pre/H_post 读写 |
-| **mhc-lora** | `with_mhc_lora_residual_midnorm.py` | `mhc_lora_residual_midnorm` | LoRA-residual，**midnorm + in-beta** |
-| **mhc-group-lora** | `with_mhc_group_lora_midnorm.py` | `mhc_group_lora_midnorm` | 分组 LoRA，**midnorm + in-beta** |
+| **mhc-lora** | `with_mhc_lora_residual_midnorm.py` | `mhc_lora_residual_midnorm` | 新版 `ca1c90f` 为 midnorm + in-beta；旧 `199654a` 为 out-beta |
+| **mhc-group-lora** | `with_mhc_group_lora_midnorm.py` | `mhc_group_lora_midnorm` | 新版 `ca1c90f` 为 midnorm + in-beta；旧 checkpoint 按训练 commit 判断 |
 
 > 其它变体（`with_*.py`）：`mhc_lite` / `hc` / `mhc_embedding` / `mhc_orthogonal_diff` / `mhc_group_lora_capped` / `mhc_lora_residual`(no-norm) / `mhc_lora_residual_affinemidnorm` 等。
 > **重要**：LoRA 系变体的前向依赖分支代码。`final`(=in-beta) 上的 LoRA ckpt 必须在 in-beta 代码下评测；老 ckpt 要按其训练 commit 评测，见 `eval/experiment_commit_map.md`。
@@ -38,7 +38,7 @@ WANDB_MODE=online CUDA_VISIBLE_DEVICES=2,3 torchrun --standalone --nproc_per_nod
 - 有效 batch = `ga × world_size × bs × block`（DDP 会把 `ga` 除以卡数）。
 - 输出目录自动命名：`out-owt-<size>-<method>-bs<bs>-<iters>step/ckpt.pt`（best-val 保存）。
 
-XL mhc 示例（当前正在跑）：
+XL mhc 示例（已完成；新 XL 主实验结果见 `data/test/ckpt_experiment_map.md`）：
 ```bash
 ... torchrun ... train.py config/train_owt.py config/xl_model.py config/with_mhc.py \
   --compile=True --wandb_run_name=XL-mhc-owt-bs4ga16-30kstep
@@ -65,4 +65,5 @@ python eval/summary.py    # 生成 eval/eval_summary.md
 
 ## 五、参考文档
 - `eval/experiment_commit_map.md` — 每个 run ↔ git commit ↔ 设置 的对照，以及"怎么给某 ckpt 选对评测 commit"。
-- `eval/eval_summary.md` / `eval/eval_report_coded.md` — 最新 S/M/L 评测结果。
+- `eval/eval_summary.md` / `eval/eval_report_coded.md` — 最新 S/M/L/XL 评测结果。
+- `/home/work/data/guotianzizhe/data/test/ckpt_experiment_map.md` — `data/test` 全部 checkpoint、实验名、训练进度、beta 语义和评测状态。

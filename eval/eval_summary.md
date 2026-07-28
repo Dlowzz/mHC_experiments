@@ -3,6 +3,17 @@
 PPL: deterministic full-pass, branch-matched (min-CE). Downstream: lm_eval 0-shot, batched.
 `(*)` = experiment code's beta-mode disagrees with the branch the weights actually match.
 
+## XL (28L/1280d)
+
+| 实验代号 | OWT-val PPL | WT103 PPL | lambada PPL | lambada acc | sciq | piqa | arc_easy | winogrande |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| `group` | 21.04 | 32.64 | 68.45 | 0.267 | 0.641 | 0.598 | 0.400 | 0.510 |
+| `lora-midnorm-inbeta` | 21.08 | 32.86 | 54.46 | 0.285 | 0.634 | 0.605 | 0.385 | 0.515 |
+| `mhc` | 21.19 | 33.57 | 57.85 | 0.270 | 0.613 | 0.590 | 0.391 | 0.517 |
+| `GL-midnorm-inbeta` | 21.41 | 33.61 | 66.96 | 0.258 | 0.633 | 0.602 | 0.385 | 0.513 |
+
+_XL `group` 是唯一跑满 30k 的 run（bs8×ga8，有效 batch 与其它 XL 相同），其余三个 best-val 停在 28–28.5k；其 PPL 优势含额外训练量因素。_
+
 ## Large (24L/1024d)
 
 | 实验代号 | OWT-val PPL | WT103 PPL | lambada PPL | lambada acc | sciq | piqa | arc_easy | winogrande |
@@ -12,7 +23,7 @@ PPL: deterministic full-pass, branch-matched (min-CE). Downstream: lm_eval 0-sho
 | `mhc` | 23.73 | 40.64 | 88.38 | 0.246 | 0.624 | 0.600 | 0.379 | 0.510 |
 | `mhc-lite` | 23.79 | 39.41 | 90.05 | 0.252 | 0.604 | 0.596 | 0.375 | 0.515 |
 | `lora-midnorm-outbeta` | 23.84 | 39.01 | 85.17 | 0.248 | 0.634 | 0.588 | 0.368 | 0.495 |
-| `GL-midnorm-inbeta` | 24.38 | 37.34 | 84.85 | 0.256 | 0.618 | 0.588 | 0.366 | 0.499 |
+| `GL-midnorm-inbeta` | 23.44 | 35.26 | 84.85 | 0.256 | 0.618 | 0.588 | 0.366 | 0.499 |
 | `lora-nonorm` | 24.51 | 41.75 | 102.71 | 0.239 | 0.592 | 0.578 | 0.366 | 0.500 |
 | `GLfake-2` | 28.65 | 50.13 | 167.42 | 0.211 | 0.540 | 0.587 | 0.356 | 0.509 |
 
@@ -26,7 +37,7 @@ PPL: deterministic full-pass, branch-matched (min-CE). Downstream: lm_eval 0-sho
 | `GL-midnorm-inbeta` | 26.19 | 43.91 | 94.10 | 0.237 | 0.619 | 0.588 | 0.361 | 0.473 |
 | `lora-midnorm-inbeta` | 26.41 | 48.47 | 93.03 | 0.238 | 0.620 | 0.577 | 0.351 | 0.508 |
 | `lora-nonorm` | 29.18 | 55.83 | 162.72 | 0.215 | 0.599 | 0.578 | 0.360 | 0.519 |
-| `GL-midnorm-outbeta` | - | - | - | - | - | - | - | - |
+| `GL-midnorm-outbeta` | - | - | - | - | - | - | - | - | legacy crashed run; excluded |
 
 ## Small (6L/512d)
 

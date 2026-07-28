@@ -1,0 +1,14 @@
+{
+  "ckpt": "out-owt-medium-mhc-group-lora-midnorm-inbeta-bs16-10000step/ckpt.pt",
+  "iter": 9500,
+  "hyper_conn_type": "mhc_group_lora_midnorm",
+  "n_layer": 12,
+  "n_embd": 768,
+  "owt_val_ce": 3.265473,
+  "owt_val_ppl": 26.1925,
+  "owt_val_tokens": 4433920,
+  "owt_val_windows": 4330,
+  "wt103_ce": 3.782042,
+  "wt103_ppl": 43.9056,
+  "wt103_tokens": 287643
+}

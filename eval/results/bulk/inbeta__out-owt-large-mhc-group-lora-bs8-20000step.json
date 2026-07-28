@@ -1,0 +1,7 @@
+{
+  "dir": "out-owt-large-mhc-group-lora-bs8-20000step",
+  "tier": "L",
+  "branch": "inbeta",
+  "ckpt": "/home/work/data/guotianzizhe/data/test/out-owt-large-mhc-group-lora-bs8-20000step/ckpt.pt",
+  "error": "missing ckpt.pt"
+}

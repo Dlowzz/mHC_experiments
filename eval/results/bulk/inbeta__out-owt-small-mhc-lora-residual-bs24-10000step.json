@@ -1,0 +1,17 @@
+{
+  "dir": "out-owt-small-mhc-lora-residual-bs24-10000step",
+  "tier": "S",
+  "branch": "inbeta",
+  "ckpt": "/home/work/data/guotianzizhe/data/test/out-owt-small-mhc-lora-residual-bs24-10000step/ckpt.pt",
+  "hyper_conn_type": "mhc_lora_residual",
+  "n_layer": 6,
+  "n_embd": 512,
+  "iter": 9500,
+  "owt_val_ce": 10.894337,
+  "owt_val_ppl": 53870.4485,
+  "owt_val_tokens": 4433920,
+  "owt_val_windows": 4330,
+  "wt103_ce": 11.173843,
+  "wt103_ppl": 71242.3863,
+  "wt103_tokens": 287643
+}

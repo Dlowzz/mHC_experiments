@@ -1,0 +1,140 @@
+W0724 15:10:38.107000 20623 torch/distributed/run.py:766] 
+W0724 15:10:38.107000 20623 torch/distributed/run.py:766] *****************************************
+W0724 15:10:38.107000 20623 torch/distributed/run.py:766] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0724 15:10:38.107000 20623 torch/distributed/run.py:766] *****************************************
+Overriding config with config/train_owt.py:
+eval_interval = 500
+eval_iters = 200
+log_interval = 10
+always_save_checkpoint = False
+
+wandb_log = True
+wandb_project = 'mhc-lite'
+out_prefix_dataset = "owt"
+
+dataset = 'openwebtext'
+gradient_accumulation_steps = 8  
+batch_size = 16
+block_size = 1024
+
+dtype = 'bfloat16'
+
+Overriding config with config/xl_model.py:
+wandb_group = "xl"
+out_prefix_model = "xl"
+
+n_layer = 28
+n_head = 20
+n_embd = 1280
+dropout = 0.0
+
+learning_rate = 2e-4
+min_lr = 2e-5
+max_iters = 15000
+lr_decay_iters = 15000
+warmup_iters = 200
+weight_decay = 0.1
+beta1 = 0.9
+beta2 = 0.95
+grad_clip = 1.0
+
+# ~600M target on 2xL20: micro-batch 4 x grad_accum 16 -> 65,536 tokens/iter
+batch_size = 4
+gradient_accumulation_steps = 16
+
+Overriding config with config/with_mhc.py:
+hyper_conn_type = "mhc" 
+hyper_conn_n = 4 
+wandb_notes = "mhc"
+
+out_prefix_method = "mhc"
+Overriding: compile = True
+Overriding: wandb_run_name = XL-mhc-owt-bs4ga16-15kstep
+Overriding config with config/train_owt.py:
+eval_interval = 500
+eval_iters = 200
+log_interval = 10
+always_save_checkpoint = False
+
+wandb_log = True
+wandb_project = 'mhc-lite'
+out_prefix_dataset = "owt"
+
+dataset = 'openwebtext'
+gradient_accumulation_steps = 8  
+batch_size = 16
+block_size = 1024
+
+dtype = 'bfloat16'
+
+Overriding config with config/xl_model.py:
+wandb_group = "xl"
+out_prefix_model = "xl"
+
+n_layer = 28
+n_head = 20
+n_embd = 1280
+dropout = 0.0
+
+learning_rate = 2e-4
+min_lr = 2e-5
+max_iters = 15000
+lr_decay_iters = 15000
+warmup_iters = 200
+weight_decay = 0.1
+beta1 = 0.9
+beta2 = 0.95
+grad_clip = 1.0
+
+# ~600M target on 2xL20: micro-batch 4 x grad_accum 16 -> 65,536 tokens/iter
+batch_size = 4
+gradient_accumulation_steps = 16
+
+Overriding config with config/with_mhc.py:
+hyper_conn_type = "mhc" 
+hyper_conn_n = 4 
+wandb_notes = "mhc"
+
+out_prefix_method = "mhc"
+Overriding: compile = True
+Overriding: wandb_run_name = XL-mhc-owt-bs4ga16-15kstep
+tokens per iteration will be: 65,536
+Initializing a new model from scratch
+defaulting to vocab_size of GPT-2 to 50304 (50257 rounded up for efficiency)
+HYPER_CONN: USING mhc with 4 streams
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /root/.netrc.
+wandb: Currently logged in as: guotzzz (guotzzz-peking-university) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 1fds97gy
+wandb: Tracking run with wandb version 0.28.0
+wandb: Run data is saved locally in /home/work/data/guotianzizhe/project/mhc-lite/wandb/run-20260724_151042-1fds97gy
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run XL-mhc-owt-bs4ga16-15kstep-6356
+wandb: ⭐️ View project at https://wandb.ai/guotzzz-peking-university/mhc-lite
+wandb: 🚀 View run at https://wandb.ai/guotzzz-peking-university/mhc-lite/runs/1fds97gy
+tokens per iteration will be: 65,536
+====================================================================================================
+n_layer = 28
+n_head = 20
+n_embd = 1280
+block_size = 1024
+bias = False
+vocab_size = None
+dropout = 0.0
+hyper_conn_n = 4
+hyper_conn_type = mhc
+====================================================================================================
+Initializing a new model from scratch
+defaulting to vocab_size of GPT-2 to 50304 (50257 rounded up for efficiency)
+HYPER_CONN: USING mhc with 4 streams
+number of parameters: 622.13M
+num decayed parameter tensors: 282, with 623,084,640 parameters
+num non-decayed parameter tensors: 337, with 360,072 parameters
+using fused AdamW: True
+compiling the model... (takes a ~minute)
+number of parameters: 622.13M
+num decayed parameter tensors: 282, with 623,084,640 parameters
+num non-decayed parameter tensors: 337, with 360,072 parameters
+using fused AdamW: True
+compiling the model... (takes a ~minute)
+[step 0]train loss: 13.9950, val loss: 13.9840, (avg train loss: 0.0000 ± 0.0000), (avg grad norm: 0.0000 ± 0.0000)
+[iter 0]loss: 13.8366, tokens/sec: 85.31 ± 0.00, tokens seen: 0, grad norm: 127.2029

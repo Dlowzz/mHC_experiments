@@ -1,0 +1,17 @@
+{
+  "dir": "out-owt-large-mhc-lora-residual",
+  "tier": "L",
+  "branch": "inbeta",
+  "ckpt": "/home/work/data/guotianzizhe/data/test/out-owt-large-mhc-lora-residual/ckpt.pt",
+  "hyper_conn_type": "mhc_lora_residual",
+  "n_layer": 24,
+  "n_embd": 1024,
+  "iter": 18500,
+  "owt_val_ce": 7.298732,
+  "owt_val_ppl": 1478.4241,
+  "owt_val_tokens": 4433920,
+  "owt_val_windows": 4330,
+  "wt103_ce": 7.85116,
+  "wt103_ppl": 2568.7125,
+  "wt103_tokens": 287643
+}

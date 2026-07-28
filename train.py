@@ -344,17 +344,25 @@ while True:
             }, step=iter_num)
         if losses['val'] < best_val_loss or always_save_checkpoint:
             best_val_loss = losses['val']
-            if iter_num > 0:
-                checkpoint = {
-                    'model': raw_model.state_dict(),
-                    'optimizer': optimizer.state_dict(),
-                    'model_args': model_args,
-                    'iter_num': iter_num,
-                    'best_val_loss': best_val_loss,
-                    'config': config,
-                }
+            save_best = True
+        else:
+            save_best = False
+        if iter_num > 0:
+            checkpoint = {
+                'model': raw_model.state_dict(),
+                'optimizer': optimizer.state_dict(),
+                'model_args': model_args,
+                'iter_num': iter_num,
+                'best_val_loss': best_val_loss,
+                'val_loss': float(losses['val']),
+                'config': config,
+            }
+            if save_best:
                 print(f"saving checkpoint to {out_dir}")
                 torch.save(checkpoint, os.path.join(out_dir, 'ckpt.pt'))
+            # always keep the most recent checkpoint as well, so the fixed-budget
+            # final model is available independently of best-val selection
+            torch.save(checkpoint, os.path.join(out_dir, 'ckpt_last.pt'))
     if iter_num == 0 and eval_only:
         break
     

@@ -1,0 +1,17 @@
+{
+  "dir": "out-owt-small-mhc-group-lora",
+  "tier": "S",
+  "branch": "inbeta",
+  "ckpt": "/home/work/data/guotianzizhe/data/test/out-owt-small-mhc-group-lora/ckpt.pt",
+  "hyper_conn_type": "mhc_group_lora",
+  "n_layer": 6,
+  "n_embd": 512,
+  "iter": 10000,
+  "owt_val_ce": 6.114643,
+  "owt_val_ppl": 452.4345,
+  "owt_val_tokens": 4433920,
+  "owt_val_windows": 4330,
+  "wt103_ce": 7.316431,
+  "wt103_ppl": 1504.8231,
+  "wt103_tokens": 287643
+}

@@ -3,6 +3,15 @@
 Deterministic full-pass PPL (fp32), branch-matched (min-CE across in-beta / midnorm / group_lora).
 Only checkpoints with an experiment code in testckpt.md; previously-untestable ones omitted.
 
+## XL (28L / 1280d)
+
+| 实验代号 | 文件夹 | OWT-val PPL | WT103 PPL | matched branch | note |
+|---|---|---:|---:|---|---|
+| `group` | out-owt-xl-mhc-group-embedding-bs8-30000step | 21.0420 | 32.6361 | inbeta | iter 30000 / 30000; bs8×ga8 |
+| `lora-midnorm-inbeta` | out-owt-xl-mhc-lora-residual-midnorm-bs4-30000step | 21.0796 | 32.8556 | inbeta | iter 28000 / 30000 |
+| `mhc` | out-owt-xl-mhc-bs4-30000step | 21.1896 | 33.5740 | inbeta | iter 28500 / 30000 |
+| `GL-midnorm-inbeta` | out-owt-xl-mhc-group-lora-midnorm-bs4-30000step | 21.4107 | 33.6073 | inbeta | iter 28000 / 30000 |
+
 ## Large (24L / 1024d)
 
 | 实验代号 | 文件夹 | OWT-val PPL | WT103 PPL | matched branch | note |
@@ -20,8 +29,8 @@ Only checkpoints with an experiment code in testckpt.md; previously-untestable o
 
 | 实验代号 | 文件夹 | OWT-val PPL | WT103 PPL | matched branch | note |
 |---|---|---:|---:|---|---|
-| `GL-midnorm-outbeta` | out-owt-medium-mhc-group-lora-midnorm-bs16-10000step | 25.3922 | 42.1238 | midnorm |  |
-| `lora-midnorm-inbeta` | out-owt-medium-mhc-lora-residual-midnorm-bs16-10000step | 25.7201 | 43.598 | midnorm | code says inbeta, but weights forward correctly under `midnorm` (out-beta) |
+| `GL-midnorm-outbeta` | out-owt-medium-mhc-group-lora-midnorm-bs16-10000step | 25.3922 | 42.1238 | midnorm | legacy crashed run; unreliable and excluded from main result |
+| `lora-midnorm-inbeta` | out-owt-medium-mhc-lora-residual-midnorm-bs16-10000step | 26.4126 | 48.4726 | inbeta | ca1c90f; this is the valid branch-matched result |
 | `mhc-lite` | out-owt-medium-mhc-lite | 25.87 | 47.1103 | inbeta |  |
 | `Group` | out-owt-medium-mhc-group-embedding | 25.9358 | 43.8231 | inbeta |  |
 | `mhc` | out-owt-medium-mhc | 25.9976 | 43.2997 | inbeta |  |

@@ -1,0 +1,17 @@
+{
+  "dir": "out-owt-medium-hc-bs16-10000step",
+  "tier": "M",
+  "branch": "inbeta",
+  "ckpt": "/home/work/data/guotianzizhe/data/test/out-owt-medium-hc-bs16-10000step/ckpt.pt",
+  "hyper_conn_type": "hc",
+  "n_layer": 12,
+  "n_embd": 768,
+  "iter": 10000,
+  "owt_val_ce": 3.267968,
+  "owt_val_ppl": 26.2579,
+  "owt_val_tokens": 4433920,
+  "owt_val_windows": 4330,
+  "wt103_ce": 3.832955,
+  "wt103_ppl": 46.1988,
+  "wt103_tokens": 287643
+}
