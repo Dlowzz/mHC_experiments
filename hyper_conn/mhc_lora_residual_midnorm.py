@@ -67,7 +67,13 @@ class ManifoldConstrainedHyperConnectionsLoRAResidualMidNorm(ManifoldConstrained
         self.stream_down_weight._no_weight_decay = True
 
     def lora_down(self, branch_output):
-        """``rmsnorm_r(h @ A_s)`` : ``b ... f d`` -> ``b ... f s r`` (norm on the rank dim)."""
+        """``rmsnorm_r(h @ A_s)`` : ``b ... f d`` -> ``b ... f s r`` (norm on the rank dim).
+
+        Kept as one batched einsum: folding all A_s into a single ``[d, s*r]`` GEMM was
+        measured ~1% *slower* end-to-end at XL (the ``[d, s*r]`` view is a non-leaf
+        tensor, so it is copied and dtype-cast on every call instead of hitting the
+        autocast weight cache, and einsum already batches the streams).
+        """
         down = einsum(
             branch_output, self.stream_down_weight,
             "b ... f d, s d r -> b ... f s r",

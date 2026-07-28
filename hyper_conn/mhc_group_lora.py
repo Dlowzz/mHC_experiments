@@ -149,15 +149,26 @@ class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConne
 
     def _compute_group_pre_gate(self, normed):
         """H_pre_grp from normed residuals.  normed: ``b ... f (s d)`` ->
-        returns ``b ... f groups streams``."""
+        returns ``b ... f groups streams``.
+
+        The read is group-local: group q only sees its own ``[streams, group_dim]``
+        slice.  Gathering those slices used to need a ``b s q d -> b q (s d)`` rearrange,
+        i.e. a full permute copy of ``normed`` (21M elements at XL) on every call.
+        Instead the compact weight is expanded into the equivalent block-diagonal dense
+        matrix ``[(s q dl), (q e)]`` -- built from the parameter on every forward, so
+        gradients only reach the compact parameter and the off-block zeros stay zero --
+        and applied as one GEMM on the untouched ``normed``.
+        """
         streams = self.num_residual_streams
         groups = self.group_embedding_groups
 
-        normed_sd = rearrange(normed, "b ... (s d) -> b ... s d", s=streams)
-        normed_grp = rearrange(normed_sd, "b ... s (q d) -> b ... s q d", q=groups)
-        x_group_flat = rearrange(normed_grp, "b ... s q d -> b ... q (s d)")
+        w = self.group_pre_weight.unflatten(1, (streams, self.group_dim))   # q s dl e (view)
+        block_eye = torch.eye(groups, device=w.device, dtype=w.dtype)
+        dense = einsum(w, block_eye, "q s l e, q p -> s q l p e").reshape(
+            streams * groups * self.group_dim, groups * streams
+        )
 
-        H_pre_dyn = einsum(x_group_flat, self.group_pre_weight, "b ... q i, q i s -> b ... q s")
+        H_pre_dyn = (normed @ dense).unflatten(-1, (groups, streams))
         H_pre_raw = self.pre_branch_scale * H_pre_dyn + self.group_pre_bias
         return H_pre_raw.sigmoid()
 
