@@ -319,20 +319,6 @@ class MHCLite(Module):
 
         self.depth_residual_fn = depth_residual_fn
 
-    def gate_logits(self, normed):
-        """alpha (and beta) gate logits from a single packed GEMM.
-
-        Both projections read the same `normed`, and
-        `normed @ [W_alpha | W_beta] == [normed @ W_alpha | normed @ W_beta]`,
-        so they are computed as one matmul and split again.
-        """
-        if not self.add_branch_out_to_residual:
-            return normed @ self.dynamic_alpha_fn, None
-
-        splits = (self.dynamic_alpha_fn.shape[-1], self.dynamic_beta_fn.shape[-1])
-        gate = normed @ cat((self.dynamic_alpha_fn, self.dynamic_beta_fn), dim = -1)
-        return gate.split(splits, dim = -1)
-
     def width_connection(
         self,
         residuals
@@ -361,8 +347,8 @@ class MHCLite(Module):
         # normed = F.normalize(normed, dim = -1)
         normed = self.norm(normed)
 
-        # alpha for weighted sum of residuals going into branch (packed with the beta projection)
-        wc_weight, dc_weight = self.gate_logits(normed) # ... f (s*v + s!) / ... (s f)
+        # alpha for weighted sum of residuals going into branch
+        wc_weight = normed @ self.dynamic_alpha_fn # ... f (s*v + s!)
         psize = self.num_input_views * streams
         dynamic_pre, dynamic_residual = wc_weight[..., :psize], wc_weight[..., psize:]
         static_pre  , static_residual   = self.static_alpha[:psize], self.static_alpha[psize:]
@@ -390,6 +376,7 @@ class MHCLite(Module):
 
         beta = None
         if self.add_branch_out_to_residual:
+            dc_weight = normed @ self.dynamic_beta_fn # ... (s f)
             dc_weight = rearrange(dc_weight, '... (s f) -> ... s f', s = streams)
 
             dynamic_beta = dc_weight * self.h_post_scale

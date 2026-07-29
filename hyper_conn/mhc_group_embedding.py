@@ -169,8 +169,7 @@ class ManifoldConstrainedHyperConnectionsGroupEmbedding(ManifoldConstrainedHyper
         normed = self.norm(normed)
 
         # ---- H_res path: EXACTLY the original mHC (dynamic alpha + sinkhorn) ----
-        # alpha and beta gate logits come from one packed GEMM (see parent gate_logits)
-        wc_weight, dc_weight = self.gate_logits(normed)
+        wc_weight = normed @ self.dynamic_alpha_fn
         wc_weight = rearrange(wc_weight, '... (s t) -> ... s t', s=streams)
 
         pre_branch_scale = repeat(self.pre_branch_scale, '1 -> v', v=self.num_input_views * self.num_fracs)
@@ -203,6 +202,7 @@ class ManifoldConstrainedHyperConnectionsGroupEmbedding(ManifoldConstrainedHyper
         # ---- H^post (beta): ORIGINAL mHC write-back generator, unchanged ----
         beta = None
         if self.add_branch_out_to_residual:
+            dc_weight = normed @ self.dynamic_beta_fn
             dc_weight = rearrange(dc_weight, '... (s f) -> ... s f', s=streams)
 
             dynamic_beta = dc_weight * self.h_post_scale
