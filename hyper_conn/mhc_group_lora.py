@@ -109,9 +109,11 @@ class ManifoldConstrainedHyperConnectionsGroupLoRA(ManifoldConstrainedHyperConne
         in_feat = streams * group_dim
         # [groups, streams*group_dim, streams] -> numel == streams^2 * effective_dim (n^2 C)
         self.group_pre_weight = nn.Parameter(torch.zeros(groups, in_feat, streams))
+        # static read bias (analogue of static_alpha): every group starts reading the
+        # layer's "home" stream, i.e. the same +1 column for all groups and -1 elsewhere,
+        # matching the original mHC static_alpha / static_beta convention.
         pre_bias = torch.full((groups, streams), -1.0)
-        for q in range(groups):
-            pre_bias[q, q % streams] = 1.0
+        pre_bias[:, self.init_residual_index] = 1.0
         self.group_pre_bias = nn.Parameter(pre_bias)
 
         # ---------- per-stream LoRA WRITE params ----------

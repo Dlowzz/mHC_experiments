@@ -234,6 +234,9 @@ class MHCLite(Module):
 
         self.num_residual_streams = num_residual_streams
         init_residual_index = default(layer_index, randrange(num_residual_streams)) % num_residual_streams # just choose one random residual stream if layer index not given
+        # recorded for symmetry with mhc.py (bookkeeping only: no effect on the forward
+        # pass, the RNG or the state_dict)
+        self.init_residual_index = init_residual_index
 
         # handle the parameter dimensions, which may require (num_residuals x num_fractions) - generalizing hyper + frac connections
 

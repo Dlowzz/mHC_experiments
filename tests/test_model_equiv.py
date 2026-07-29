@@ -67,10 +67,15 @@ def run_variant(hc_type, device):
     ref = build_gpt(hc_type, True, device)
 
     # ---- identical init (also proves RNG consumption order is unchanged) ----
+    # `group_pre_bias` is intentionally initialised differently from the reference now
+    # (see tests/test_init_policy.py); everything else must match, and the reference then
+    # takes this model's weights so the comparisons below are weight-for-weight.
     sd_new, sd_ref = new.state_dict(), ref.state_dict()
     assert list(sd_new.keys()) == list(sd_ref.keys()), f"{hc_type}: state_dict keys differ"
-    worst_init = max(scaled_diff(sd_new[k], sd_ref[k]) for k in sd_new)
+    compared = [k for k in sd_new if not k.endswith("group_pre_bias")]
+    worst_init = max(scaled_diff(sd_new[k], sd_ref[k]) for k in compared)
     assert worst_init <= TOL, f"{hc_type}: init differs, scaled diff {worst_init:.3e}"
+    ref.load_state_dict(sd_new)
 
     # ---- fixed batches ----
     torch.manual_seed(7)

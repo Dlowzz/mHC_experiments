@@ -81,13 +81,21 @@ def run_case(label, klass, ref_klass, case, device, seed=1234):
     report = []
 
     # ---- structural: same keys, same shapes, same init values ----
+    # `group_pre_bias` is deliberately initialised differently now (all groups start on
+    # the layer's home stream instead of the diagonal), so it is excluded here and covered
+    # by tests/test_init_policy.py; the reference then takes this model's weights so the
+    # math comparison below is weight-for-weight.
+    changed_init = ("group_pre_bias",)
     sd_new, sd_ref = new.state_dict(), ref.state_dict()
     assert list(sd_new.keys()) == list(sd_ref.keys()), (
         f"{label}: state_dict keys differ\n{list(sd_new.keys())}\n{list(sd_ref.keys())}"
     )
     for k in sd_new:
         assert sd_new[k].shape == sd_ref[k].shape, f"{label}: shape mismatch for {k}"
+        if k.endswith(changed_init):
+            continue
         check(f"init:{k}", sd_new[k], sd_ref[k], report)
+    ref.load_state_dict(sd_new)
 
     # ---- forward: width_connection ----
     streams, dim = case["streams"], case["dim"]

@@ -66,6 +66,12 @@
 - 这一轮跑在 `perf` 分支上，但 **alpha/beta 的两次投影已恢复为两个独立 GEMM**，`mhc` 与 `mhc_lite` 的算子路径与 `final` 完全一致（单测逐位相同）；group / LoRA 变体仍带各自的写回优化，见 `tests/`。
 - 30k 那轮的 ckpt 与评测结果仍在 `data/test/`，但 token 预算与 lr schedule 都不同，**不可与本轮混比**。
 
+**⚠️ 初始化在本轮有两处修复，与此前所有 run（S/M/L 与 XL 30k）都不同：**
+
+- `train.py` / `train_analysis.py` 现在会 `random.seed(seed)`。此前只设了 `torch.manual_seed`，而每层 beta 的「主写入流」来自 `random.randrange`（`hyper_conn/mhc.py`），所以**旧 run 每次的主写入流布局都不一样、也不可复现**；旧 ckpt 的布局只能用 `static_beta.argmax()` 反推。DDP 下用不带 rank 偏移的 `seed`，保证各 rank 一致。
+- group 变体的 `group_pre_bias` 从「对角线」（group q 的 home 落在 stream q）改为**所有 group 共用该层的 home 列**（该列 +1、其余 -1），与原始 mHC 的 `static_alpha` / `static_beta` 约定一致。旧 ckpt 加载不受影响（形状不变、值来自 state_dict），30k 那轮的评测仍可逐位复现；但 group / group-lora 的新 run 与旧 run **初始化语义不同**。
+- 两项都有测试守护：`tests/test_init_policy.py`（种子可复现性、bias 形态、三处 home 定义一致性、trainer 确实设了种子）。
+
 启动命令（`<method>` 见第五节）：
 
 ```bash

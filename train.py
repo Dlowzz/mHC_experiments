@@ -140,6 +140,10 @@ out_dir = os.path.join(
 if master_process:
     os.makedirs(out_dir, exist_ok=True)
 torch.manual_seed(seed + seed_offset)
+# the hyper-connection modules pick their beta "home" stream with random.randrange
+# (hyper_conn/mhc.py), so `random` has to be seeded too or every run gets a different
+# per-layer write-in stream. no rank offset here: all ranks must agree on the layout.
+random.seed(seed)
 torch.backends.cuda.matmul.allow_tf32 = True # allow tf32 on matmul
 torch.backends.cudnn.allow_tf32 = True # allow tf32 on cudnn
 device_type = 'cuda' if 'cuda' in device else 'cpu' # for later use in torch.autocast
