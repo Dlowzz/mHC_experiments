@@ -21,6 +21,12 @@ Ablations of the LoRA norm (all on ``mhc_lora_residual_midnorm``):
   ``mhc_lora_residual_prenorm``      norm moved before A_s (on h, hidden dim)
   ``mhc_lora_residual_postnorm``     norm moved after B_s (on delta, hidden dim)
 
+The same three norm ablations on the group-LoRA line (group-wise H_pre read kept):
+
+  ``mhc_group_lora_scalemidnorm``    rank-dim norm + learnable scale (no bias)
+  ``mhc_group_lora_prenorm``         norm moved before A_s (on h, hidden dim)
+  ``mhc_group_lora_postnorm``        norm moved after B_s (on delta, hidden dim)
+
 ``mhc_lora_residual.py`` and ``mhc_group_lora.py`` are kept because the two midnorm
 variants inherit from them; the no-norm variants themselves are no longer selectable.
 Every other variant (hc / mhc_embedding / mhc_orthogonal_diff / mhc_group_lora_capped /
@@ -89,6 +95,24 @@ from .mhc_lora_residual_postnorm import (
     get_init_and_expand_reduce_stream_functions as mhc_lora_residual_postnorm_get_init_and_expand_reduce_stream_functions,
 )
 
+from .mhc_group_lora_scalemidnorm import (
+    ManifoldConstrainedHyperConnectionsGroupLoRAScaleMidNorm,
+    MHCGroupLoRAScaleMidNorm,
+    get_init_and_expand_reduce_stream_functions as mhc_group_lora_scalemidnorm_get_init_and_expand_reduce_stream_functions,
+)
+
+from .mhc_group_lora_prenorm import (
+    ManifoldConstrainedHyperConnectionsGroupLoRAPreNorm,
+    MHCGroupLoRAPreNorm,
+    get_init_and_expand_reduce_stream_functions as mhc_group_lora_prenorm_get_init_and_expand_reduce_stream_functions,
+)
+
+from .mhc_group_lora_postnorm import (
+    ManifoldConstrainedHyperConnectionsGroupLoRAPostNorm,
+    MHCGroupLoRAPostNorm,
+    get_init_and_expand_reduce_stream_functions as mhc_group_lora_postnorm_get_init_and_expand_reduce_stream_functions,
+)
+
 SUPPORTED_HYPER_CONN_TYPES = (
     "none",
     "mhc",
@@ -103,6 +127,10 @@ SUPPORTED_HYPER_CONN_TYPES = (
     "mhc_lora_residual_scalemidnorm",
     "mhc_lora_residual_prenorm",
     "mhc_lora_residual_postnorm",
+    # the same three norm ablations on the group-LoRA line
+    "mhc_group_lora_scalemidnorm",
+    "mhc_group_lora_prenorm",
+    "mhc_group_lora_postnorm",
 )
 
 flag = False
@@ -137,6 +165,12 @@ def hyper_conn_init_func(hyper_conn_type: str, hyper_conn_n: int):
         return mhc_lora_residual_prenorm_get_init_and_expand_reduce_stream_functions(hyper_conn_n)
     elif hyper_conn_type == "mhc_lora_residual_postnorm":
         return mhc_lora_residual_postnorm_get_init_and_expand_reduce_stream_functions(hyper_conn_n)
+    elif hyper_conn_type == "mhc_group_lora_scalemidnorm":
+        return mhc_group_lora_scalemidnorm_get_init_and_expand_reduce_stream_functions(hyper_conn_n)
+    elif hyper_conn_type == "mhc_group_lora_prenorm":
+        return mhc_group_lora_prenorm_get_init_and_expand_reduce_stream_functions(hyper_conn_n)
+    elif hyper_conn_type == "mhc_group_lora_postnorm":
+        return mhc_group_lora_postnorm_get_init_and_expand_reduce_stream_functions(hyper_conn_n)
     else:
         raise ValueError(
             f"Invalid hyper connection type: {hyper_conn_type}. supported: "

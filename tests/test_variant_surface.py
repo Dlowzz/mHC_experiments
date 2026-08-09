@@ -33,6 +33,10 @@ EXPECTED_TYPES = (
     "mhc_lora_residual_scalemidnorm",
     "mhc_lora_residual_prenorm",
     "mhc_lora_residual_postnorm",
+    # the same three norm ablations on the group-LoRA line
+    "mhc_group_lora_scalemidnorm",
+    "mhc_group_lora_prenorm",
+    "mhc_group_lora_postnorm",
 )
 REMOVED_TYPES = (
     "hc", "shc", "mhc_embedding", "mhc_orthogonal_diff", "mhc_group_lora_capped",
@@ -55,6 +59,9 @@ EXPECTED_FILES = {
     "mhc_lora_residual_scalemidnorm.py", "test_mhc_lora_residual_scalemidnorm.py",
     "mhc_lora_residual_prenorm.py", "test_mhc_lora_residual_prenorm.py",
     "mhc_lora_residual_postnorm.py", "test_mhc_lora_residual_postnorm.py",
+    "mhc_group_lora_scalemidnorm.py", "test_mhc_group_lora_scalemidnorm.py",
+    "mhc_group_lora_prenorm.py", "test_mhc_group_lora_prenorm.py",
+    "mhc_group_lora_postnorm.py", "test_mhc_group_lora_postnorm.py",
 }
 
 
