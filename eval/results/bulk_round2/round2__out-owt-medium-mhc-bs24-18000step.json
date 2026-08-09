@@ -1,0 +1,18 @@
+{
+  "dir": "out-owt-medium-mhc-bs24-18000step",
+  "tier": null,
+  "branch": "round2",
+  "ckpt": "/home/work/data/guotianzizhe/data/eval_round2/out-owt-medium-mhc-bs24-18000step/ckpt.pt",
+  "hyper_conn_type": "mhc",
+  "n_layer": 12,
+  "n_embd": 768,
+  "iter": 18000,
+  "block_size": 1024,
+  "owt_val_ce": 3.084602,
+  "owt_val_ppl": 21.8588,
+  "owt_val_tokens": 4433920,
+  "owt_val_windows": 4330,
+  "wt103_ce": 3.671834,
+  "wt103_ppl": 39.324,
+  "wt103_tokens": 287643
+}

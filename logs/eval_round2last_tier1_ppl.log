@@ -1,0 +1,11 @@
+[run_all] branch=round2last device=cuda:0 n=4 wt103=True
+HYPER_CONN: USING mhc with 4 streams
+number of parameters: 622.13M
+OK [None] out-owt-xl-mhc-bs6-80000step: owt_ppl=18.9517 wt103_ppl=31.0602
+number of parameters: 623.28M
+OK [None] out-owt-xl-mhc-group-embedding-bs6-80000step: owt_ppl=18.1458 wt103_ppl=30.7641
+number of parameters: 626.72M
+OK [None] out-owt-xl-mhc-lora-residual-midnorm-bs6-80000step: owt_ppl=18.8346 wt103_ppl=31.6534
+number of parameters: 627.87M
+OK [None] out-owt-xl-mhc-group-lora-midnorm-bs6-80000step: owt_ppl=18.0848 wt103_ppl=29.478
+[run_all] done

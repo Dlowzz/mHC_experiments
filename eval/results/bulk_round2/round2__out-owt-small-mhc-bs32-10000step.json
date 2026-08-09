@@ -1,0 +1,18 @@
+{
+  "dir": "out-owt-small-mhc-bs32-10000step",
+  "tier": null,
+  "branch": "round2",
+  "ckpt": "/home/work/data/guotianzizhe/data/eval_round2/out-owt-small-mhc-bs32-10000step/ckpt.pt",
+  "hyper_conn_type": "mhc",
+  "n_layer": 6,
+  "n_embd": 512,
+  "iter": 10000,
+  "block_size": 1024,
+  "owt_val_ce": 3.386925,
+  "owt_val_ppl": 29.5749,
+  "owt_val_tokens": 4433920,
+  "owt_val_windows": 4330,
+  "wt103_ce": 4.001432,
+  "wt103_ppl": 54.6764,
+  "wt103_tokens": 287643
+}

@@ -106,6 +106,9 @@ def main():
     ap.add_argument("--tiers", default="L,M,S")
     ap.add_argument("--dirs", default="", help="explicit comma-separated dir list (overrides tiers)")
     ap.add_argument("--filter", default="", help="only dirs containing this substring")
+    ap.add_argument("--ckpt_name", default="ckpt.pt",
+                    help="which file inside each dir to score (ckpt.pt = best-val, "
+                         "ckpt_last.pt = last eval, i.e. equal-budget across runs)")
     ap.add_argument("--wt103", action="store_true")
     args = ap.parse_args()
 
@@ -121,11 +124,11 @@ def main():
     print(f"[run_all] branch={args.branch} device={args.device} n={len(todo)} wt103={args.wt103}", flush=True)
 
     for tier, d in todo:
-        ckpt = os.path.join(args.root, d, "ckpt.pt")
+        ckpt = os.path.join(args.root, d, args.ckpt_name)
         out = os.path.join(args.out_dir, f"{args.branch}__{d}.json")
         rec = {"dir": d, "tier": tier, "branch": args.branch, "ckpt": ckpt}
         if not os.path.exists(ckpt):
-            rec["error"] = "missing ckpt.pt"
+            rec["error"] = f"missing {args.ckpt_name}"
             json.dump(rec, open(out, "w"), indent=2)
             print(f"SKIP(missing) {d}", flush=True)
             continue

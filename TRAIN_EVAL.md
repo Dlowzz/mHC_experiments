@@ -24,7 +24,8 @@ nanoGPT 派生的 mHC (Manifold-constrained Hyper-Connections) 消融实验代�
 | **mhc-lora** | `with_mhc_lora_residual_midnorm.py` | `mhc_lora_residual_midnorm` | 新版 `ca1c90f` 为 midnorm + in-beta；旧 `199654a` 为 out-beta |
 | **mhc-group-lora** | `with_mhc_group_lora_midnorm.py` | `mhc_group_lora_midnorm` | 新版 `ca1c90f` 为 midnorm + in-beta；旧 checkpoint 按训练 commit 判断 |
 
-> 其它变体（`with_*.py`）：`mhc_lite` / `hc` / `mhc_embedding` / `mhc_orthogonal_diff` / `mhc_group_lora_capped` / `mhc_lora_residual`(no-norm) / `mhc_lora_residual_affinemidnorm` 等。
+> 本分支（`perf`）只保留这 4 类主实验 + `mhc_lite` + `none`（plain GPT）共 6 个可选 `hyper_conn_type`；`hc` / `mhc_embedding` / `mhc_orthogonal_diff` / `mhc_group_lora_capped` / `mhc_lora_residual`(no-norm) / `mhc_group_lora`(no-norm) / `mhc_lora_residual_affinemidnorm` / `analysis` 及其 config、单测都已删除，传这些类型会直接报错。要训练或评测它们的旧 ckpt 请切到 `final` 分支。
+> `mhc_lora_residual.py` 与 `mhc_group_lora.py` 两个文件仍保留，因为两个 midnorm 变体继承自它们（但类型本身不可选）。
 > **重要**：LoRA 系变体的前向依赖分支代码。`final`(=in-beta) 上的 LoRA ckpt 必须在 in-beta 代码下评测；老 ckpt 要按其训练 commit 评测，见 `eval/experiment_commit_map.md`。
 
 ## 三、训练

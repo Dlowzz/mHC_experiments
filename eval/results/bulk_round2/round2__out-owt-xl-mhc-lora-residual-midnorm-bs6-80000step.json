@@ -1,0 +1,18 @@
+{
+  "dir": "out-owt-xl-mhc-lora-residual-midnorm-bs6-80000step",
+  "tier": null,
+  "branch": "round2",
+  "ckpt": "/home/work/data/guotianzizhe/data/eval_round2/out-owt-xl-mhc-lora-residual-midnorm-bs6-80000step/ckpt.pt",
+  "hyper_conn_type": "mhc_lora_residual_midnorm",
+  "n_layer": 28,
+  "n_embd": 1280,
+  "iter": 73000,
+  "block_size": 1024,
+  "owt_val_ce": 2.942532,
+  "owt_val_ppl": 18.9638,
+  "owt_val_tokens": 4433920,
+  "owt_val_windows": 4330,
+  "wt103_ce": 3.459768,
+  "wt103_ppl": 31.8096,
+  "wt103_tokens": 287643
+}

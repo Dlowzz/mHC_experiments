@@ -125,6 +125,8 @@ WANDB_MODE=online CUDA_VISIBLE_DEVICES=2,3 torchrun --standalone --nproc_per_nod
 
 > LoRA 系变体前向**依赖分支代码**：`final`(=in-beta) 上训的 ckpt 必须在 in-beta 代码下评测；老 ckpt 按其训练 commit 评测。详见 `eval/experiment_commit_map.md`。
 
+> **本分支（`perf`）已裁剪变体集合**：可选 `hyper_conn_type` 只有上表 4 类 + `mhc_lite` + `none`（plain GPT）。`hc` / `mhc_embedding` / `mhc_orthogonal_diff` / `mhc_group_lora_capped` / `mhc_lora_residual`(no-norm) / `mhc_group_lora`(no-norm) / `mhc_lora_residual_affinemidnorm` / `analysis` 的实现、config 与单测都已删除，传这些类型会抛 `ValueError`。`data/test/` 里这些类型的旧 ckpt 在本分支**无法评测**（`eval/run_all.py` 会给对应目录写 `error` 字段并继续），需要时切到 `final` 分支跑。`mhc_lora_residual.py` / `mhc_group_lora.py` 两个文件保留，仅作为两个 midnorm 变体的父类。裁剪由 `tests/test_variant_surface.py` 守护。
+
 ## 六、XL 实验与评测状态（更新于 2026-07-28）
 
 - 四个 XL 主实验 checkpoint 已集中到 `/home/work/data/guotianzizhe/data/test/` 并完成统一评测：OWT-val、WikiText-103 以及 8 个 lm-eval 0-shot 任务。

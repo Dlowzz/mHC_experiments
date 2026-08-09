@@ -22,9 +22,16 @@ import model as model_mod
 from model import GPTConfig
 from hyper_conn.mhc_group_embedding import ManifoldConstrainedHyperConnectionsGroupEmbedding as Group
 from hyper_conn.mhc_group_lora_midnorm import ManifoldConstrainedHyperConnectionsGroupLoRAMidNorm as GroupLoRA
+from hyper_conn.mhc_group_dense_embedding import ManifoldConstrainedHyperConnectionsGroupDenseEmbedding as GroupDense
+from hyper_conn.mhc_group_lora_dense_midnorm import ManifoldConstrainedHyperConnectionsGroupLoRADenseMidNorm as GroupLoRADense
 
 REPO = Path(__file__).resolve().parents[1]
-GROUP_TYPES = ("mhc_group_embedding", "mhc_group_lora_midnorm")
+# the dense ablations replace group_pre_weight but keep group_pre_bias, so the same
+# home-stream bias convention must hold for them too
+GROUP_TYPES = (
+    "mhc_group_embedding", "mhc_group_lora_midnorm",
+    "mhc_group_dense_embedding", "mhc_group_lora_dense_midnorm",
+)
 
 
 def build_gpt(hc_type, random_seed, n_layer=6):
@@ -59,7 +66,7 @@ def test_seed_controls_home_stream():
 
 
 def test_group_bias_pattern():
-    for klass in (Group, GroupLoRA):
+    for klass in (Group, GroupLoRA, GroupDense, GroupLoRADense):
         for streams, dim, groups in ((4, 64, 4), (4, 64, 2), (8, 64, 8), (2, 48, 2)):
             random.seed(0)
             torch.manual_seed(0)

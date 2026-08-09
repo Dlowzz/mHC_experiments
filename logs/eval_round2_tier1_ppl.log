@@ -1,0 +1,27 @@
+[run_all] branch=round2 device=cuda:0 n=12 wt103=True
+HYPER_CONN: USING mhc with 4 streams
+number of parameters: 45.25M
+OK [None] out-owt-small-mhc-bs32-10000step: owt_ppl=29.5749 wt103_ppl=54.6764
+number of parameters: 45.35M
+OK [None] out-owt-small-mhc-group-embedding-bs32-10000step: owt_ppl=29.581 wt103_ppl=58.7461
+number of parameters: 45.64M
+OK [None] out-owt-small-mhc-lora-residual-midnorm-bs32-10000step: owt_ppl=29.3554 wt103_ppl=51.0823
+number of parameters: 45.74M
+OK [None] out-owt-small-mhc-group-lora-midnorm-bs32-10000step: owt_ppl=29.3726 wt103_ppl=54.977
+number of parameters: 125.43M
+OK [None] out-owt-medium-mhc-bs24-18000step: owt_ppl=21.8588 wt103_ppl=39.324
+number of parameters: 125.73M
+OK [None] out-owt-medium-mhc-group-embedding-bs24-18000step: owt_ppl=21.8098 wt103_ppl=34.277
+number of parameters: 126.61M
+OK [None] out-owt-medium-mhc-lora-residual-midnorm-bs24-18000step: owt_ppl=21.8994 wt103_ppl=36.8024
+number of parameters: 126.91M
+OK [None] out-owt-medium-mhc-group-lora-midnorm-bs24-18000step: owt_ppl=21.8559 wt103_ppl=34.7367
+number of parameters: 622.13M
+OK [None] out-owt-xl-mhc-bs6-80000step: owt_ppl=18.876 wt103_ppl=30.3139
+number of parameters: 623.28M
+OK [None] out-owt-xl-mhc-group-embedding-bs6-80000step: owt_ppl=18.1594 wt103_ppl=30.8313
+number of parameters: 626.72M
+OK [None] out-owt-xl-mhc-lora-residual-midnorm-bs6-80000step: owt_ppl=18.9638 wt103_ppl=31.8096
+number of parameters: 627.87M
+OK [None] out-owt-xl-mhc-group-lora-midnorm-bs6-80000step: owt_ppl=18.2292 wt103_ppl=29.6067
+[run_all] done

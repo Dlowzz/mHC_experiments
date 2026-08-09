@@ -29,16 +29,19 @@ def main():
     ap.add_argument("--tasks", default=DEF_TASKS)
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--batch_size", type=int, default=32)
+    ap.add_argument("--ckpt_name", default="ckpt.pt",
+                    help="which file inside each dir to score (ckpt.pt = best-val, "
+                         "ckpt_last.pt = last eval, i.e. equal-budget across runs)")
     args = ap.parse_args()
 
     os.makedirs(args.out_dir, exist_ok=True)
     tasks = args.tasks.split(",")
     print(f"[run_tasks] branch={args.branch} device={args.device} tasks={tasks}", flush=True)
     for d in args.dirs.split(","):
-        ckpt = os.path.join(args.root, d, "ckpt.pt")
+        ckpt = os.path.join(args.root, d, args.ckpt_name)
         out = os.path.join(args.out_dir, f"{args.branch}__{d}.json")
         if not os.path.exists(ckpt):
-            json.dump({"dir": d, "branch": args.branch, "error": "missing ckpt.pt"}, open(out, "w"), indent=2)
+            json.dump({"dir": d, "branch": args.branch, "error": f"missing {args.ckpt_name}"}, open(out, "w"), indent=2)
             print(f"SKIP(missing) {d}", flush=True)
             continue
         try:
