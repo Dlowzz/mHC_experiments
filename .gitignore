@@ -17,4 +17,6 @@ eval/results/**/raw/
 # internal-host rsync notes (contain internal IPs)
 eval/ckpt_rsync.md
 mhc_equiv/pull_ckpts.sh
+# modelscope upload cache
+.ms_upload_cache
 
