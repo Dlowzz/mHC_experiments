@@ -86,6 +86,8 @@ decay_lr = True # whether to decay the learning rate
 warmup_iters = 2000 # how many steps to warm up for
 lr_decay_iters = 600000 # should be ~= max_iters per Chinchilla
 min_lr = 6e-5 # minimum learning rate, should be ~= learning_rate/10 per Chinchilla
+lr_schedule = 'cosine' # 'cosine' (warmup->cosine->min) | 'wsd' (warmup->stable->cosine tail)
+lr_decay_start_iters = 0 # WSD only: iter at which the tail cosine decay begins (0 -> warmup_iters)
 # DDP settings
 backend = 'nccl' # 'nccl', 'gloo', etc.
 # system
@@ -290,7 +292,7 @@ def estimate_loss():
     model.train()
     return out
 
-# learning rate decay scheduler (cosine with warmup)
+# learning rate decay scheduler (cosine, or WSD = warmup-stable-decay)
 def get_lr(it):
     # 1) linear warmup for warmup_iters steps
     if it < warmup_iters:
@@ -298,8 +300,16 @@ def get_lr(it):
     # 2) if it > lr_decay_iters, return min learning rate
     if it > lr_decay_iters:
         return min_lr
-    # 3) in between, use cosine decay down to min learning rate
-    decay_ratio = (it - warmup_iters) / (lr_decay_iters - warmup_iters)
+    # 3) WSD: hold LR flat until lr_decay_start_iters, then cosine-decay to min_lr
+    #    over [lr_decay_start_iters, lr_decay_iters]. Otherwise plain cosine over
+    #    [warmup_iters, lr_decay_iters].
+    if lr_schedule == 'wsd':
+        decay_start = lr_decay_start_iters if lr_decay_start_iters > 0 else warmup_iters
+        if it < decay_start:
+            return learning_rate  # stable phase: constant max LR
+        decay_ratio = (it - decay_start) / (lr_decay_iters - decay_start)
+    else:
+        decay_ratio = (it - warmup_iters) / (lr_decay_iters - warmup_iters)
     assert 0 <= decay_ratio <= 1
     coeff = 0.5 * (1.0 + math.cos(math.pi * decay_ratio)) # coeff ranges 0..1
     return min_lr + coeff * (learning_rate - min_lr)

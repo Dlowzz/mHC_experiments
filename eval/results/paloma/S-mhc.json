@@ -1,0 +1,39 @@
+{
+  "ckpt": "/home/work/data/guotianzizhe/data/test/out-owt-small-mhc-bs32-10000step/ckpt_last.pt",
+  "label": "S-mhc",
+  "iter": 10000,
+  "hyper_conn_type": "mhc",
+  "n_layer": 6,
+  "n_embd": 512,
+  "block_size": 1024,
+  "vocab_size": 50304,
+  "batch_size": 8,
+  "limit": null,
+  "results": {
+    "c4": {
+      "word_perplexity": 229.498205,
+      "byte_perplexity": 2.474284,
+      "bits_per_byte": 1.307011
+    },
+    "dolma": {
+      "word_perplexity": 587.023106,
+      "byte_perplexity": 2.665694,
+      "bits_per_byte": 1.414511
+    },
+    "falcon": {
+      "word_perplexity": 377.774225,
+      "byte_perplexity": 2.713098,
+      "bits_per_byte": 1.439941
+    },
+    "redpajama": {
+      "word_perplexity": 2794.905079,
+      "byte_perplexity": 3.009186,
+      "bits_per_byte": 1.589373
+    },
+    "wikitext": {
+      "word_perplexity": 124.184548,
+      "byte_perplexity": 2.462442,
+      "bits_per_byte": 1.30009
+    }
+  }
+}

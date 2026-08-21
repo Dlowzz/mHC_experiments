@@ -1,0 +1,39 @@
+{
+  "ckpt": "/home/work/data/guotianzizhe/data/eval_round2/out-owt-xl-mhc-group-embedding-bs6-80000step/ckpt_last.pt",
+  "label": "XL-group",
+  "iter": 80000,
+  "hyper_conn_type": "mhc_group_embedding",
+  "n_layer": 28,
+  "n_embd": 1280,
+  "block_size": 1024,
+  "vocab_size": 50304,
+  "batch_size": 8,
+  "limit": null,
+  "results": {
+    "c4": {
+      "word_perplexity": 129.543203,
+      "byte_perplexity": 2.249349,
+      "bits_per_byte": 1.169508
+    },
+    "dolma": {
+      "word_perplexity": 321.497941,
+      "byte_perplexity": 2.429942,
+      "bits_per_byte": 1.280922
+    },
+    "falcon": {
+      "word_perplexity": 188.762175,
+      "byte_perplexity": 2.414276,
+      "bits_per_byte": 1.27159
+    },
+    "redpajama": {
+      "word_perplexity": 1495.415609,
+      "byte_perplexity": 2.758944,
+      "bits_per_byte": 1.464116
+    },
+    "wikitext": {
+      "word_perplexity": 71.495579,
+      "byte_perplexity": 2.221014,
+      "bits_per_byte": 1.151219
+    }
+  }
+}

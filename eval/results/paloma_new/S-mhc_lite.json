@@ -1,0 +1,39 @@
+{
+  "ckpt": "/home/work/data/guotianzizhe/project/mhc-lite/out-owt-small-mhc-lite-bs32-10000step/ckpt.pt",
+  "label": "S-mhc_lite",
+  "iter": 10000,
+  "hyper_conn_type": "mhc_lite",
+  "n_layer": 6,
+  "n_embd": 512,
+  "block_size": 1024,
+  "vocab_size": 50304,
+  "batch_size": 8,
+  "limit": null,
+  "results": {
+    "c4": {
+      "word_perplexity": 224.465224,
+      "byte_perplexity": 2.465157,
+      "bits_per_byte": 1.301679
+    },
+    "dolma": {
+      "word_perplexity": 590.882544,
+      "byte_perplexity": 2.668382,
+      "bits_per_byte": 1.415965
+    },
+    "falcon": {
+      "word_perplexity": 362.669264,
+      "byte_perplexity": 2.694542,
+      "bits_per_byte": 1.43004
+    },
+    "redpajama": {
+      "word_perplexity": 2908.434188,
+      "byte_perplexity": 3.025866,
+      "bits_per_byte": 1.597348
+    },
+    "wikitext": {
+      "word_perplexity": 137.773634,
+      "byte_perplexity": 2.510699,
+      "bits_per_byte": 1.328089
+    }
+  }
+}

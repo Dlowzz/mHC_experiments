@@ -1,0 +1,213 @@
+
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+Overriding config with config/train_owt.py:
+eval_interval = 500
+eval_iters = 200
+log_interval = 10
+always_save_checkpoint = False
+
+wandb_log = True
+wandb_project = 'mhc-lite'
+out_prefix_dataset = "owt"
+
+dataset = 'openwebtext'
+gradient_accumulation_steps = 8  
+batch_size = 16
+block_size = 1024
+
+dtype = 'bfloat16'
+
+Overriding config with config/medium_model.py:
+wandb_group = "medium"
+out_prefix_model = "medium"
+
+n_layer = 12
+n_head = 12
+n_embd = 768
+dropout = 0.0
+
+learning_rate = 6e-4
+min_lr = 6e-5
+max_iters = 10000
+lr_decay_iters = 10000
+warmup_iters = 200
+weight_decay = 0.1
+beta1 = 0.9
+beta2 = 0.95
+grad_clip = 1.0
+
+Overriding config with config/with_mhc_lite.py:
+hyper_conn_type = "mhc_lite"
+hyper_conn_n = 4
+
+wandb_notes = "mhc-lite"
+out_prefix_method = "mhc-lite"
+Overriding: batch_size = 24
+Overriding: gradient_accumulation_steps = 8
+Overriding: max_iters = 18000
+Overriding: lr_decay_iters = 18000
+Overriding: warmup_iters = 200
+Overriding: compile = True
+Overriding: wandb_run_name = M-mhc-lite-owt-bs24ga8-18kstep
+Overriding config with config/train_owt.py:
+eval_interval = 500
+eval_iters = 200
+log_interval = 10
+always_save_checkpoint = False
+
+wandb_log = True
+wandb_project = 'mhc-lite'
+out_prefix_dataset = "owt"
+
+dataset = 'openwebtext'
+gradient_accumulation_steps = 8  
+batch_size = 16
+block_size = 1024
+
+dtype = 'bfloat16'
+
+Overriding config with config/medium_model.py:
+wandb_group = "medium"
+out_prefix_model = "medium"
+
+n_layer = 12
+n_head = 12
+n_embd = 768
+dropout = 0.0
+
+learning_rate = 6e-4
+min_lr = 6e-5
+max_iters = 10000
+lr_decay_iters = 10000
+warmup_iters = 200
+weight_decay = 0.1
+beta1 = 0.9
+beta2 = 0.95
+grad_clip = 1.0
+
+Overriding config with config/with_mhc_lite.py:
+hyper_conn_type = "mhc_lite"
+hyper_conn_n = 4
+
+wandb_notes = "mhc-lite"
+out_prefix_method = "mhc-lite"
+Overriding: batch_size = 24
+Overriding: gradient_accumulation_steps = 8
+Overriding: max_iters = 18000
+Overriding: lr_decay_iters = 18000
+Overriding: warmup_iters = 200
+Overriding: compile = True
+Overriding: wandb_run_name = M-mhc-lite-owt-bs24ga8-18kstep
+tokens per iteration will be: 196,608
+Initializing a new model from scratch
+defaulting to vocab_size of GPT-2 to 50304 (50257 rounded up for efficiency)
+HYPER_CONN: USING mhc_lite with 4 streams
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /root/.netrc.
+wandb: Currently logged in as: guotzzz (guotzzz-peking-university) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+number of parameters: 126.02M
+num decayed parameter tensors: 98, with 126,713,856 parameters
+num non-decayed parameter tensors: 169, with 93,768 parameters
+using fused AdamW: True
+compiling the model... (takes a ~minute)
+wandb: setting up run 7fnjlkjn
+wandb: Tracking run with wandb version 0.28.0
+wandb: Run data is saved locally in /home/work/data/guotianzizhe/project/mhc-lite/wandb/run-20260813_154844-7fnjlkjn
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run M-mhc-lite-owt-bs24ga8-18kstep-3939
+wandb: ⭐️ View project at https://wandb.ai/guotzzz-peking-university/mhc-lite
+wandb: 🚀 View run at https://wandb.ai/guotzzz-peking-university/mhc-lite/runs/7fnjlkjn
+tokens per iteration will be: 196,608
+====================================================================================================
+n_layer = 12
+n_head = 12
+n_embd = 768
+block_size = 1024
+bias = False
+vocab_size = None
+dropout = 0.0
+hyper_conn_n = 4
+hyper_conn_type = mhc_lite
+====================================================================================================
+Initializing a new model from scratch
+defaulting to vocab_size of GPT-2 to 50304 (50257 rounded up for efficiency)
+HYPER_CONN: USING mhc_lite with 4 streams
+number of parameters: 126.02M
+num decayed parameter tensors: 98, with 126,713,856 parameters
+num non-decayed parameter tensors: 169, with 93,768 parameters
+using fused AdamW: True
+compiling the model... (takes a ~minute)
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/home/work/data/guotianzizhe/project/mhc-lite/train.py", line 389, in <module>
+[rank1]:     scaler.scale(loss).backward()
+[rank1]:     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+[rank1]:   File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/_tensor.py", line 648, in backward
+[rank1]:     torch.autograd.backward(
+[rank1]:     ~~~~~~~~~~~~~~~~~~~~~~~^
+[rank1]:         self, gradient, retain_graph, create_graph, inputs=inputs
+[rank1]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:     )
+[rank1]:     ^
+[rank1]:   File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/autograd/__init__.py", line 353, in backward
+[rank1]:     _engine_run_backward(
+[rank1]:     ~~~~~~~~~~~~~~~~~~~~^
+[rank1]:         tensors,
+[rank1]:         ^^^^^^^^
+[rank1]:     ...<5 lines>...
+[rank1]:         accumulate_grad=True,
+[rank1]:         ^^^^^^^^^^^^^^^^^^^^^
+[rank1]:     )
+[rank1]:     ^
+[rank1]:   File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/autograd/graph.py", line 824, in _engine_run_backward
+[rank1]:     return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[rank1]:            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:         t_outputs, *args, **kwargs
+[rank1]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:     )  # Calls into the C++ engine to run the backward pass
+[rank1]:     ^
+[rank1]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 4.61 GiB. GPU 1 has a total capacity of 44.40 GiB of which 1.97 GiB is free. Including non-PyTorch memory, this process has 42.43 GiB memory in use. Of the allocated memory 35.07 GiB is allocated by PyTorch, and 6.89 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+W0813 15:49:33.715000 2513295 torch/distributed/elastic/multiprocessing/api.py:900] Sending process 2513369 closing signal SIGTERM
+E0813 15:49:33.931000 2513295 torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 1 (pid: 2513370) of binary: /home/work/data/guotianzizhe/venv/bin/python
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/distributed/run.py", line 896, in <module>
+    main()
+    ~~~~^^
+  File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+  File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/distributed/run.py", line 892, in main
+    run(args)
+    ~~~^^^^^^
+  File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/distributed/run.py", line 883, in run
+    elastic_launch(
+    ~~~~~~~~~~~~~~~
+        config=config,
+        ~~~~~~~~~~~~~~
+        entrypoint=cmd,
+        ~~~~~~~~~~~~~~~
+    )(*cmd_args)
+    ~^^^^^^^^^^^
+  File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/distributed/launcher/api.py", line 139, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/work/data/guotianzizhe/venv/lib/python3.13/site-packages/torch/distributed/launcher/api.py", line 270, in launch_agent
+    raise ChildFailedError(
+    ...<2 lines>...
+    )
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+train.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-08-13_15:49:33
+  host      : instance-9xos2u6k-1
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 2513370)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

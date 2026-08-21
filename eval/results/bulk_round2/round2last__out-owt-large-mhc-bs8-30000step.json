@@ -1,0 +1,18 @@
+{
+  "dir": "out-owt-large-mhc-bs8-30000step",
+  "tier": null,
+  "branch": "round2last",
+  "ckpt": "/home/work/data/guotianzizhe/data/test/out-owt-large-mhc-bs8-30000step/ckpt_last.pt",
+  "hyper_conn_type": "mhc",
+  "n_layer": 24,
+  "n_embd": 1024,
+  "iter": 30000,
+  "block_size": 1024,
+  "owt_val_ce": 2.992875,
+  "owt_val_ppl": 19.9429,
+  "owt_val_tokens": 4433920,
+  "owt_val_windows": 4330,
+  "wt103_ce": 3.483688,
+  "wt103_ppl": 32.5796,
+  "wt103_tokens": 287643
+}

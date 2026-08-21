@@ -29,6 +29,7 @@ from loader import load_ckpt, get_encoder, full_logits
 
 from lm_eval.api.model import LM
 from lm_eval.api.registry import register_model
+from lm_eval.utils import get_rolling_token_windows
 
 BLOCK = 1024
 
@@ -112,24 +113,41 @@ class MHCLMAdapter(LM):
 
     @torch.no_grad()
     def loglikelihood_rolling(self, requests):
-        out = []
-        for req in requests:
+        # Rolling PPL (Paloma / wikitext, output_type=loglikelihood_rolling).
+        # Windows come from lm_eval's OWN generator (context_len=1) so the windowing
+        # matches every other model on these benchmarks, and each input is <= max_length
+        # tokens (fits block_size). logits[t] predicts inp[t+1]; score the last len(pred)
+        # rows. Windows are independent sequences, so we right-pad and batch them through
+        # the model together -- for a causal LM the padding sits AFTER every scored token
+        # and never influences it, so batched == unbatched exactly (verified in
+        # eval/check_paloma_rolling.py).
+        windows = []                                    # (req_idx, inp, pred)
+        for ri, req in enumerate(requests):
             (string,) = req.args
-            ids = [self.eot_token_id] + self.tok_encode(string)
-            window, stride = self.max_length + 1, self.max_length
-            total, prev_end = 0.0, 1
-            for begin in range(0, len(ids), stride):
-                end = min(begin + window, len(ids))
-                x = torch.tensor(ids[begin:end], dtype=torch.long, device=self._device)[None]
-                lp = F.log_softmax(full_logits(self.model, x)[0].float()[:-1], dim=-1)
-                tgt = torch.tensor(ids[begin + 1:end], dtype=torch.long, device=self._device)
-                m = max(prev_end - begin - 1, 0)
-                total += float(lp[m:].gather(-1, tgt[m:, None]).squeeze(-1).sum().item())
-                prev_end = end
-                if end == len(ids):
-                    break
-            out.append((total,))
-        return out
+            for inp, pred in get_rolling_token_windows(
+                token_list=self.tok_encode(string),
+                prefix_token=self.eot_token_id,
+                max_seq_len=self.max_length,
+                context_len=1,
+            ):
+                windows.append((ri, list(inp), list(pred)))
+        totals = [0.0] * len(requests)
+        order = sorted(range(len(windows)), key=lambda k: len(windows[k][1]))  # pack by length
+        for b0 in range(0, len(order), self.batch_size):
+            idxs = order[b0:b0 + self.batch_size]
+            maxlen = max(len(windows[k][1]) for k in idxs)
+            x = torch.full((len(idxs), maxlen), self.eot_token_id, dtype=torch.long, device=self._device)
+            for j, k in enumerate(idxs):
+                inp = windows[k][1]
+                x[j, :len(inp)] = torch.tensor(inp, dtype=torch.long, device=self._device)
+            logp = torch.log_softmax(full_logits(self.model, x).float(), dim=-1)   # [B, maxlen, V]
+            for j, k in enumerate(idxs):
+                ri, inp, pred = windows[k]
+                li, p = len(inp), len(pred)
+                sel = logp[j, li - p: li]                # rows predicting pred
+                tgt = torch.tensor(pred, dtype=torch.long, device=self._device)
+                totals[ri] += float(sel.gather(-1, tgt[:, None]).squeeze(-1).sum().item())
+        return totals          # loglikelihood_rolling returns list[float]
 
     def generate_until(self, requests):
         raise NotImplementedError("v1 supports loglikelihood tasks only (no generation)")

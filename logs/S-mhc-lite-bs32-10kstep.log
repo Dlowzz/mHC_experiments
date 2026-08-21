@@ -1,0 +1,1185 @@
+
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+Overriding config with config/train_owt.py:
+eval_interval = 500
+eval_iters = 200
+log_interval = 10
+always_save_checkpoint = False
+
+wandb_log = True
+wandb_project = 'mhc-lite'
+out_prefix_dataset = "owt"
+
+dataset = 'openwebtext'
+gradient_accumulation_steps = 8  
+batch_size = 16
+block_size = 1024
+
+dtype = 'bfloat16'
+
+Overriding config with config/small_model.py:
+wandb_group = "small"
+out_prefix_model = "small"
+
+n_layer = 6
+n_head = 8
+n_embd = 512
+dropout = 0.0
+
+learning_rate = 1e-3
+min_lr = 1e-4
+max_iters = 10000
+lr_decay_iters = 10000
+warmup_iters = 200
+weight_decay = 0.1
+beta1 = 0.9
+beta2 = 0.95
+grad_clip = 1.0
+
+Overriding config with config/with_mhc_lite.py:
+hyper_conn_type = "mhc_lite"
+hyper_conn_n = 4
+
+wandb_notes = "mhc-lite"
+out_prefix_method = "mhc-lite"
+Overriding: batch_size = 32
+Overriding: gradient_accumulation_steps = 8
+Overriding: max_iters = 10000
+Overriding: lr_decay_iters = 10000
+Overriding: warmup_iters = 200
+Overriding: compile = True
+Overriding: wandb_run_name = S-mhc-lite-owt-bs32ga8-10kstep
+tokens per iteration will be: 262,144
+Initializing a new model from scratch
+defaulting to vocab_size of GPT-2 to 50304 (50257 rounded up for efficiency)
+HYPER_CONN: USING mhc_lite with 4 streams
+Overriding config with config/train_owt.py:
+eval_interval = 500
+eval_iters = 200
+log_interval = 10
+always_save_checkpoint = False
+
+wandb_log = True
+wandb_project = 'mhc-lite'
+out_prefix_dataset = "owt"
+
+dataset = 'openwebtext'
+gradient_accumulation_steps = 8  
+batch_size = 16
+block_size = 1024
+
+dtype = 'bfloat16'
+
+Overriding config with config/small_model.py:
+wandb_group = "small"
+out_prefix_model = "small"
+
+n_layer = 6
+n_head = 8
+n_embd = 512
+dropout = 0.0
+
+learning_rate = 1e-3
+min_lr = 1e-4
+max_iters = 10000
+lr_decay_iters = 10000
+warmup_iters = 200
+weight_decay = 0.1
+beta1 = 0.9
+beta2 = 0.95
+grad_clip = 1.0
+
+Overriding config with config/with_mhc_lite.py:
+hyper_conn_type = "mhc_lite"
+hyper_conn_n = 4
+
+wandb_notes = "mhc-lite"
+out_prefix_method = "mhc-lite"
+Overriding: batch_size = 32
+Overriding: gradient_accumulation_steps = 8
+Overriding: max_iters = 10000
+Overriding: lr_decay_iters = 10000
+Overriding: warmup_iters = 200
+Overriding: compile = True
+Overriding: wandb_run_name = S-mhc-lite-owt-bs32ga8-10kstep
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /root/.netrc.
+number of parameters: 45.45M
+num decayed parameter tensors: 50, with 45,940,736 parameters
+num non-decayed parameter tensors: 85, with 31,652 parameters
+using fused AdamW: True
+compiling the model... (takes a ~minute)
+wandb: Currently logged in as: guotzzz (guotzzz-peking-university) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run nt8vpf5v
+wandb: Tracking run with wandb version 0.28.0
+wandb: Run data is saved locally in /home/work/data/guotianzizhe/project/mhc-lite/wandb/run-20260813_115710-nt8vpf5v
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run S-mhc-lite-owt-bs32ga8-10kstep-3257
+wandb: ⭐️ View project at https://wandb.ai/guotzzz-peking-university/mhc-lite
+wandb: 🚀 View run at https://wandb.ai/guotzzz-peking-university/mhc-lite/runs/nt8vpf5v
+tokens per iteration will be: 262,144
+====================================================================================================
+n_layer = 6
+n_head = 8
+n_embd = 512
+block_size = 1024
+bias = False
+vocab_size = None
+dropout = 0.0
+hyper_conn_n = 4
+hyper_conn_type = mhc_lite
+====================================================================================================
+Initializing a new model from scratch
+defaulting to vocab_size of GPT-2 to 50304 (50257 rounded up for efficiency)
+HYPER_CONN: USING mhc_lite with 4 streams
+number of parameters: 45.45M
+num decayed parameter tensors: 50, with 45,940,736 parameters
+num non-decayed parameter tensors: 85, with 31,652 parameters
+using fused AdamW: True
+compiling the model... (takes a ~minute)
+[step 0]train loss: 12.0394, val loss: 12.0347, (avg train loss: 0.0000 ± 0.0000), (avg grad norm: 0.0000 ± 0.0000)
+[iter 0]loss: 12.0503, tokens/sec: 12276.40 ± 0.00, tokens seen: 0, grad norm: 21.9220
+[iter 10]loss: 9.5152, tokens/sec: 186288.02 ± 55027.75, tokens seen: 2621440, grad norm: 5.6918
+[iter 20]loss: 8.1415, tokens/sec: 194596.51 ± 40768.57, tokens seen: 5242880, grad norm: 3.6717
+[iter 30]loss: 7.3392, tokens/sec: 197544.50 ± 33825.82, tokens seen: 7864320, grad norm: 3.7844
+[iter 40]loss: 7.2337, tokens/sec: 198472.63 ± 29549.68, tokens seen: 10485760, grad norm: 3.8744
+[iter 50]loss: 6.9646, tokens/sec: 199479.85 ± 26573.22, tokens seen: 13107200, grad norm: 3.9348
+[iter 60]loss: 6.7370, tokens/sec: 200140.62 ± 24343.69, tokens seen: 15728640, grad norm: 1.6843
+[iter 70]loss: 6.8738, tokens/sec: 200608.33 ± 22593.94, tokens seen: 18350080, grad norm: 2.0890
+[iter 80]loss: 6.4925, tokens/sec: 200954.71 ± 21173.63, tokens seen: 20971520, grad norm: 3.0203
+[iter 90]loss: 6.5733, tokens/sec: 201211.75 ± 19989.92, tokens seen: 23592960, grad norm: 1.8998
+[iter 100]loss: 6.3980, tokens/sec: 201420.64 ± 18985.10, tokens seen: 26214400, grad norm: 1.7715
+[iter 110]loss: 6.1873, tokens/sec: 201595.11 ± 18118.32, tokens seen: 28835840, grad norm: 2.4345
+[iter 120]loss: 6.1312, tokens/sec: 201745.44 ± 17360.87, tokens seen: 31457280, grad norm: 1.7166
+[iter 130]loss: 6.0819, tokens/sec: 201868.31 ± 16690.67, tokens seen: 34078720, grad norm: 2.3510
+[iter 140]loss: 6.0754, tokens/sec: 201971.39 ± 16092.32, tokens seen: 36700160, grad norm: 1.6483
+[iter 150]loss: 6.1132, tokens/sec: 202061.54 ± 15554.15, tokens seen: 39321600, grad norm: 1.5569
+[iter 160]loss: 6.0280, tokens/sec: 202140.19 ± 15066.61, tokens seen: 41943040, grad norm: 1.2780
+[iter 170]loss: 6.0397, tokens/sec: 202206.88 ± 14621.94, tokens seen: 44564480, grad norm: 1.4412
+[iter 180]loss: 5.8814, tokens/sec: 202272.44 ± 14214.93, tokens seen: 47185920, grad norm: 1.4827
+[iter 190]loss: 5.8793, tokens/sec: 202325.56 ± 13839.78, tokens seen: 49807360, grad norm: 2.1774
+[iter 200]loss: 5.8994, tokens/sec: 202364.25 ± 13492.31, tokens seen: 52428800, grad norm: 1.8510
+[iter 210]loss: 5.6805, tokens/sec: 202405.02 ± 13170.14, tokens seen: 55050240, grad norm: 1.1092
+[iter 220]loss: 5.5876, tokens/sec: 202446.59 ± 12870.25, tokens seen: 57671680, grad norm: 0.9890
+[iter 230]loss: 5.7456, tokens/sec: 202484.88 ± 12589.91, tokens seen: 60293120, grad norm: 0.9368
+[iter 240]loss: 5.6912, tokens/sec: 202518.68 ± 12327.04, tokens seen: 62914560, grad norm: 1.3163
+[iter 250]loss: 5.4963, tokens/sec: 202555.37 ± 12080.35, tokens seen: 65536000, grad norm: 1.5835
+[iter 260]loss: 5.6024, tokens/sec: 202586.34 ± 11847.73, tokens seen: 68157440, grad norm: 0.6872
+[iter 270]loss: 5.5419, tokens/sec: 202612.07 ± 11627.95, tokens seen: 70778880, grad norm: 0.8902
+[iter 280]loss: 5.4392, tokens/sec: 202631.12 ± 11419.68, tokens seen: 73400320, grad norm: 1.4199
+[iter 290]loss: 5.5024, tokens/sec: 202656.45 ± 11222.63, tokens seen: 76021760, grad norm: 0.6480
+[iter 300]loss: 5.3884, tokens/sec: 202671.76 ± 11035.04, tokens seen: 78643200, grad norm: 1.0515
+[iter 310]loss: 5.3362, tokens/sec: 202694.06 ± 10856.90, tokens seen: 81264640, grad norm: 1.0804
+[iter 320]loss: 5.1857, tokens/sec: 202712.40 ± 10687.02, tokens seen: 83886080, grad norm: 0.5894
+[iter 330]loss: 5.1262, tokens/sec: 202729.41 ± 10524.87, tokens seen: 86507520, grad norm: 0.6199
+[iter 340]loss: 5.2710, tokens/sec: 202746.59 ± 10369.98, tokens seen: 89128960, grad norm: 1.0944
+[iter 350]loss: 5.2356, tokens/sec: 202762.92 ± 10221.69, tokens seen: 91750400, grad norm: 0.6379
+[iter 360]loss: 5.2389, tokens/sec: 202779.81 ± 10079.73, tokens seen: 94371840, grad norm: 0.7000
+[iter 370]loss: 5.0710, tokens/sec: 202795.68 ± 9943.46, tokens seen: 96993280, grad norm: 0.5629
+[iter 380]loss: 5.1133, tokens/sec: 202807.13 ± 9812.40, tokens seen: 99614720, grad norm: 0.7324
+[iter 390]loss: 5.0987, tokens/sec: 202816.63 ± 9686.33, tokens seen: 102236160, grad norm: 0.7717
+[iter 400]loss: 5.0742, tokens/sec: 202829.33 ± 9565.17, tokens seen: 104857600, grad norm: 0.8989
+[iter 410]loss: 4.8895, tokens/sec: 202840.17 ± 9448.40, tokens seen: 107479040, grad norm: 0.7156
+[iter 420]loss: 4.9616, tokens/sec: 202851.96 ± 9335.85, tokens seen: 110100480, grad norm: 0.5696
+[iter 430]loss: 4.8888, tokens/sec: 202863.68 ± 9227.25, tokens seen: 112721920, grad norm: 0.5956
+[iter 440]loss: 4.7655, tokens/sec: 202872.08 ± 9122.25, tokens seen: 115343360, grad norm: 0.6809
+[iter 450]loss: 4.8496, tokens/sec: 202883.57 ± 9020.97, tokens seen: 117964800, grad norm: 0.8044
+[iter 460]loss: 4.8482, tokens/sec: 202891.35 ± 8922.79, tokens seen: 120586240, grad norm: 0.5222
+[iter 470]loss: 4.8862, tokens/sec: 202895.73 ± 8827.69, tokens seen: 123207680, grad norm: 0.5639
+[iter 480]loss: 4.8058, tokens/sec: 202901.96 ± 8735.63, tokens seen: 125829120, grad norm: 0.6647
+[iter 490]loss: 4.7575, tokens/sec: 202909.31 ± 8646.41, tokens seen: 128450560, grad norm: 0.6285
+[step 500]train loss: 4.7412, val loss: 4.7385, (avg train loss: 1.2566 ± 0.0492), (avg grad norm: 0.7102 ± 0.1551)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 500]loss: 4.7266, tokens/sec: 202927.74 ± 8564.23, tokens seen: 131072000, grad norm: 0.4869
+[iter 510]loss: 4.6342, tokens/sec: 202936.99 ± 8480.43, tokens seen: 133693440, grad norm: 0.4905
+[iter 520]loss: 4.6393, tokens/sec: 202946.52 ± 8399.05, tokens seen: 136314880, grad norm: 0.6423
+[iter 530]loss: 4.6044, tokens/sec: 202953.01 ± 8319.79, tokens seen: 138936320, grad norm: 0.4848
+[iter 540]loss: 4.5883, tokens/sec: 202960.26 ± 8242.79, tokens seen: 141557760, grad norm: 0.5896
+[iter 550]loss: 4.7933, tokens/sec: 202966.21 ± 8167.80, tokens seen: 144179200, grad norm: 0.6432
+[iter 560]loss: 4.6066, tokens/sec: 202975.54 ± 8095.01, tokens seen: 146800640, grad norm: 0.5163
+[iter 570]loss: 4.5298, tokens/sec: 202981.68 ± 8023.99, tokens seen: 149422080, grad norm: 0.5092
+[iter 580]loss: 4.4492, tokens/sec: 202986.51 ± 7954.79, tokens seen: 152043520, grad norm: 0.5376
+[iter 590]loss: 4.5808, tokens/sec: 202992.31 ± 7887.37, tokens seen: 154664960, grad norm: 0.5731
+[iter 600]loss: 4.5062, tokens/sec: 202998.29 ± 7821.68, tokens seen: 157286400, grad norm: 0.5472
+[iter 610]loss: 4.5712, tokens/sec: 203004.17 ± 7757.63, tokens seen: 159907840, grad norm: 0.5597
+[iter 620]loss: 4.4648, tokens/sec: 203008.01 ± 7695.09, tokens seen: 162529280, grad norm: 0.5210
+[iter 630]loss: 4.4142, tokens/sec: 203013.99 ± 7634.05, tokens seen: 165150720, grad norm: 0.5657
+[iter 640]loss: 4.4211, tokens/sec: 203019.50 ± 7574.42, tokens seen: 167772160, grad norm: 0.5423
+[iter 650]loss: 4.3386, tokens/sec: 203023.42 ± 7516.13, tokens seen: 170393600, grad norm: 0.6232
+[iter 660]loss: 4.3304, tokens/sec: 203028.97 ± 7459.21, tokens seen: 173015040, grad norm: 0.5582
+[iter 670]loss: 4.2938, tokens/sec: 203033.04 ± 7403.55, tokens seen: 175636480, grad norm: 0.5506
+[iter 680]loss: 4.3345, tokens/sec: 203037.17 ± 7349.10, tokens seen: 178257920, grad norm: 0.5617
+[iter 690]loss: 4.1782, tokens/sec: 203040.95 ± 7295.84, tokens seen: 180879360, grad norm: 0.4874
+[iter 700]loss: 4.2757, tokens/sec: 203044.47 ± 7243.71, tokens seen: 183500800, grad norm: 0.4924
+[iter 710]loss: 4.4280, tokens/sec: 203047.84 ± 7192.70, tokens seen: 186122240, grad norm: 0.6369
+[iter 720]loss: 4.2712, tokens/sec: 203048.87 ± 7142.71, tokens seen: 188743680, grad norm: 0.4931
+[iter 730]loss: 4.1521, tokens/sec: 203052.10 ± 7093.79, tokens seen: 191365120, grad norm: 0.5096
+[iter 740]loss: 4.2306, tokens/sec: 203055.59 ± 7045.90, tokens seen: 193986560, grad norm: 0.6280
+[iter 750]loss: 4.2152, tokens/sec: 203057.95 ± 6998.95, tokens seen: 196608000, grad norm: 0.4887
+[iter 760]loss: 4.2180, tokens/sec: 203060.36 ± 6952.91, tokens seen: 199229440, grad norm: 0.5052
+[iter 770]loss: 4.3029, tokens/sec: 203062.85 ± 6907.75, tokens seen: 201850880, grad norm: 0.6381
+[iter 780]loss: 4.0718, tokens/sec: 203065.18 ± 6863.49, tokens seen: 204472320, grad norm: 0.4570
+[iter 790]loss: 4.2689, tokens/sec: 203068.19 ± 6820.09, tokens seen: 207093760, grad norm: 0.5664
+[iter 800]loss: 4.0903, tokens/sec: 203068.37 ± 6777.45, tokens seen: 209715200, grad norm: 0.4498
+[iter 810]loss: 4.2389, tokens/sec: 203072.15 ± 6735.65, tokens seen: 212336640, grad norm: 0.4295
+[iter 820]loss: 4.1774, tokens/sec: 203074.25 ± 6694.57, tokens seen: 214958080, grad norm: 0.4377
+[iter 830]loss: 4.1131, tokens/sec: 203075.34 ± 6654.20, tokens seen: 217579520, grad norm: 0.4465
+[iter 840]loss: 4.2220, tokens/sec: 203077.74 ± 6614.60, tokens seen: 220200960, grad norm: 0.5323
+[iter 850]loss: 4.0897, tokens/sec: 203079.58 ± 6575.71, tokens seen: 222822400, grad norm: 0.4777
+[iter 860]loss: 4.1062, tokens/sec: 203081.72 ± 6537.46, tokens seen: 225443840, grad norm: 0.4416
+[iter 870]loss: 4.1734, tokens/sec: 203083.77 ± 6499.92, tokens seen: 228065280, grad norm: 0.4519
+[iter 880]loss: 4.0268, tokens/sec: 203086.25 ± 6463.02, tokens seen: 230686720, grad norm: 0.4208
+[iter 890]loss: 4.1843, tokens/sec: 203086.64 ± 6426.70, tokens seen: 233308160, grad norm: 0.5919
+[iter 900]loss: 4.0143, tokens/sec: 203088.46 ± 6391.01, tokens seen: 235929600, grad norm: 0.4304
+[iter 910]loss: 4.1130, tokens/sec: 203089.71 ± 6355.90, tokens seen: 238551040, grad norm: 0.5234
+[iter 920]loss: 4.1267, tokens/sec: 203091.57 ± 6321.36, tokens seen: 241172480, grad norm: 0.3840
+[iter 930]loss: 3.9713, tokens/sec: 203093.45 ± 6287.40, tokens seen: 243793920, grad norm: 0.4230
+[iter 940]loss: 4.1182, tokens/sec: 203095.86 ± 6254.01, tokens seen: 246415360, grad norm: 0.4318
+[iter 950]loss: 4.2547, tokens/sec: 203098.98 ± 6221.15, tokens seen: 249036800, grad norm: 0.4887
+[iter 960]loss: 3.9385, tokens/sec: 203099.81 ± 6188.77, tokens seen: 251658240, grad norm: 0.4288
+[iter 970]loss: 4.0069, tokens/sec: 203101.83 ± 6156.93, tokens seen: 254279680, grad norm: 0.4112
+[iter 980]loss: 4.0670, tokens/sec: 203102.73 ± 6125.50, tokens seen: 256901120, grad norm: 0.5098
+[iter 990]loss: 3.9625, tokens/sec: 203104.34 ± 6094.60, tokens seen: 259522560, grad norm: 0.4411
+[step 1000]train loss: 4.0524, val loss: 4.0628, (avg train loss: 1.0290 ± 0.0201), (avg grad norm: 0.4747 ± 0.0591)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 1000]loss: 4.1340, tokens/sec: 203112.61 ± 6067.33, tokens seen: 262144000, grad norm: 0.5030
+[iter 1010]loss: 3.9843, tokens/sec: 203116.50 ± 6037.39, tokens seen: 264765440, grad norm: 0.4572
+[iter 1020]loss: 4.0625, tokens/sec: 203120.45 ± 6007.90, tokens seen: 267386880, grad norm: 0.4995
+[iter 1030]loss: 3.9737, tokens/sec: 203124.17 ± 5978.82, tokens seen: 270008320, grad norm: 0.5212
+[iter 1040]loss: 4.0834, tokens/sec: 203126.85 ± 5950.11, tokens seen: 272629760, grad norm: 0.3685
+[iter 1050]loss: 3.9760, tokens/sec: 203129.03 ± 5921.82, tokens seen: 275251200, grad norm: 0.4558
+[iter 1060]loss: 4.1781, tokens/sec: 203131.08 ± 5893.91, tokens seen: 277872640, grad norm: 0.4295
+[iter 1070]loss: 4.1247, tokens/sec: 203133.81 ± 5866.44, tokens seen: 280494080, grad norm: 0.3662
+[iter 1080]loss: 3.9522, tokens/sec: 203135.88 ± 5839.32, tokens seen: 283115520, grad norm: 0.4549
+[iter 1090]loss: 3.9189, tokens/sec: 203137.34 ± 5812.54, tokens seen: 285736960, grad norm: 0.3990
+[iter 1100]loss: 4.0851, tokens/sec: 203138.41 ± 5786.11, tokens seen: 288358400, grad norm: 0.3678
+[iter 1110]loss: 3.9866, tokens/sec: 203138.87 ± 5760.07, tokens seen: 290979840, grad norm: 0.5527
+[iter 1120]loss: 3.9594, tokens/sec: 203141.12 ± 5734.42, tokens seen: 293601280, grad norm: 0.3849
+[iter 1130]loss: 4.0213, tokens/sec: 203142.52 ± 5709.07, tokens seen: 296222720, grad norm: 0.3585
+[iter 1140]loss: 3.9998, tokens/sec: 203144.58 ± 5684.08, tokens seen: 298844160, grad norm: 0.4802
+[iter 1150]loss: 3.7927, tokens/sec: 203144.46 ± 5659.38, tokens seen: 301465600, grad norm: 0.4263
+[iter 1160]loss: 3.8841, tokens/sec: 203146.03 ± 5635.01, tokens seen: 304087040, grad norm: 0.4188
+[iter 1170]loss: 4.0858, tokens/sec: 203147.70 ± 5610.97, tokens seen: 306708480, grad norm: 0.3946
+[iter 1180]loss: 4.0761, tokens/sec: 203148.47 ± 5587.20, tokens seen: 309329920, grad norm: 0.4167
+[iter 1190]loss: 3.9752, tokens/sec: 203149.00 ± 5563.76, tokens seen: 311951360, grad norm: 0.3995
+[iter 1200]loss: 3.9447, tokens/sec: 203150.24 ± 5540.61, tokens seen: 314572800, grad norm: 0.3925
+[iter 1210]loss: 3.9494, tokens/sec: 203151.09 ± 5517.75, tokens seen: 317194240, grad norm: 0.3789
+[iter 1220]loss: 3.9388, tokens/sec: 203151.78 ± 5495.15, tokens seen: 319815680, grad norm: 0.4045
+[iter 1230]loss: 3.9014, tokens/sec: 203153.10 ± 5472.85, tokens seen: 322437120, grad norm: 0.3688
+[iter 1240]loss: 3.9094, tokens/sec: 203153.64 ± 5450.78, tokens seen: 325058560, grad norm: 0.3822
+[iter 1250]loss: 3.9126, tokens/sec: 203153.89 ± 5428.98, tokens seen: 327680000, grad norm: 0.4928
+[iter 1260]loss: 3.9210, tokens/sec: 203153.47 ± 5407.45, tokens seen: 330301440, grad norm: 0.3822
+[iter 1270]loss: 4.0560, tokens/sec: 203154.23 ± 5386.19, tokens seen: 332922880, grad norm: 0.4358
+[iter 1280]loss: 3.9446, tokens/sec: 203154.99 ± 5365.15, tokens seen: 335544320, grad norm: 0.4278
+[iter 1290]loss: 3.8076, tokens/sec: 203155.93 ± 5344.38, tokens seen: 338165760, grad norm: 0.3608
+[iter 1300]loss: 3.8890, tokens/sec: 203155.87 ± 5323.83, tokens seen: 340787200, grad norm: 0.4316
+[iter 1310]loss: 3.9627, tokens/sec: 203157.12 ± 5303.54, tokens seen: 343408640, grad norm: 0.3996
+[iter 1320]loss: 3.9492, tokens/sec: 203158.31 ± 5283.46, tokens seen: 346030080, grad norm: 0.3841
+[iter 1330]loss: 3.9762, tokens/sec: 203159.86 ± 5263.63, tokens seen: 348651520, grad norm: 0.5593
+[iter 1340]loss: 3.9431, tokens/sec: 203161.41 ± 5244.03, tokens seen: 351272960, grad norm: 0.3508
+[iter 1350]loss: 3.9233, tokens/sec: 203162.76 ± 5224.67, tokens seen: 353894400, grad norm: 0.3749
+[iter 1360]loss: 3.7462, tokens/sec: 203164.25 ± 5205.50, tokens seen: 356515840, grad norm: 0.4012
+[iter 1370]loss: 3.8365, tokens/sec: 203165.45 ± 5186.53, tokens seen: 359137280, grad norm: 0.4344
+[iter 1380]loss: 3.9112, tokens/sec: 203166.09 ± 5167.76, tokens seen: 361758720, grad norm: 0.3594
+[iter 1390]loss: 3.9789, tokens/sec: 203167.88 ± 5149.22, tokens seen: 364380160, grad norm: 0.3634
+[iter 1400]loss: 3.8148, tokens/sec: 203169.30 ± 5130.87, tokens seen: 367001600, grad norm: 0.4363
+[iter 1410]loss: 3.8662, tokens/sec: 203171.09 ± 5112.71, tokens seen: 369623040, grad norm: 0.3412
+[iter 1420]loss: 3.9128, tokens/sec: 203171.98 ± 5094.74, tokens seen: 372244480, grad norm: 0.3570
+[iter 1430]loss: 3.9137, tokens/sec: 203172.93 ± 5076.94, tokens seen: 374865920, grad norm: 0.3551
+[iter 1440]loss: 3.9082, tokens/sec: 203174.57 ± 5059.38, tokens seen: 377487360, grad norm: 0.3612
+[iter 1450]loss: 4.0287, tokens/sec: 203175.89 ± 5042.00, tokens seen: 380108800, grad norm: 0.4300
+[iter 1460]loss: 3.9030, tokens/sec: 203177.06 ± 5024.75, tokens seen: 382730240, grad norm: 0.3930
+[iter 1470]loss: 3.8935, tokens/sec: 203177.76 ± 5007.66, tokens seen: 385351680, grad norm: 0.3880
+[iter 1480]loss: 3.9142, tokens/sec: 203178.13 ± 4990.80, tokens seen: 387973120, grad norm: 0.3972
+[iter 1490]loss: 3.8052, tokens/sec: 203178.71 ± 4974.08, tokens seen: 390594560, grad norm: 0.3728
+[step 1500]train loss: 3.8676, val loss: 3.8741, (avg train loss: 0.9767 ± 0.0160), (avg grad norm: 0.3936 ± 0.0463)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 1500]loss: 3.8824, tokens/sec: 203183.75 ± 4959.59, tokens seen: 393216000, grad norm: 0.4115
+[iter 1510]loss: 3.9286, tokens/sec: 203186.78 ± 4943.32, tokens seen: 395837440, grad norm: 0.3709
+[iter 1520]loss: 3.8960, tokens/sec: 203189.02 ± 4927.17, tokens seen: 398458880, grad norm: 0.4253
+[iter 1530]loss: 3.9214, tokens/sec: 203190.69 ± 4911.13, tokens seen: 401080320, grad norm: 0.3959
+[iter 1540]loss: 3.8576, tokens/sec: 203191.96 ± 4895.23, tokens seen: 403701760, grad norm: 0.3893
+[iter 1550]loss: 3.8135, tokens/sec: 203193.50 ± 4879.50, tokens seen: 406323200, grad norm: 0.3347
+[iter 1560]loss: 3.8501, tokens/sec: 203194.30 ± 4863.87, tokens seen: 408944640, grad norm: 0.3407
+[iter 1570]loss: 3.9275, tokens/sec: 203194.87 ± 4848.39, tokens seen: 411566080, grad norm: 0.3664
+[iter 1580]loss: 3.8393, tokens/sec: 203195.60 ± 4833.06, tokens seen: 414187520, grad norm: 0.3555
+[iter 1590]loss: 3.9139, tokens/sec: 203196.07 ± 4817.90, tokens seen: 416808960, grad norm: 0.3855
+[iter 1600]loss: 3.7200, tokens/sec: 203196.25 ± 4802.86, tokens seen: 419430400, grad norm: 0.3721
+[iter 1610]loss: 3.7976, tokens/sec: 203197.16 ± 4787.99, tokens seen: 422051840, grad norm: 0.3841
+[iter 1620]loss: 3.7682, tokens/sec: 203197.24 ± 4773.23, tokens seen: 424673280, grad norm: 0.3488
+[iter 1630]loss: 3.7839, tokens/sec: 203197.71 ± 4758.60, tokens seen: 427294720, grad norm: 0.3866
+[iter 1640]loss: 3.8003, tokens/sec: 203197.94 ± 4744.16, tokens seen: 429916160, grad norm: 0.3653
+[iter 1650]loss: 3.9119, tokens/sec: 203198.71 ± 4729.81, tokens seen: 432537600, grad norm: 0.4049
+[iter 1660]loss: 3.8734, tokens/sec: 203199.01 ± 4715.59, tokens seen: 435159040, grad norm: 0.3098
+[iter 1670]loss: 3.8254, tokens/sec: 203199.79 ± 4701.48, tokens seen: 437780480, grad norm: 0.2973
+[iter 1680]loss: 3.7930, tokens/sec: 203199.89 ± 4687.52, tokens seen: 440401920, grad norm: 0.3641
+[iter 1690]loss: 3.7890, tokens/sec: 203200.71 ± 4673.68, tokens seen: 443023360, grad norm: 0.3653
+[iter 1700]loss: 3.8010, tokens/sec: 203200.97 ± 4659.96, tokens seen: 445644800, grad norm: 0.3351
+[iter 1710]loss: 3.8233, tokens/sec: 203202.07 ± 4646.40, tokens seen: 448266240, grad norm: 0.3355
+[iter 1720]loss: 3.9236, tokens/sec: 203202.46 ± 4632.93, tokens seen: 450887680, grad norm: 0.3555
+[iter 1730]loss: 3.7280, tokens/sec: 203203.23 ± 4619.56, tokens seen: 453509120, grad norm: 0.3729
+[iter 1740]loss: 3.7464, tokens/sec: 203204.03 ± 4606.33, tokens seen: 456130560, grad norm: 0.3358
+[iter 1750]loss: 3.6361, tokens/sec: 203204.48 ± 4593.19, tokens seen: 458752000, grad norm: 0.3987
+[iter 1760]loss: 3.6946, tokens/sec: 203205.39 ± 4580.17, tokens seen: 461373440, grad norm: 0.3172
+[iter 1770]loss: 3.5968, tokens/sec: 203206.05 ± 4567.25, tokens seen: 463994880, grad norm: 0.3914
+[iter 1780]loss: 3.8057, tokens/sec: 203206.51 ± 4554.44, tokens seen: 466616320, grad norm: 0.3524
+[iter 1790]loss: 3.7302, tokens/sec: 203206.35 ± 4541.73, tokens seen: 469237760, grad norm: 0.3953
+[iter 1800]loss: 3.7621, tokens/sec: 203206.90 ± 4529.13, tokens seen: 471859200, grad norm: 0.3410
+[iter 1810]loss: 3.7773, tokens/sec: 203207.90 ± 4516.64, tokens seen: 474480640, grad norm: 0.3747
+[iter 1820]loss: 3.6938, tokens/sec: 203208.10 ± 4504.27, tokens seen: 477102080, grad norm: 0.3141
+[iter 1830]loss: 3.7961, tokens/sec: 203208.67 ± 4491.96, tokens seen: 479723520, grad norm: 0.3387
+[iter 1840]loss: 3.7924, tokens/sec: 203209.05 ± 4479.77, tokens seen: 482344960, grad norm: 0.3936
+[iter 1850]loss: 3.7981, tokens/sec: 203209.48 ± 4467.69, tokens seen: 484966400, grad norm: 0.3842
+[iter 1860]loss: 3.7131, tokens/sec: 203209.77 ± 4455.71, tokens seen: 487587840, grad norm: 0.3792
+[iter 1870]loss: 3.8528, tokens/sec: 203210.48 ± 4443.81, tokens seen: 490209280, grad norm: 0.3656
+[iter 1880]loss: 3.8412, tokens/sec: 203211.43 ± 4432.05, tokens seen: 492830720, grad norm: 0.3719
+[iter 1890]loss: 3.7226, tokens/sec: 203212.64 ± 4420.37, tokens seen: 495452160, grad norm: 0.3683
+[iter 1900]loss: 3.8147, tokens/sec: 203213.34 ± 4408.77, tokens seen: 498073600, grad norm: 0.3153
+[iter 1910]loss: 3.8669, tokens/sec: 203214.31 ± 4397.25, tokens seen: 500695040, grad norm: 0.3524
+[iter 1920]loss: 3.8692, tokens/sec: 203214.77 ± 4385.81, tokens seen: 503316480, grad norm: 0.3884
+[iter 1930]loss: 3.7710, tokens/sec: 203215.17 ± 4374.47, tokens seen: 505937920, grad norm: 0.3477
+[iter 1940]loss: 3.7861, tokens/sec: 203215.63 ± 4363.19, tokens seen: 508559360, grad norm: 0.3712
+[iter 1950]loss: 3.7910, tokens/sec: 203216.34 ± 4352.05, tokens seen: 511180800, grad norm: 0.3569
+[iter 1960]loss: 3.7133, tokens/sec: 203216.45 ± 4340.99, tokens seen: 513802240, grad norm: 0.3256
+[iter 1970]loss: 3.8275, tokens/sec: 203216.68 ± 4330.01, tokens seen: 516423680, grad norm: 0.2917
+[iter 1980]loss: 3.7980, tokens/sec: 203216.62 ± 4319.11, tokens seen: 519045120, grad norm: 0.4397
+[iter 1990]loss: 3.6654, tokens/sec: 203216.53 ± 4308.29, tokens seen: 521666560, grad norm: 0.3543
+[step 2000]train loss: 3.7624, val loss: 3.7677, (avg train loss: 0.9445 ± 0.0180), (avg grad norm: 0.3552 ± 0.0368)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 2000]loss: 3.9479, tokens/sec: 203219.73 ± 4299.37, tokens seen: 524288000, grad norm: 0.3085
+[iter 2010]loss: 3.8736, tokens/sec: 203221.76 ± 4288.78, tokens seen: 526909440, grad norm: 0.3042
+[iter 2020]loss: 3.7493, tokens/sec: 203223.20 ± 4278.21, tokens seen: 529530880, grad norm: 0.3751
+[iter 2030]loss: 3.7649, tokens/sec: 203224.14 ± 4267.71, tokens seen: 532152320, grad norm: 0.3505
+[iter 2040]loss: 3.7913, tokens/sec: 203225.16 ± 4257.30, tokens seen: 534773760, grad norm: 0.3181
+[iter 2050]loss: 3.7932, tokens/sec: 203225.99 ± 4246.95, tokens seen: 537395200, grad norm: 0.3585
+[iter 2060]loss: 3.6963, tokens/sec: 203226.71 ± 4236.66, tokens seen: 540016640, grad norm: 0.3242
+[iter 2070]loss: 3.7582, tokens/sec: 203228.28 ± 4226.50, tokens seen: 542638080, grad norm: 0.3802
+[iter 2080]loss: 3.8374, tokens/sec: 203229.42 ± 4216.40, tokens seen: 545259520, grad norm: 0.3214
+[iter 2090]loss: 3.7035, tokens/sec: 203229.65 ± 4206.34, tokens seen: 547880960, grad norm: 0.3551
+[iter 2100]loss: 3.7034, tokens/sec: 203230.01 ± 4196.35, tokens seen: 550502400, grad norm: 0.3079
+[iter 2110]loss: 3.7100, tokens/sec: 203229.87 ± 4186.43, tokens seen: 553123840, grad norm: 0.3144
+[iter 2120]loss: 3.7939, tokens/sec: 203230.56 ± 4176.60, tokens seen: 555745280, grad norm: 0.2991
+[iter 2130]loss: 3.7908, tokens/sec: 203230.86 ± 4166.81, tokens seen: 558366720, grad norm: 0.3593
+[iter 2140]loss: 3.6352, tokens/sec: 203231.22 ± 4157.10, tokens seen: 560988160, grad norm: 0.3469
+[iter 2150]loss: 3.7087, tokens/sec: 203231.67 ± 4147.45, tokens seen: 563609600, grad norm: 0.3847
+[iter 2160]loss: 3.6880, tokens/sec: 203231.75 ± 4137.85, tokens seen: 566231040, grad norm: 0.3154
+[iter 2170]loss: 3.7931, tokens/sec: 203232.02 ± 4128.34, tokens seen: 568852480, grad norm: 0.3695
+[iter 2180]loss: 3.6939, tokens/sec: 203232.20 ± 4118.89, tokens seen: 571473920, grad norm: 0.3334
+[iter 2190]loss: 3.6983, tokens/sec: 203232.56 ± 4109.51, tokens seen: 574095360, grad norm: 0.3218
+[iter 2200]loss: 3.6548, tokens/sec: 203233.13 ± 4100.20, tokens seen: 576716800, grad norm: 0.3161
+[iter 2210]loss: 3.7475, tokens/sec: 203233.36 ± 4090.97, tokens seen: 579338240, grad norm: 0.3456
+[iter 2220]loss: 3.8081, tokens/sec: 203233.88 ± 4081.78, tokens seen: 581959680, grad norm: 0.3197
+[iter 2230]loss: 3.9062, tokens/sec: 203234.15 ± 4072.65, tokens seen: 584581120, grad norm: 0.3048
+[iter 2240]loss: 3.7754, tokens/sec: 203234.38 ± 4063.60, tokens seen: 587202560, grad norm: 0.3299
+[iter 2250]loss: 3.6949, tokens/sec: 203234.49 ± 4054.59, tokens seen: 589824000, grad norm: 0.2937
+[iter 2260]loss: 3.7048, tokens/sec: 203233.71 ± 4045.65, tokens seen: 592445440, grad norm: 0.3127
+[iter 2270]loss: 3.7096, tokens/sec: 203234.32 ± 4036.76, tokens seen: 595066880, grad norm: 0.3102
+[iter 2280]loss: 3.6107, tokens/sec: 203235.28 ± 4027.95, tokens seen: 597688320, grad norm: 0.3426
+[iter 2290]loss: 3.6782, tokens/sec: 203235.81 ± 4019.19, tokens seen: 600309760, grad norm: 0.3764
+[iter 2300]loss: 3.6611, tokens/sec: 203236.67 ± 4010.48, tokens seen: 602931200, grad norm: 0.3114
+[iter 2310]loss: 3.6614, tokens/sec: 203236.49 ± 4001.83, tokens seen: 605552640, grad norm: 0.4243
+[iter 2320]loss: 3.7114, tokens/sec: 203236.41 ± 3993.23, tokens seen: 608174080, grad norm: 0.3330
+[iter 2330]loss: 3.7314, tokens/sec: 203236.69 ± 3984.67, tokens seen: 610795520, grad norm: 0.3186
+[iter 2340]loss: 3.6997, tokens/sec: 203237.41 ± 3976.18, tokens seen: 613416960, grad norm: 0.3314
+[iter 2350]loss: 3.7203, tokens/sec: 203237.70 ± 3967.76, tokens seen: 616038400, grad norm: 0.3590
+[iter 2360]loss: 3.7026, tokens/sec: 203237.85 ± 3959.38, tokens seen: 618659840, grad norm: 0.3157
+[iter 2370]loss: 3.7755, tokens/sec: 203238.15 ± 3951.05, tokens seen: 621281280, grad norm: 0.3460
+[iter 2380]loss: 3.7206, tokens/sec: 203238.46 ± 3942.79, tokens seen: 623902720, grad norm: 0.3445
+[iter 2390]loss: 3.6661, tokens/sec: 203239.08 ± 3934.57, tokens seen: 626524160, grad norm: 0.3207
+[iter 2400]loss: 3.7381, tokens/sec: 203239.57 ± 3926.42, tokens seen: 629145600, grad norm: 0.3475
+[iter 2410]loss: 3.7791, tokens/sec: 203240.32 ± 3918.31, tokens seen: 631767040, grad norm: 0.3841
+[iter 2420]loss: 3.7114, tokens/sec: 203240.64 ± 3910.24, tokens seen: 634388480, grad norm: 0.3396
+[iter 2430]loss: 3.6672, tokens/sec: 203240.97 ± 3902.23, tokens seen: 637009920, grad norm: 0.3223
+[iter 2440]loss: 3.7220, tokens/sec: 203241.56 ± 3894.28, tokens seen: 639631360, grad norm: 0.2998
+[iter 2450]loss: 3.7737, tokens/sec: 203242.11 ± 3886.36, tokens seen: 642252800, grad norm: 0.3623
+[iter 2460]loss: 3.7976, tokens/sec: 203242.24 ± 3878.49, tokens seen: 644874240, grad norm: 0.3228
+[iter 2470]loss: 3.7273, tokens/sec: 203242.36 ± 3870.67, tokens seen: 647495680, grad norm: 0.3138
+[iter 2480]loss: 3.7632, tokens/sec: 203243.08 ± 3862.92, tokens seen: 650117120, grad norm: 0.3265
+[iter 2490]loss: 3.6684, tokens/sec: 203242.75 ± 3855.20, tokens seen: 652738560, grad norm: 0.3324
+[step 2500]train loss: 3.6926, val loss: 3.6955, (avg train loss: 0.9276 ± 0.0157), (avg grad norm: 0.3332 ± 0.0301)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 2500]loss: 3.6422, tokens/sec: 203245.32 ± 3849.48, tokens seen: 655360000, grad norm: 0.3174
+[iter 2510]loss: 3.8025, tokens/sec: 203246.42 ± 3841.88, tokens seen: 657981440, grad norm: 0.3315
+[iter 2520]loss: 3.7349, tokens/sec: 203247.69 ± 3834.35, tokens seen: 660602880, grad norm: 0.3312
+[iter 2530]loss: 3.6887, tokens/sec: 203248.52 ± 3826.82, tokens seen: 663224320, grad norm: 0.3277
+[iter 2540]loss: 3.4918, tokens/sec: 203249.27 ± 3819.31, tokens seen: 665845760, grad norm: 0.3212
+[iter 2550]loss: 3.7366, tokens/sec: 203249.58 ± 3811.85, tokens seen: 668467200, grad norm: 0.3695
+[iter 2560]loss: 3.7192, tokens/sec: 203250.23 ± 3804.43, tokens seen: 671088640, grad norm: 0.3844
+[iter 2570]loss: 3.6597, tokens/sec: 203250.43 ± 3797.08, tokens seen: 673710080, grad norm: 0.3831
+[iter 2580]loss: 3.7466, tokens/sec: 203250.76 ± 3789.75, tokens seen: 676331520, grad norm: 0.3771
+[iter 2590]loss: 3.7103, tokens/sec: 203251.01 ± 3782.46, tokens seen: 678952960, grad norm: 0.3343
+[iter 2600]loss: 3.6544, tokens/sec: 203251.30 ± 3775.21, tokens seen: 681574400, grad norm: 0.2908
+[iter 2610]loss: 3.7298, tokens/sec: 203251.65 ± 3768.00, tokens seen: 684195840, grad norm: 0.3214
+[iter 2620]loss: 3.7220, tokens/sec: 203251.90 ± 3760.85, tokens seen: 686817280, grad norm: 0.3602
+[iter 2630]loss: 3.6709, tokens/sec: 203252.14 ± 3753.72, tokens seen: 689438720, grad norm: 0.3024
+[iter 2640]loss: 3.7164, tokens/sec: 203252.35 ± 3746.63, tokens seen: 692060160, grad norm: 0.3439
+[iter 2650]loss: 3.8507, tokens/sec: 203252.65 ± 3739.59, tokens seen: 694681600, grad norm: 0.2872
+[iter 2660]loss: 3.6716, tokens/sec: 203252.86 ± 3732.60, tokens seen: 697303040, grad norm: 0.2979
+[iter 2670]loss: 3.6292, tokens/sec: 203252.72 ± 3725.62, tokens seen: 699924480, grad norm: 0.3305
+[iter 2680]loss: 3.6178, tokens/sec: 203253.26 ± 3718.69, tokens seen: 702545920, grad norm: 0.3992
+[iter 2690]loss: 3.6173, tokens/sec: 203253.72 ± 3711.81, tokens seen: 705167360, grad norm: 0.3224
+[iter 2700]loss: 3.6748, tokens/sec: 203254.35 ± 3704.96, tokens seen: 707788800, grad norm: 0.3481
+[iter 2710]loss: 3.7319, tokens/sec: 203254.46 ± 3698.15, tokens seen: 710410240, grad norm: 0.3303
+[iter 2720]loss: 3.5591, tokens/sec: 203254.65 ± 3691.39, tokens seen: 713031680, grad norm: 0.3344
+[iter 2730]loss: 3.6642, tokens/sec: 203254.74 ± 3684.65, tokens seen: 715653120, grad norm: 0.3193
+[iter 2740]loss: 3.6862, tokens/sec: 203254.72 ± 3677.95, tokens seen: 718274560, grad norm: 0.3398
+[iter 2750]loss: 3.7550, tokens/sec: 203255.01 ± 3671.28, tokens seen: 720896000, grad norm: 0.3084
+[iter 2760]loss: 3.8164, tokens/sec: 203255.04 ± 3664.65, tokens seen: 723517440, grad norm: 0.3230
+[iter 2770]loss: 3.7125, tokens/sec: 203254.45 ± 3658.06, tokens seen: 726138880, grad norm: 0.3536
+[iter 2780]loss: 3.5634, tokens/sec: 203254.88 ± 3651.50, tokens seen: 728760320, grad norm: 0.3080
+[iter 2790]loss: 3.6131, tokens/sec: 203254.97 ± 3644.98, tokens seen: 731381760, grad norm: 0.3326
+[iter 2800]loss: 3.6667, tokens/sec: 203255.08 ± 3638.48, tokens seen: 734003200, grad norm: 0.3101
+[iter 2810]loss: 3.6699, tokens/sec: 203254.27 ± 3632.08, tokens seen: 736624640, grad norm: 0.3077
+[iter 2820]loss: 3.5351, tokens/sec: 203253.77 ± 3625.67, tokens seen: 739246080, grad norm: 0.3945
+[iter 2830]loss: 3.5426, tokens/sec: 203254.03 ± 3619.28, tokens seen: 741867520, grad norm: 0.3123
+[iter 2840]loss: 3.7953, tokens/sec: 203253.96 ± 3612.93, tokens seen: 744488960, grad norm: 0.3396
+[iter 2850]loss: 3.5982, tokens/sec: 203254.21 ± 3606.64, tokens seen: 747110400, grad norm: 0.3385
+[iter 2860]loss: 3.6431, tokens/sec: 203254.37 ± 3600.35, tokens seen: 749731840, grad norm: 0.2894
+[iter 2870]loss: 3.5161, tokens/sec: 203254.63 ± 3594.10, tokens seen: 752353280, grad norm: 0.3022
+[iter 2880]loss: 3.7140, tokens/sec: 203255.12 ± 3587.88, tokens seen: 754974720, grad norm: 0.3288
+[iter 2890]loss: 3.7331, tokens/sec: 203254.67 ± 3581.76, tokens seen: 757596160, grad norm: 0.3367
+[iter 2900]loss: 3.5857, tokens/sec: 203255.15 ± 3575.62, tokens seen: 760217600, grad norm: 0.2854
+[iter 2910]loss: 3.6473, tokens/sec: 203255.06 ± 3569.51, tokens seen: 762839040, grad norm: 0.3030
+[iter 2920]loss: 3.7513, tokens/sec: 203255.40 ± 3563.44, tokens seen: 765460480, grad norm: 0.3188
+[iter 2930]loss: 3.7104, tokens/sec: 203255.75 ± 3557.37, tokens seen: 768081920, grad norm: 0.2954
+[iter 2940]loss: 3.5400, tokens/sec: 203255.85 ± 3551.34, tokens seen: 770703360, grad norm: 0.2799
+[iter 2950]loss: 3.6203, tokens/sec: 203256.04 ± 3545.34, tokens seen: 773324800, grad norm: 0.3078
+[iter 2960]loss: 3.6321, tokens/sec: 203256.11 ± 3539.38, tokens seen: 775946240, grad norm: 0.3068
+[iter 2970]loss: 3.5805, tokens/sec: 203255.93 ± 3533.45, tokens seen: 778567680, grad norm: 0.3569
+[iter 2980]loss: 3.5480, tokens/sec: 203256.44 ± 3527.56, tokens seen: 781189120, grad norm: 0.3058
+[iter 2990]loss: 3.6661, tokens/sec: 203256.35 ± 3521.69, tokens seen: 783810560, grad norm: 0.3192
+[step 3000]train loss: 3.6560, val loss: 3.6529, (avg train loss: 0.9131 ± 0.0160), (avg grad norm: 0.3202 ± 0.0256)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 3000]loss: 3.7171, tokens/sec: 203258.51 ± 3517.61, tokens seen: 786432000, grad norm: 0.3407
+[iter 3010]loss: 3.6198, tokens/sec: 203259.53 ± 3511.83, tokens seen: 789053440, grad norm: 0.3188
+[iter 3020]loss: 3.6301, tokens/sec: 203260.25 ± 3506.05, tokens seen: 791674880, grad norm: 0.3924
+[iter 3030]loss: 3.7033, tokens/sec: 203261.29 ± 3500.32, tokens seen: 794296320, grad norm: 0.3799
+[iter 3040]loss: 3.6007, tokens/sec: 203261.92 ± 3494.61, tokens seen: 796917760, grad norm: 0.3417
+[iter 3050]loss: 3.5790, tokens/sec: 203262.09 ± 3488.91, tokens seen: 799539200, grad norm: 0.3122
+[iter 3060]loss: 3.5338, tokens/sec: 203262.56 ± 3483.22, tokens seen: 802160640, grad norm: 0.3324
+[iter 3070]loss: 3.5453, tokens/sec: 203262.84 ± 3477.59, tokens seen: 804782080, grad norm: 0.3191
+[iter 3080]loss: 3.6730, tokens/sec: 203263.20 ± 3471.97, tokens seen: 807403520, grad norm: 0.2865
+[iter 3090]loss: 3.6796, tokens/sec: 203262.88 ± 3466.40, tokens seen: 810024960, grad norm: 0.3087
+[iter 3100]loss: 3.7711, tokens/sec: 203262.81 ± 3460.82, tokens seen: 812646400, grad norm: 0.2941
+[iter 3110]loss: 3.7447, tokens/sec: 203262.97 ± 3455.29, tokens seen: 815267840, grad norm: 0.2896
+[iter 3120]loss: 3.6236, tokens/sec: 203263.47 ± 3449.78, tokens seen: 817889280, grad norm: 0.3437
+[iter 3130]loss: 3.6881, tokens/sec: 203263.50 ± 3444.32, tokens seen: 820510720, grad norm: 0.3392
+[iter 3140]loss: 3.6751, tokens/sec: 203264.04 ± 3438.85, tokens seen: 823132160, grad norm: 0.3627
+[iter 3150]loss: 3.6194, tokens/sec: 203264.15 ± 3433.41, tokens seen: 825753600, grad norm: 0.3461
+[iter 3160]loss: 3.6180, tokens/sec: 203264.16 ± 3428.01, tokens seen: 828375040, grad norm: 0.3217
+[iter 3170]loss: 3.6700, tokens/sec: 203264.53 ± 3422.63, tokens seen: 830996480, grad norm: 0.2999
+[iter 3180]loss: 3.5845, tokens/sec: 203264.40 ± 3417.29, tokens seen: 833617920, grad norm: 0.3157
+[iter 3190]loss: 3.5414, tokens/sec: 203264.08 ± 3411.96, tokens seen: 836239360, grad norm: 0.3242
+[iter 3200]loss: 3.7228, tokens/sec: 203264.06 ± 3406.64, tokens seen: 838860800, grad norm: 0.2942
+[iter 3210]loss: 3.4851, tokens/sec: 203263.89 ± 3401.36, tokens seen: 841482240, grad norm: 0.3331
+[iter 3220]loss: 3.7608, tokens/sec: 203263.73 ± 3396.11, tokens seen: 844103680, grad norm: 0.3499
+[iter 3230]loss: 3.5843, tokens/sec: 203263.34 ± 3390.90, tokens seen: 846725120, grad norm: 0.2740
+[iter 3240]loss: 3.5446, tokens/sec: 203263.51 ± 3385.68, tokens seen: 849346560, grad norm: 0.3428
+[iter 3250]loss: 3.5881, tokens/sec: 203264.03 ± 3380.50, tokens seen: 851968000, grad norm: 0.2870
+[iter 3260]loss: 3.6573, tokens/sec: 203264.52 ± 3375.33, tokens seen: 854589440, grad norm: 0.3188
+[iter 3270]loss: 3.5156, tokens/sec: 203264.90 ± 3370.20, tokens seen: 857210880, grad norm: 0.3185
+[iter 3280]loss: 3.6637, tokens/sec: 203265.01 ± 3365.08, tokens seen: 859832320, grad norm: 0.3278
+[iter 3290]loss: 3.5922, tokens/sec: 203265.11 ± 3360.00, tokens seen: 862453760, grad norm: 0.3146
+[iter 3300]loss: 3.5457, tokens/sec: 203264.99 ± 3354.93, tokens seen: 865075200, grad norm: 0.2925
+[iter 3310]loss: 3.7407, tokens/sec: 203265.25 ± 3349.89, tokens seen: 867696640, grad norm: 0.3163
+[iter 3320]loss: 3.6289, tokens/sec: 203265.42 ± 3344.87, tokens seen: 870318080, grad norm: 0.3361
+[iter 3330]loss: 3.6540, tokens/sec: 203265.70 ± 3339.87, tokens seen: 872939520, grad norm: 0.3490
+[iter 3340]loss: 3.7285, tokens/sec: 203265.52 ± 3334.88, tokens seen: 875560960, grad norm: 0.2797
+[iter 3350]loss: 3.4889, tokens/sec: 203265.38 ± 3329.91, tokens seen: 878182400, grad norm: 0.2916
+[iter 3360]loss: 3.6185, tokens/sec: 203265.56 ± 3324.98, tokens seen: 880803840, grad norm: 0.3040
+[iter 3370]loss: 3.5860, tokens/sec: 203265.58 ± 3320.08, tokens seen: 883425280, grad norm: 0.3132
+[iter 3380]loss: 3.6794, tokens/sec: 203265.43 ± 3315.21, tokens seen: 886046720, grad norm: 0.3457
+[iter 3390]loss: 3.5170, tokens/sec: 203265.65 ± 3310.34, tokens seen: 888668160, grad norm: 0.2824
+[iter 3400]loss: 3.6441, tokens/sec: 203265.60 ± 3305.51, tokens seen: 891289600, grad norm: 0.3035
+[iter 3410]loss: 3.4662, tokens/sec: 203265.97 ± 3300.68, tokens seen: 893911040, grad norm: 0.3303
+[iter 3420]loss: 3.6430, tokens/sec: 203266.23 ± 3295.88, tokens seen: 896532480, grad norm: 0.3592
+[iter 3430]loss: 3.4934, tokens/sec: 203266.12 ± 3291.10, tokens seen: 899153920, grad norm: 0.2843
+[iter 3440]loss: 3.6826, tokens/sec: 203265.75 ± 3286.35, tokens seen: 901775360, grad norm: 0.3391
+[iter 3450]loss: 3.4981, tokens/sec: 203265.97 ± 3281.62, tokens seen: 904396800, grad norm: 0.2852
+[iter 3460]loss: 3.4712, tokens/sec: 203265.71 ± 3276.91, tokens seen: 907018240, grad norm: 0.3441
+[iter 3470]loss: 3.5950, tokens/sec: 203265.96 ± 3272.22, tokens seen: 909639680, grad norm: 0.3210
+[iter 3480]loss: 3.5217, tokens/sec: 203265.89 ± 3267.53, tokens seen: 912261120, grad norm: 0.3297
+[iter 3490]loss: 3.6061, tokens/sec: 203265.95 ± 3262.87, tokens seen: 914882560, grad norm: 0.3461
+[step 3500]train loss: 3.6108, val loss: 3.6107, (avg train loss: 0.9025 ± 0.0173), (avg grad norm: 0.3210 ± 0.0288)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 3500]loss: 3.6413, tokens/sec: 203267.94 ± 3259.80, tokens seen: 917504000, grad norm: 0.2926
+[iter 3510]loss: 3.7397, tokens/sec: 203268.95 ± 3255.21, tokens seen: 920125440, grad norm: 0.2774
+[iter 3520]loss: 3.7202, tokens/sec: 203269.58 ± 3250.61, tokens seen: 922746880, grad norm: 0.3077
+[iter 3530]loss: 3.5495, tokens/sec: 203269.96 ± 3246.03, tokens seen: 925368320, grad norm: 0.2931
+[iter 3540]loss: 3.5859, tokens/sec: 203270.46 ± 3241.48, tokens seen: 927989760, grad norm: 0.3048
+[iter 3550]loss: 3.6517, tokens/sec: 203270.85 ± 3236.93, tokens seen: 930611200, grad norm: 0.2968
+[iter 3560]loss: 3.7119, tokens/sec: 203271.47 ± 3232.43, tokens seen: 933232640, grad norm: 0.3245
+[iter 3570]loss: 3.5209, tokens/sec: 203271.97 ± 3227.96, tokens seen: 935854080, grad norm: 0.3391
+[iter 3580]loss: 3.5351, tokens/sec: 203272.21 ± 3223.48, tokens seen: 938475520, grad norm: 0.3009
+[iter 3590]loss: 3.6131, tokens/sec: 203272.50 ± 3218.99, tokens seen: 941096960, grad norm: 0.2758
+[iter 3600]loss: 3.5649, tokens/sec: 203272.97 ± 3214.55, tokens seen: 943718400, grad norm: 0.3386
+[iter 3610]loss: 3.7308, tokens/sec: 203273.10 ± 3210.12, tokens seen: 946339840, grad norm: 0.3133
+[iter 3620]loss: 3.5703, tokens/sec: 203273.08 ± 3205.70, tokens seen: 948961280, grad norm: 0.3239
+[iter 3630]loss: 3.5138, tokens/sec: 203273.10 ± 3201.32, tokens seen: 951582720, grad norm: 0.3482
+[iter 3640]loss: 3.5258, tokens/sec: 203272.88 ± 3196.95, tokens seen: 954204160, grad norm: 0.3018
+[iter 3650]loss: 3.7607, tokens/sec: 203273.19 ± 3192.59, tokens seen: 956825600, grad norm: 0.2997
+[iter 3660]loss: 3.5360, tokens/sec: 203273.07 ± 3188.25, tokens seen: 959447040, grad norm: 0.3153
+[iter 3670]loss: 3.6421, tokens/sec: 203273.33 ± 3183.92, tokens seen: 962068480, grad norm: 0.3400
+[iter 3680]loss: 3.5232, tokens/sec: 203273.40 ± 3179.62, tokens seen: 964689920, grad norm: 0.3197
+[iter 3690]loss: 3.6271, tokens/sec: 203272.88 ± 3175.36, tokens seen: 967311360, grad norm: 0.3133
+[iter 3700]loss: 3.6177, tokens/sec: 203272.94 ± 3171.09, tokens seen: 969932800, grad norm: 0.3333
+[iter 3710]loss: 3.4739, tokens/sec: 203273.03 ± 3166.83, tokens seen: 972554240, grad norm: 0.3049
+[iter 3720]loss: 3.5485, tokens/sec: 203273.39 ± 3162.59, tokens seen: 975175680, grad norm: 0.3034
+[iter 3730]loss: 3.5635, tokens/sec: 203273.58 ± 3158.37, tokens seen: 977797120, grad norm: 0.3673
+[iter 3740]loss: 3.5880, tokens/sec: 203273.56 ± 3154.17, tokens seen: 980418560, grad norm: 0.3034
+[iter 3750]loss: 3.6122, tokens/sec: 203273.47 ± 3150.00, tokens seen: 983040000, grad norm: 0.2896
+[iter 3760]loss: 3.5073, tokens/sec: 203273.39 ± 3145.83, tokens seen: 985661440, grad norm: 0.3197
+[iter 3770]loss: 3.5226, tokens/sec: 203273.48 ± 3141.69, tokens seen: 988282880, grad norm: 0.3274
+[iter 3780]loss: 3.5608, tokens/sec: 203273.39 ± 3137.56, tokens seen: 990904320, grad norm: 0.3664
+[iter 3790]loss: 3.6254, tokens/sec: 203273.05 ± 3133.43, tokens seen: 993525760, grad norm: 0.2932
+[iter 3800]loss: 3.6011, tokens/sec: 203272.81 ± 3129.34, tokens seen: 996147200, grad norm: 0.3155
+[iter 3810]loss: 3.4797, tokens/sec: 203272.88 ± 3125.26, tokens seen: 998768640, grad norm: 0.2868
+[iter 3820]loss: 3.5356, tokens/sec: 203272.68 ± 3121.20, tokens seen: 1001390080, grad norm: 0.3279
+[iter 3830]loss: 3.4398, tokens/sec: 203272.81 ± 3117.15, tokens seen: 1004011520, grad norm: 0.2913
+[iter 3840]loss: 3.6226, tokens/sec: 203272.96 ± 3113.11, tokens seen: 1006632960, grad norm: 0.3018
+[iter 3850]loss: 3.5399, tokens/sec: 203272.89 ± 3109.10, tokens seen: 1009254400, grad norm: 0.3112
+[iter 3860]loss: 3.5346, tokens/sec: 203272.85 ± 3105.09, tokens seen: 1011875840, grad norm: 0.3632
+[iter 3870]loss: 3.6499, tokens/sec: 203272.62 ± 3101.10, tokens seen: 1014497280, grad norm: 0.2837
+[iter 3880]loss: 3.6403, tokens/sec: 203272.39 ± 3097.14, tokens seen: 1017118720, grad norm: 0.3129
+[iter 3890]loss: 3.5845, tokens/sec: 203272.52 ± 3093.19, tokens seen: 1019740160, grad norm: 0.2934
+[iter 3900]loss: 3.4119, tokens/sec: 203272.42 ± 3089.26, tokens seen: 1022361600, grad norm: 0.2970
+[iter 3910]loss: 3.5791, tokens/sec: 203272.45 ± 3085.34, tokens seen: 1024983040, grad norm: 0.2693
+[iter 3920]loss: 3.4952, tokens/sec: 203272.75 ± 3081.43, tokens seen: 1027604480, grad norm: 0.3081
+[iter 3930]loss: 3.6440, tokens/sec: 203273.01 ± 3077.53, tokens seen: 1030225920, grad norm: 0.3460
+[iter 3940]loss: 3.6511, tokens/sec: 203272.91 ± 3073.66, tokens seen: 1032847360, grad norm: 0.2989
+[iter 3950]loss: 3.5252, tokens/sec: 203273.15 ± 3069.81, tokens seen: 1035468800, grad norm: 0.3045
+[iter 3960]loss: 3.6023, tokens/sec: 203273.18 ± 3065.96, tokens seen: 1038090240, grad norm: 0.2745
+[iter 3970]loss: 3.5619, tokens/sec: 203273.34 ± 3062.12, tokens seen: 1040711680, grad norm: 0.3254
+[iter 3980]loss: 3.5418, tokens/sec: 203273.51 ± 3058.30, tokens seen: 1043333120, grad norm: 0.3308
+[iter 3990]loss: 3.5769, tokens/sec: 203273.73 ± 3054.49, tokens seen: 1045954560, grad norm: 0.2967
+[step 4000]train loss: 3.5697, val loss: 3.5785, (avg train loss: 0.8931 ± 0.0180), (avg grad norm: 0.3139 ± 0.0246)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 4000]loss: 3.4454, tokens/sec: 203275.36 ± 3052.00, tokens seen: 1048576000, grad norm: 0.3250
+[iter 4010]loss: 3.6506, tokens/sec: 203276.18 ± 3048.25, tokens seen: 1051197440, grad norm: 0.3203
+[iter 4020]loss: 3.4722, tokens/sec: 203276.93 ± 3044.52, tokens seen: 1053818880, grad norm: 0.2899
+[iter 4030]loss: 3.7471, tokens/sec: 203277.49 ± 3040.79, tokens seen: 1056440320, grad norm: 0.2892
+[iter 4040]loss: 3.5142, tokens/sec: 203278.00 ± 3037.05, tokens seen: 1059061760, grad norm: 0.2803
+[iter 4050]loss: 3.5964, tokens/sec: 203278.30 ± 3033.33, tokens seen: 1061683200, grad norm: 0.3410
+[iter 4060]loss: 3.5734, tokens/sec: 203278.90 ± 3029.63, tokens seen: 1064304640, grad norm: 0.3104
+[iter 4070]loss: 3.5327, tokens/sec: 203279.01 ± 3025.92, tokens seen: 1066926080, grad norm: 0.3022
+[iter 4080]loss: 3.4997, tokens/sec: 203279.30 ± 3022.25, tokens seen: 1069547520, grad norm: 0.2887
+[iter 4090]loss: 3.5587, tokens/sec: 203279.69 ± 3018.59, tokens seen: 1072168960, grad norm: 0.2904
+[iter 4100]loss: 3.5661, tokens/sec: 203280.04 ± 3014.95, tokens seen: 1074790400, grad norm: 0.3171
+[iter 4110]loss: 3.6286, tokens/sec: 203280.13 ± 3011.30, tokens seen: 1077411840, grad norm: 0.3054
+[iter 4120]loss: 3.5083, tokens/sec: 203280.33 ± 3007.66, tokens seen: 1080033280, grad norm: 0.2819
+[iter 4130]loss: 3.6486, tokens/sec: 203280.49 ± 3004.05, tokens seen: 1082654720, grad norm: 0.2888
+[iter 4140]loss: 3.5684, tokens/sec: 203280.53 ± 3000.44, tokens seen: 1085276160, grad norm: 0.3149
+[iter 4150]loss: 3.5349, tokens/sec: 203281.00 ± 2996.85, tokens seen: 1087897600, grad norm: 0.3173
+[iter 4160]loss: 3.6246, tokens/sec: 203280.42 ± 2993.28, tokens seen: 1090519040, grad norm: 0.3616
+[iter 4170]loss: 3.6755, tokens/sec: 203280.52 ± 2989.71, tokens seen: 1093140480, grad norm: 0.3346
+[iter 4180]loss: 3.5351, tokens/sec: 203280.70 ± 2986.16, tokens seen: 1095761920, grad norm: 0.3087
+[iter 4190]loss: 3.6494, tokens/sec: 203280.62 ± 2982.62, tokens seen: 1098383360, grad norm: 0.2858
+[iter 4200]loss: 3.5478, tokens/sec: 203280.66 ± 2979.09, tokens seen: 1101004800, grad norm: 0.3068
+[iter 4210]loss: 3.6479, tokens/sec: 203280.92 ± 2975.58, tokens seen: 1103626240, grad norm: 0.3145
+[iter 4220]loss: 3.5839, tokens/sec: 203281.11 ± 2972.07, tokens seen: 1106247680, grad norm: 0.3315
+[iter 4230]loss: 3.5773, tokens/sec: 203281.16 ± 2968.57, tokens seen: 1108869120, grad norm: 0.2853
+[iter 4240]loss: 3.4119, tokens/sec: 203281.25 ± 2965.09, tokens seen: 1111490560, grad norm: 0.3111
+[iter 4250]loss: 3.5825, tokens/sec: 203281.31 ± 2961.62, tokens seen: 1114112000, grad norm: 0.3059
+[iter 4260]loss: 3.5799, tokens/sec: 203281.25 ± 2958.17, tokens seen: 1116733440, grad norm: 0.2910
+[iter 4270]loss: 3.4340, tokens/sec: 203281.40 ± 2954.72, tokens seen: 1119354880, grad norm: 0.3072
+[iter 4280]loss: 3.6313, tokens/sec: 203281.26 ± 2951.30, tokens seen: 1121976320, grad norm: 0.3080
+[iter 4290]loss: 3.5042, tokens/sec: 203281.22 ± 2947.89, tokens seen: 1124597760, grad norm: 0.3549
+[iter 4300]loss: 3.7385, tokens/sec: 203281.38 ± 2944.49, tokens seen: 1127219200, grad norm: 0.3223
+[iter 4310]loss: 3.5098, tokens/sec: 203281.53 ± 2941.08, tokens seen: 1129840640, grad norm: 0.3053
+[iter 4320]loss: 3.5491, tokens/sec: 203281.49 ± 2937.70, tokens seen: 1132462080, grad norm: 0.2903
+[iter 4330]loss: 3.5198, tokens/sec: 203281.79 ± 2934.32, tokens seen: 1135083520, grad norm: 0.3281
+[iter 4340]loss: 3.5740, tokens/sec: 203281.93 ± 2930.96, tokens seen: 1137704960, grad norm: 0.3138
+[iter 4350]loss: 3.5527, tokens/sec: 203281.72 ± 2927.60, tokens seen: 1140326400, grad norm: 0.3438
+[iter 4360]loss: 3.4918, tokens/sec: 203281.65 ± 2924.26, tokens seen: 1142947840, grad norm: 0.2975
+[iter 4370]loss: 3.4388, tokens/sec: 203281.60 ± 2920.92, tokens seen: 1145569280, grad norm: 0.2688
+[iter 4380]loss: 3.5843, tokens/sec: 203281.88 ± 2917.63, tokens seen: 1148190720, grad norm: 0.3103
+[iter 4390]loss: 3.3601, tokens/sec: 203281.99 ± 2914.33, tokens seen: 1150812160, grad norm: 0.2954
+[iter 4400]loss: 3.5321, tokens/sec: 203281.92 ± 2911.04, tokens seen: 1153433600, grad norm: 0.3081
+[iter 4410]loss: 3.5762, tokens/sec: 203281.95 ± 2907.76, tokens seen: 1156055040, grad norm: 0.3582
+[iter 4420]loss: 3.4877, tokens/sec: 203281.69 ± 2904.50, tokens seen: 1158676480, grad norm: 0.3069
+[iter 4430]loss: 3.4702, tokens/sec: 203281.66 ± 2901.25, tokens seen: 1161297920, grad norm: 0.3356
+[iter 4440]loss: 3.6503, tokens/sec: 203281.88 ± 2897.99, tokens seen: 1163919360, grad norm: 0.2953
+[iter 4450]loss: 3.7317, tokens/sec: 203281.94 ± 2894.75, tokens seen: 1166540800, grad norm: 0.3045
+[iter 4460]loss: 3.5296, tokens/sec: 203282.09 ± 2891.53, tokens seen: 1169162240, grad norm: 0.3252
+[iter 4470]loss: 3.5269, tokens/sec: 203282.00 ± 2888.33, tokens seen: 1171783680, grad norm: 0.2985
+[iter 4480]loss: 3.3879, tokens/sec: 203282.07 ± 2885.11, tokens seen: 1174405120, grad norm: 0.3570
+[iter 4490]loss: 3.5780, tokens/sec: 203281.92 ± 2881.92, tokens seen: 1177026560, grad norm: 0.2906
+[step 4500]train loss: 3.5444, val loss: 3.5485, (avg train loss: 0.8870 ± 0.0190), (avg grad norm: 0.3138 ± 0.0221)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 4500]loss: 3.5560, tokens/sec: 203283.44 ± 2879.88, tokens seen: 1179648000, grad norm: 0.3119
+[iter 4510]loss: 3.5362, tokens/sec: 203284.10 ± 2876.73, tokens seen: 1182269440, grad norm: 0.3411
+[iter 4520]loss: 3.5185, tokens/sec: 203284.60 ± 2873.57, tokens seen: 1184890880, grad norm: 0.2756
+[iter 4530]loss: 3.4958, tokens/sec: 203284.80 ± 2870.43, tokens seen: 1187512320, grad norm: 0.3051
+[iter 4540]loss: 3.6170, tokens/sec: 203285.15 ± 2867.30, tokens seen: 1190133760, grad norm: 0.3169
+[iter 4550]loss: 3.5092, tokens/sec: 203285.70 ± 2864.19, tokens seen: 1192755200, grad norm: 0.3288
+[iter 4560]loss: 3.6098, tokens/sec: 203285.83 ± 2861.09, tokens seen: 1195376640, grad norm: 0.2898
+[iter 4570]loss: 3.4847, tokens/sec: 203285.91 ± 2857.99, tokens seen: 1197998080, grad norm: 0.3016
+[iter 4580]loss: 3.5376, tokens/sec: 203286.02 ± 2854.90, tokens seen: 1200619520, grad norm: 0.3066
+[iter 4590]loss: 3.4953, tokens/sec: 203286.20 ± 2851.81, tokens seen: 1203240960, grad norm: 0.3481
+[iter 4600]loss: 3.5092, tokens/sec: 203286.26 ± 2848.72, tokens seen: 1205862400, grad norm: 0.2927
+[iter 4610]loss: 3.5696, tokens/sec: 203286.21 ± 2845.65, tokens seen: 1208483840, grad norm: 0.2839
+[iter 4620]loss: 3.7061, tokens/sec: 203286.34 ± 2842.59, tokens seen: 1211105280, grad norm: 0.3172
+[iter 4630]loss: 3.5379, tokens/sec: 203286.59 ± 2839.54, tokens seen: 1213726720, grad norm: 0.3127
+[iter 4640]loss: 3.5055, tokens/sec: 203286.69 ± 2836.50, tokens seen: 1216348160, grad norm: 0.3057
+[iter 4650]loss: 3.5645, tokens/sec: 203286.94 ± 2833.46, tokens seen: 1218969600, grad norm: 0.3331
+[iter 4660]loss: 3.4461, tokens/sec: 203286.87 ± 2830.44, tokens seen: 1221591040, grad norm: 0.2947
+[iter 4670]loss: 3.3985, tokens/sec: 203287.01 ± 2827.43, tokens seen: 1224212480, grad norm: 0.3028
+[iter 4680]loss: 3.5068, tokens/sec: 203287.27 ± 2824.43, tokens seen: 1226833920, grad norm: 0.3433
+[iter 4690]loss: 3.6366, tokens/sec: 203287.48 ± 2821.43, tokens seen: 1229455360, grad norm: 0.3264
+[iter 4700]loss: 3.5994, tokens/sec: 203287.52 ± 2818.45, tokens seen: 1232076800, grad norm: 0.2992
+[iter 4710]loss: 3.4085, tokens/sec: 203287.63 ± 2815.49, tokens seen: 1234698240, grad norm: 0.3079
+[iter 4720]loss: 3.4739, tokens/sec: 203287.55 ± 2812.53, tokens seen: 1237319680, grad norm: 0.3138
+[iter 4730]loss: 3.4482, tokens/sec: 203287.47 ± 2809.58, tokens seen: 1239941120, grad norm: 0.2887
+[iter 4740]loss: 3.3557, tokens/sec: 203287.70 ± 2806.63, tokens seen: 1242562560, grad norm: 0.3138
+[iter 4750]loss: 3.5325, tokens/sec: 203287.97 ± 2803.69, tokens seen: 1245184000, grad norm: 0.3089
+[iter 4760]loss: 3.4558, tokens/sec: 203288.27 ± 2800.77, tokens seen: 1247805440, grad norm: 0.3233
+[iter 4770]loss: 3.6755, tokens/sec: 203288.26 ± 2797.86, tokens seen: 1250426880, grad norm: 0.3019
+[iter 4780]loss: 3.5467, tokens/sec: 203288.26 ± 2794.94, tokens seen: 1253048320, grad norm: 0.3238
+[iter 4790]loss: 3.4943, tokens/sec: 203288.19 ± 2792.04, tokens seen: 1255669760, grad norm: 0.3307
+[iter 4800]loss: 3.5711, tokens/sec: 203288.04 ± 2789.17, tokens seen: 1258291200, grad norm: 0.3125
+[iter 4810]loss: 3.5796, tokens/sec: 203288.14 ± 2786.28, tokens seen: 1260912640, grad norm: 0.2802
+[iter 4820]loss: 3.5535, tokens/sec: 203288.04 ± 2783.41, tokens seen: 1263534080, grad norm: 0.3076
+[iter 4830]loss: 3.6754, tokens/sec: 203288.12 ± 2780.54, tokens seen: 1266155520, grad norm: 0.3210
+[iter 4840]loss: 3.4812, tokens/sec: 203288.29 ± 2777.68, tokens seen: 1268776960, grad norm: 0.2934
+[iter 4850]loss: 3.6225, tokens/sec: 203288.45 ± 2774.83, tokens seen: 1271398400, grad norm: 0.2865
+[iter 4860]loss: 3.4232, tokens/sec: 203288.47 ± 2771.99, tokens seen: 1274019840, grad norm: 0.3369
+[iter 4870]loss: 3.5543, tokens/sec: 203288.61 ± 2769.16, tokens seen: 1276641280, grad norm: 0.3224
+[iter 4880]loss: 3.4474, tokens/sec: 203288.58 ± 2766.33, tokens seen: 1279262720, grad norm: 0.3247
+[iter 4890]loss: 3.5012, tokens/sec: 203288.72 ± 2763.52, tokens seen: 1281884160, grad norm: 0.3063
+[iter 4900]loss: 3.4614, tokens/sec: 203288.53 ± 2760.73, tokens seen: 1284505600, grad norm: 0.2986
+[iter 4910]loss: 3.4814, tokens/sec: 203288.37 ± 2757.95, tokens seen: 1287127040, grad norm: 0.3147
+[iter 4920]loss: 3.6016, tokens/sec: 203288.55 ± 2755.18, tokens seen: 1289748480, grad norm: 0.2985
+[iter 4930]loss: 3.4628, tokens/sec: 203288.62 ± 2752.44, tokens seen: 1292369920, grad norm: 0.2995
+[iter 4940]loss: 3.6470, tokens/sec: 203288.69 ± 2749.67, tokens seen: 1294991360, grad norm: 0.3207
+[iter 4950]loss: 3.4601, tokens/sec: 203288.61 ± 2746.91, tokens seen: 1297612800, grad norm: 0.3163
+[iter 4960]loss: 3.5582, tokens/sec: 203288.77 ± 2744.15, tokens seen: 1300234240, grad norm: 0.2880
+[iter 4970]loss: 3.5186, tokens/sec: 203288.82 ± 2741.41, tokens seen: 1302855680, grad norm: 0.3118
+[iter 4980]loss: 3.4940, tokens/sec: 203288.86 ± 2738.68, tokens seen: 1305477120, grad norm: 0.2814
+[iter 4990]loss: 3.4346, tokens/sec: 203289.05 ± 2735.94, tokens seen: 1308098560, grad norm: 0.2997
+[step 5000]train loss: 3.5084, val loss: 3.5221, (avg train loss: 0.8802 ± 0.0177), (avg grad norm: 0.3115 ± 0.0204)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 5000]loss: 3.4477, tokens/sec: 203290.19 ± 2734.44, tokens seen: 1310720000, grad norm: 0.3245
+[iter 5010]loss: 3.5210, tokens/sec: 203290.81 ± 2731.75, tokens seen: 1313341440, grad norm: 0.3288
+[iter 5020]loss: 3.4659, tokens/sec: 203291.35 ± 2729.08, tokens seen: 1315962880, grad norm: 0.3140
+[iter 5030]loss: 3.5665, tokens/sec: 203291.63 ± 2726.39, tokens seen: 1318584320, grad norm: 0.3025
+[iter 5040]loss: 3.4161, tokens/sec: 203291.97 ± 2723.71, tokens seen: 1321205760, grad norm: 0.3169
+[iter 5050]loss: 3.5214, tokens/sec: 203292.12 ± 2721.04, tokens seen: 1323827200, grad norm: 0.3125
+[iter 5060]loss: 3.6354, tokens/sec: 203292.41 ± 2718.38, tokens seen: 1326448640, grad norm: 0.3430
+[iter 5070]loss: 3.5323, tokens/sec: 203292.45 ± 2715.71, tokens seen: 1329070080, grad norm: 0.3490
+[iter 5080]loss: 3.4000, tokens/sec: 203292.78 ± 2713.06, tokens seen: 1331691520, grad norm: 0.2937
+[iter 5090]loss: 3.5434, tokens/sec: 203292.95 ± 2710.41, tokens seen: 1334312960, grad norm: 0.3175
+[iter 5100]loss: 3.5493, tokens/sec: 203293.08 ± 2707.79, tokens seen: 1336934400, grad norm: 0.3055
+[iter 5110]loss: 3.5574, tokens/sec: 203293.23 ± 2705.16, tokens seen: 1339555840, grad norm: 0.2929
+[iter 5120]loss: 3.3685, tokens/sec: 203293.16 ± 2702.55, tokens seen: 1342177280, grad norm: 0.3123
+[iter 5130]loss: 3.4407, tokens/sec: 203293.14 ± 2699.94, tokens seen: 1344798720, grad norm: 0.3000
+[iter 5140]loss: 3.5470, tokens/sec: 203293.00 ± 2697.32, tokens seen: 1347420160, grad norm: 0.2861
+[iter 5150]loss: 3.5426, tokens/sec: 203293.12 ± 2694.73, tokens seen: 1350041600, grad norm: 0.3557
+[iter 5160]loss: 3.5109, tokens/sec: 203292.94 ± 2692.14, tokens seen: 1352663040, grad norm: 0.2679
+[iter 5170]loss: 3.4333, tokens/sec: 203293.05 ± 2689.55, tokens seen: 1355284480, grad norm: 0.3088
+[iter 5180]loss: 3.4437, tokens/sec: 203293.24 ± 2686.97, tokens seen: 1357905920, grad norm: 0.2833
+[iter 5190]loss: 3.5847, tokens/sec: 203293.35 ± 2684.40, tokens seen: 1360527360, grad norm: 0.3087
+[iter 5200]loss: 3.5416, tokens/sec: 203293.16 ± 2681.85, tokens seen: 1363148800, grad norm: 0.3402
+[iter 5210]loss: 3.6188, tokens/sec: 203293.41 ± 2679.29, tokens seen: 1365770240, grad norm: 0.2881
+[iter 5220]loss: 3.6004, tokens/sec: 203293.67 ± 2676.73, tokens seen: 1368391680, grad norm: 0.3067
+[iter 5230]loss: 3.4377, tokens/sec: 203293.67 ± 2674.20, tokens seen: 1371013120, grad norm: 0.2996
+[iter 5240]loss: 3.5114, tokens/sec: 203293.68 ± 2671.67, tokens seen: 1373634560, grad norm: 0.3008
+[iter 5250]loss: 3.5281, tokens/sec: 203293.77 ± 2669.15, tokens seen: 1376256000, grad norm: 0.2940
+[iter 5260]loss: 3.4297, tokens/sec: 203293.68 ± 2666.63, tokens seen: 1378877440, grad norm: 0.2788
+[iter 5270]loss: 3.7125, tokens/sec: 203293.73 ± 2664.12, tokens seen: 1381498880, grad norm: 0.2820
+[iter 5280]loss: 3.4829, tokens/sec: 203293.77 ± 2661.61, tokens seen: 1384120320, grad norm: 0.3260
+[iter 5290]loss: 3.4770, tokens/sec: 203293.72 ± 2659.12, tokens seen: 1386741760, grad norm: 0.3233
+[iter 5300]loss: 3.5115, tokens/sec: 203293.95 ± 2656.63, tokens seen: 1389363200, grad norm: 0.3108
+[iter 5310]loss: 3.5671, tokens/sec: 203294.02 ± 2654.14, tokens seen: 1391984640, grad norm: 0.2924
+[iter 5320]loss: 3.4438, tokens/sec: 203294.18 ± 2651.67, tokens seen: 1394606080, grad norm: 0.2861
+[iter 5330]loss: 3.5680, tokens/sec: 203294.32 ± 2649.19, tokens seen: 1397227520, grad norm: 0.3254
+[iter 5340]loss: 3.5979, tokens/sec: 203294.18 ± 2646.75, tokens seen: 1399848960, grad norm: 0.3013
+[iter 5350]loss: 3.4824, tokens/sec: 203294.32 ± 2644.29, tokens seen: 1402470400, grad norm: 0.3572
+[iter 5360]loss: 3.5571, tokens/sec: 203294.41 ± 2641.86, tokens seen: 1405091840, grad norm: 0.3010
+[iter 5370]loss: 3.4645, tokens/sec: 203294.48 ± 2639.41, tokens seen: 1407713280, grad norm: 0.2862
+[iter 5380]loss: 3.4692, tokens/sec: 203294.66 ± 2636.97, tokens seen: 1410334720, grad norm: 0.3238
+[iter 5390]loss: 3.3883, tokens/sec: 203294.67 ± 2634.54, tokens seen: 1412956160, grad norm: 0.3459
+[iter 5400]loss: 3.4426, tokens/sec: 203294.79 ± 2632.12, tokens seen: 1415577600, grad norm: 0.3113
+[iter 5410]loss: 3.6026, tokens/sec: 203294.72 ± 2629.72, tokens seen: 1418199040, grad norm: 0.3004
+[iter 5420]loss: 3.4821, tokens/sec: 203294.77 ± 2627.30, tokens seen: 1420820480, grad norm: 0.3131
+[iter 5430]loss: 3.5156, tokens/sec: 203294.87 ± 2624.91, tokens seen: 1423441920, grad norm: 0.2839
+[iter 5440]loss: 3.5992, tokens/sec: 203294.86 ± 2622.51, tokens seen: 1426063360, grad norm: 0.3248
+[iter 5450]loss: 3.5145, tokens/sec: 203294.74 ± 2620.11, tokens seen: 1428684800, grad norm: 0.2796
+[iter 5460]loss: 3.5233, tokens/sec: 203294.68 ± 2617.73, tokens seen: 1431306240, grad norm: 0.3035
+[iter 5470]loss: 3.4847, tokens/sec: 203294.67 ± 2615.37, tokens seen: 1433927680, grad norm: 0.2800
+[iter 5480]loss: 3.5014, tokens/sec: 203294.75 ± 2613.00, tokens seen: 1436549120, grad norm: 0.3003
+[iter 5490]loss: 3.3773, tokens/sec: 203294.53 ± 2610.64, tokens seen: 1439170560, grad norm: 0.3509
+[step 5500]train loss: 3.4951, val loss: 3.4972, (avg train loss: 0.8758 ± 0.0178), (avg grad norm: 0.3086 ± 0.0221)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 5500]loss: 3.4528, tokens/sec: 203295.64 ± 2609.49, tokens seen: 1441792000, grad norm: 0.3541
+[iter 5510]loss: 3.4813, tokens/sec: 203296.24 ± 2607.16, tokens seen: 1444413440, grad norm: 0.3345
+[iter 5520]loss: 3.4907, tokens/sec: 203296.86 ± 2604.85, tokens seen: 1447034880, grad norm: 0.3094
+[iter 5530]loss: 3.4375, tokens/sec: 203297.32 ± 2602.53, tokens seen: 1449656320, grad norm: 0.3032
+[iter 5540]loss: 3.4126, tokens/sec: 203297.50 ± 2600.19, tokens seen: 1452277760, grad norm: 0.3078
+[iter 5550]loss: 3.6248, tokens/sec: 203297.82 ± 2597.87, tokens seen: 1454899200, grad norm: 0.3247
+[iter 5560]loss: 3.4891, tokens/sec: 203298.10 ± 2595.57, tokens seen: 1457520640, grad norm: 0.3194
+[iter 5570]loss: 3.4613, tokens/sec: 203298.29 ± 2593.26, tokens seen: 1460142080, grad norm: 0.2973
+[iter 5580]loss: 3.3171, tokens/sec: 203298.50 ± 2590.95, tokens seen: 1462763520, grad norm: 0.3270
+[iter 5590]loss: 3.6242, tokens/sec: 203298.60 ± 2588.65, tokens seen: 1465384960, grad norm: 0.2771
+[iter 5600]loss: 3.5101, tokens/sec: 203298.79 ± 2586.36, tokens seen: 1468006400, grad norm: 0.2854
+[iter 5610]loss: 3.5266, tokens/sec: 203298.89 ± 2584.07, tokens seen: 1470627840, grad norm: 0.3131
+[iter 5620]loss: 3.5675, tokens/sec: 203298.89 ± 2581.81, tokens seen: 1473249280, grad norm: 0.3208
+[iter 5630]loss: 3.5344, tokens/sec: 203298.97 ± 2579.54, tokens seen: 1475870720, grad norm: 0.3077
+[iter 5640]loss: 3.5969, tokens/sec: 203298.98 ± 2577.27, tokens seen: 1478492160, grad norm: 0.3130
+[iter 5650]loss: 3.6436, tokens/sec: 203298.98 ± 2575.02, tokens seen: 1481113600, grad norm: 0.3032
+[iter 5660]loss: 3.4402, tokens/sec: 203299.05 ± 2572.76, tokens seen: 1483735040, grad norm: 0.3226
+[iter 5670]loss: 3.4851, tokens/sec: 203298.93 ± 2570.51, tokens seen: 1486356480, grad norm: 0.3135
+[iter 5680]loss: 3.5794, tokens/sec: 203298.97 ± 2568.28, tokens seen: 1488977920, grad norm: 0.3054
+[iter 5690]loss: 3.4461, tokens/sec: 203298.78 ± 2566.05, tokens seen: 1491599360, grad norm: 0.2969
+[iter 5700]loss: 3.4879, tokens/sec: 203298.87 ± 2563.81, tokens seen: 1494220800, grad norm: 0.3166
+[iter 5710]loss: 3.5220, tokens/sec: 203299.00 ± 2561.58, tokens seen: 1496842240, grad norm: 0.3040
+[iter 5720]loss: 3.5001, tokens/sec: 203299.09 ± 2559.36, tokens seen: 1499463680, grad norm: 0.2944
+[iter 5730]loss: 3.4322, tokens/sec: 203299.10 ± 2557.14, tokens seen: 1502085120, grad norm: 0.3207
+[iter 5740]loss: 3.5248, tokens/sec: 203299.06 ± 2554.93, tokens seen: 1504706560, grad norm: 0.3220
+[iter 5750]loss: 3.5159, tokens/sec: 203299.07 ± 2552.72, tokens seen: 1507328000, grad norm: 0.2894
+[iter 5760]loss: 3.5364, tokens/sec: 203299.12 ± 2550.53, tokens seen: 1509949440, grad norm: 0.2793
+[iter 5770]loss: 3.5348, tokens/sec: 203299.35 ± 2548.34, tokens seen: 1512570880, grad norm: 0.3071
+[iter 5780]loss: 3.5368, tokens/sec: 203299.33 ± 2546.17, tokens seen: 1515192320, grad norm: 0.3271
+[iter 5790]loss: 3.4756, tokens/sec: 203299.26 ± 2543.98, tokens seen: 1517813760, grad norm: 0.3170
+[iter 5800]loss: 3.5522, tokens/sec: 203299.27 ± 2541.81, tokens seen: 1520435200, grad norm: 0.3134
+[iter 5810]loss: 3.3935, tokens/sec: 203299.44 ± 2539.66, tokens seen: 1523056640, grad norm: 0.2863
+[iter 5820]loss: 3.4689, tokens/sec: 203299.27 ± 2537.51, tokens seen: 1525678080, grad norm: 0.2891
+[iter 5830]loss: 3.3355, tokens/sec: 203299.14 ± 2535.35, tokens seen: 1528299520, grad norm: 0.3137
+[iter 5840]loss: 3.4423, tokens/sec: 203299.24 ± 2533.20, tokens seen: 1530920960, grad norm: 0.2926
+[iter 5850]loss: 3.5593, tokens/sec: 203299.28 ± 2531.05, tokens seen: 1533542400, grad norm: 0.3141
+[iter 5860]loss: 3.5543, tokens/sec: 203299.21 ± 2528.94, tokens seen: 1536163840, grad norm: 0.2983
+[iter 5870]loss: 3.6025, tokens/sec: 203299.15 ± 2526.81, tokens seen: 1538785280, grad norm: 0.3277
+[iter 5880]loss: 3.4452, tokens/sec: 203299.17 ± 2524.69, tokens seen: 1541406720, grad norm: 0.3101
+[iter 5890]loss: 3.5324, tokens/sec: 203299.35 ± 2522.56, tokens seen: 1544028160, grad norm: 0.3278
+[iter 5900]loss: 3.4447, tokens/sec: 203299.25 ± 2520.44, tokens seen: 1546649600, grad norm: 0.2937
+[iter 5910]loss: 3.5735, tokens/sec: 203299.25 ± 2518.31, tokens seen: 1549271040, grad norm: 0.2989
+[iter 5920]loss: 3.4747, tokens/sec: 203299.39 ± 2516.21, tokens seen: 1551892480, grad norm: 0.2855
+[iter 5930]loss: 3.5377, tokens/sec: 203299.46 ± 2514.11, tokens seen: 1554513920, grad norm: 0.3189
+[iter 5940]loss: 3.4076, tokens/sec: 203299.29 ± 2512.03, tokens seen: 1557135360, grad norm: 0.3146
+[iter 5950]loss: 3.4857, tokens/sec: 203299.30 ± 2509.93, tokens seen: 1559756800, grad norm: 0.2897
+[iter 5960]loss: 3.4707, tokens/sec: 203299.17 ± 2507.84, tokens seen: 1562378240, grad norm: 0.2978
+[iter 5970]loss: 3.3752, tokens/sec: 203296.14 ± 2514.98, tokens seen: 1564999680, grad norm: 0.2847
+[iter 5980]loss: 3.4717, tokens/sec: 203296.22 ± 2512.92, tokens seen: 1567621120, grad norm: 0.3661
+[iter 5990]loss: 3.5323, tokens/sec: 203296.23 ± 2510.85, tokens seen: 1570242560, grad norm: 0.3051
+[step 6000]train loss: 3.4677, val loss: 3.4727, (avg train loss: 0.8697 ± 0.0190), (avg grad norm: 0.3069 ± 0.0163)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 6000]loss: 3.3053, tokens/sec: 203297.21 ± 2509.79, tokens seen: 1572864000, grad norm: 0.2740
+[iter 6010]loss: 3.5521, tokens/sec: 203297.63 ± 2507.74, tokens seen: 1575485440, grad norm: 0.2967
+[iter 6020]loss: 3.4190, tokens/sec: 203297.97 ± 2505.68, tokens seen: 1578106880, grad norm: 0.2888
+[iter 6030]loss: 3.5071, tokens/sec: 203298.35 ± 2503.62, tokens seen: 1580728320, grad norm: 0.3091
+[iter 6040]loss: 3.5493, tokens/sec: 203298.88 ± 2501.59, tokens seen: 1583349760, grad norm: 0.2921
+[iter 6050]loss: 3.5080, tokens/sec: 203299.00 ± 2499.54, tokens seen: 1585971200, grad norm: 0.3055
+[iter 6060]loss: 3.4045, tokens/sec: 203299.22 ± 2497.49, tokens seen: 1588592640, grad norm: 0.2945
+[iter 6070]loss: 3.5064, tokens/sec: 203299.43 ± 2495.46, tokens seen: 1591214080, grad norm: 0.3263
+[iter 6080]loss: 3.6010, tokens/sec: 203299.58 ± 2493.44, tokens seen: 1593835520, grad norm: 0.2787
+[iter 6090]loss: 3.4139, tokens/sec: 203299.62 ± 2491.40, tokens seen: 1596456960, grad norm: 0.2787
+[iter 6100]loss: 3.4859, tokens/sec: 203299.81 ± 2489.39, tokens seen: 1599078400, grad norm: 0.3267
+[iter 6110]loss: 3.5054, tokens/sec: 203299.89 ± 2487.37, tokens seen: 1601699840, grad norm: 0.3357
+[iter 6120]loss: 3.5548, tokens/sec: 203299.70 ± 2485.36, tokens seen: 1604321280, grad norm: 0.2737
+[iter 6130]loss: 3.5406, tokens/sec: 203299.76 ± 2483.34, tokens seen: 1606942720, grad norm: 0.2951
+[iter 6140]loss: 3.3831, tokens/sec: 203299.67 ± 2481.33, tokens seen: 1609564160, grad norm: 0.3116
+[iter 6150]loss: 3.4172, tokens/sec: 203299.83 ± 2479.33, tokens seen: 1612185600, grad norm: 0.3155
+[iter 6160]loss: 3.4755, tokens/sec: 203299.92 ± 2477.35, tokens seen: 1614807040, grad norm: 0.3203
+[iter 6170]loss: 3.5492, tokens/sec: 203299.83 ± 2475.36, tokens seen: 1617428480, grad norm: 0.2884
+[iter 6180]loss: 3.4101, tokens/sec: 203299.86 ± 2473.38, tokens seen: 1620049920, grad norm: 0.3078
+[iter 6190]loss: 3.4764, tokens/sec: 203299.74 ± 2471.40, tokens seen: 1622671360, grad norm: 0.3052
+[iter 6200]loss: 3.4612, tokens/sec: 203299.77 ± 2469.42, tokens seen: 1625292800, grad norm: 0.3013
+[iter 6210]loss: 3.5251, tokens/sec: 203299.48 ± 2467.47, tokens seen: 1627914240, grad norm: 0.3513
+[iter 6220]loss: 3.4514, tokens/sec: 203299.43 ± 2465.51, tokens seen: 1630535680, grad norm: 0.3303
+[iter 6230]loss: 3.3144, tokens/sec: 203299.39 ± 2463.54, tokens seen: 1633157120, grad norm: 0.2705
+[iter 6240]loss: 3.4089, tokens/sec: 203299.47 ± 2461.59, tokens seen: 1635778560, grad norm: 0.2913
+[iter 6250]loss: 3.5426, tokens/sec: 203299.32 ± 2459.65, tokens seen: 1638400000, grad norm: 0.3226
+[iter 6260]loss: 3.4186, tokens/sec: 203299.18 ± 2457.72, tokens seen: 1641021440, grad norm: 0.3005
+[iter 6270]loss: 3.5617, tokens/sec: 203299.04 ± 2455.80, tokens seen: 1643642880, grad norm: 0.2972
+[iter 6280]loss: 3.4651, tokens/sec: 203299.01 ± 2453.86, tokens seen: 1646264320, grad norm: 0.2834
+[iter 6290]loss: 3.4758, tokens/sec: 203299.12 ± 2451.92, tokens seen: 1648885760, grad norm: 0.2837
+[iter 6300]loss: 3.4149, tokens/sec: 203299.12 ± 2449.99, tokens seen: 1651507200, grad norm: 0.3230
+[iter 6310]loss: 3.4761, tokens/sec: 203299.21 ± 2448.06, tokens seen: 1654128640, grad norm: 0.3027
+[iter 6320]loss: 3.4020, tokens/sec: 203299.39 ± 2446.14, tokens seen: 1656750080, grad norm: 0.2745
+[iter 6330]loss: 3.4030, tokens/sec: 203299.12 ± 2444.23, tokens seen: 1659371520, grad norm: 0.2959
+[iter 6340]loss: 3.4296, tokens/sec: 203299.13 ± 2442.32, tokens seen: 1661992960, grad norm: 0.3269
+[iter 6350]loss: 3.4669, tokens/sec: 203298.98 ± 2440.42, tokens seen: 1664614400, grad norm: 0.2760
+[iter 6360]loss: 3.4376, tokens/sec: 203298.94 ± 2438.52, tokens seen: 1667235840, grad norm: 0.3222
+[iter 6370]loss: 3.4829, tokens/sec: 203298.70 ± 2436.63, tokens seen: 1669857280, grad norm: 0.3099
+[iter 6380]loss: 3.4645, tokens/sec: 203298.69 ± 2434.73, tokens seen: 1672478720, grad norm: 0.3087
+[iter 6390]loss: 3.5122, tokens/sec: 203298.74 ± 2432.86, tokens seen: 1675100160, grad norm: 0.2895
+[iter 6400]loss: 3.4163, tokens/sec: 203298.69 ± 2430.96, tokens seen: 1677721600, grad norm: 0.3015
+[iter 6410]loss: 3.4110, tokens/sec: 203298.75 ± 2429.10, tokens seen: 1680343040, grad norm: 0.3018
+[iter 6420]loss: 3.5310, tokens/sec: 203298.81 ± 2427.22, tokens seen: 1682964480, grad norm: 0.3742
+[iter 6430]loss: 3.4484, tokens/sec: 203298.83 ± 2425.35, tokens seen: 1685585920, grad norm: 0.3361
+[iter 6440]loss: 3.3470, tokens/sec: 203298.49 ± 2423.50, tokens seen: 1688207360, grad norm: 0.3019
+[iter 6450]loss: 3.3934, tokens/sec: 203298.54 ± 2421.65, tokens seen: 1690828800, grad norm: 0.3088
+[iter 6460]loss: 3.4979, tokens/sec: 203298.36 ± 2419.81, tokens seen: 1693450240, grad norm: 0.3225
+[iter 6470]loss: 3.5415, tokens/sec: 203298.41 ± 2417.96, tokens seen: 1696071680, grad norm: 0.2866
+[iter 6480]loss: 3.4514, tokens/sec: 203298.28 ± 2416.14, tokens seen: 1698693120, grad norm: 0.2952
+[iter 6490]loss: 3.4572, tokens/sec: 203297.95 ± 2414.30, tokens seen: 1701314560, grad norm: 0.3156
+[step 6500]train loss: 3.4548, val loss: 3.4594, (avg train loss: 0.8643 ± 0.0163), (avg grad norm: 0.3077 ± 0.0210)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 6500]loss: 3.3521, tokens/sec: 203298.82 ± 2413.48, tokens seen: 1703936000, grad norm: 0.2889
+[iter 6510]loss: 3.4209, tokens/sec: 203299.41 ± 2411.68, tokens seen: 1706557440, grad norm: 0.2862
+[iter 6520]loss: 3.5302, tokens/sec: 203299.71 ± 2409.86, tokens seen: 1709178880, grad norm: 0.3035
+[iter 6530]loss: 3.2740, tokens/sec: 203299.95 ± 2408.03, tokens seen: 1711800320, grad norm: 0.3189
+[iter 6540]loss: 3.4573, tokens/sec: 203300.21 ± 2406.20, tokens seen: 1714421760, grad norm: 0.3127
+[iter 6550]loss: 3.2992, tokens/sec: 203300.16 ± 2404.39, tokens seen: 1717043200, grad norm: 0.2986
+[iter 6560]loss: 3.4796, tokens/sec: 203300.39 ± 2402.58, tokens seen: 1719664640, grad norm: 0.2952
+[iter 6570]loss: 3.4214, tokens/sec: 203300.45 ± 2400.80, tokens seen: 1722286080, grad norm: 0.2919
+[iter 6580]loss: 3.5086, tokens/sec: 203300.43 ± 2398.99, tokens seen: 1724907520, grad norm: 0.2816
+[iter 6590]loss: 3.4464, tokens/sec: 203300.62 ± 2397.20, tokens seen: 1727528960, grad norm: 0.2973
+[iter 6600]loss: 3.4666, tokens/sec: 203300.71 ± 2395.40, tokens seen: 1730150400, grad norm: 0.3089
+[iter 6610]loss: 3.5162, tokens/sec: 203300.60 ± 2393.62, tokens seen: 1732771840, grad norm: 0.3190
+[iter 6620]loss: 3.5220, tokens/sec: 203300.57 ± 2391.82, tokens seen: 1735393280, grad norm: 0.2960
+[iter 6630]loss: 3.5554, tokens/sec: 203300.49 ± 2390.04, tokens seen: 1738014720, grad norm: 0.3049
+[iter 6640]loss: 3.4966, tokens/sec: 203300.63 ± 2388.27, tokens seen: 1740636160, grad norm: 0.3252
+[iter 6650]loss: 3.4846, tokens/sec: 203300.77 ± 2386.51, tokens seen: 1743257600, grad norm: 0.3136
+[iter 6660]loss: 3.3722, tokens/sec: 203300.78 ± 2384.74, tokens seen: 1745879040, grad norm: 0.3178
+[iter 6670]loss: 3.4015, tokens/sec: 203300.78 ± 2382.96, tokens seen: 1748500480, grad norm: 0.3182
+[iter 6680]loss: 3.3987, tokens/sec: 203300.59 ± 2381.20, tokens seen: 1751121920, grad norm: 0.3025
+[iter 6690]loss: 3.4318, tokens/sec: 203300.63 ± 2379.44, tokens seen: 1753743360, grad norm: 0.3000
+[iter 6700]loss: 3.4517, tokens/sec: 203300.68 ± 2377.67, tokens seen: 1756364800, grad norm: 0.3016
+[iter 6710]loss: 3.4571, tokens/sec: 203300.73 ± 2375.92, tokens seen: 1758986240, grad norm: 0.3061
+[iter 6720]loss: 3.3456, tokens/sec: 203300.67 ± 2374.17, tokens seen: 1761607680, grad norm: 0.3202
+[iter 6730]loss: 3.5378, tokens/sec: 203300.70 ± 2372.43, tokens seen: 1764229120, grad norm: 0.3212
+[iter 6740]loss: 3.4090, tokens/sec: 203300.67 ± 2370.68, tokens seen: 1766850560, grad norm: 0.3148
+[iter 6750]loss: 3.3101, tokens/sec: 203300.67 ± 2368.95, tokens seen: 1769472000, grad norm: 0.2908
+[iter 6760]loss: 3.3898, tokens/sec: 203300.88 ± 2367.21, tokens seen: 1772093440, grad norm: 0.2936
+[iter 6770]loss: 3.4590, tokens/sec: 203300.73 ± 2365.49, tokens seen: 1774714880, grad norm: 0.3034
+[iter 6780]loss: 3.4486, tokens/sec: 203300.65 ± 2363.77, tokens seen: 1777336320, grad norm: 0.2944
+[iter 6790]loss: 3.5540, tokens/sec: 203300.69 ± 2362.04, tokens seen: 1779957760, grad norm: 0.3088
+[iter 6800]loss: 3.3671, tokens/sec: 203300.54 ± 2360.32, tokens seen: 1782579200, grad norm: 0.2651
+[iter 6810]loss: 3.3141, tokens/sec: 203300.55 ± 2358.60, tokens seen: 1785200640, grad norm: 0.2997
+[iter 6820]loss: 3.5017, tokens/sec: 203300.44 ± 2356.90, tokens seen: 1787822080, grad norm: 0.3067
+[iter 6830]loss: 3.5593, tokens/sec: 203300.37 ± 2355.19, tokens seen: 1790443520, grad norm: 0.2974
+[iter 6840]loss: 3.4860, tokens/sec: 203300.53 ± 2353.49, tokens seen: 1793064960, grad norm: 0.2918
+[iter 6850]loss: 3.5069, tokens/sec: 203300.59 ± 2351.80, tokens seen: 1795686400, grad norm: 0.2982
+[iter 6860]loss: 3.4135, tokens/sec: 203300.65 ± 2350.10, tokens seen: 1798307840, grad norm: 0.3004
+[iter 6870]loss: 3.4910, tokens/sec: 203300.58 ± 2348.40, tokens seen: 1800929280, grad norm: 0.2962
+[iter 6880]loss: 3.4774, tokens/sec: 203300.63 ± 2346.72, tokens seen: 1803550720, grad norm: 0.3859
+[iter 6890]loss: 3.4554, tokens/sec: 203300.67 ± 2345.02, tokens seen: 1806172160, grad norm: 0.3025
+[iter 6900]loss: 3.3976, tokens/sec: 203300.67 ± 2343.34, tokens seen: 1808793600, grad norm: 0.3016
+[iter 6910]loss: 3.4371, tokens/sec: 203300.74 ± 2341.66, tokens seen: 1811415040, grad norm: 0.3104
+[iter 6920]loss: 3.3693, tokens/sec: 203300.79 ± 2339.99, tokens seen: 1814036480, grad norm: 0.2939
+[iter 6930]loss: 3.4423, tokens/sec: 203300.94 ± 2338.32, tokens seen: 1816657920, grad norm: 0.3064
+[iter 6940]loss: 3.5407, tokens/sec: 203300.86 ± 2336.65, tokens seen: 1819279360, grad norm: 0.3028
+[iter 6950]loss: 3.4969, tokens/sec: 203300.81 ± 2334.99, tokens seen: 1821900800, grad norm: 0.2965
+[iter 6960]loss: 3.4364, tokens/sec: 203300.81 ± 2333.34, tokens seen: 1824522240, grad norm: 0.3307
+[iter 6970]loss: 3.4177, tokens/sec: 203300.82 ± 2331.68, tokens seen: 1827143680, grad norm: 0.3071
+[iter 6980]loss: 3.5036, tokens/sec: 203300.80 ± 2330.03, tokens seen: 1829765120, grad norm: 0.3385
+[iter 6990]loss: 3.4352, tokens/sec: 203300.81 ± 2328.37, tokens seen: 1832386560, grad norm: 0.2889
+[step 7000]train loss: 3.4291, val loss: 3.4385, (avg train loss: 0.8597 ± 0.0172), (avg grad norm: 0.3101 ± 0.0181)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 7000]loss: 3.4442, tokens/sec: 203301.82 ± 2327.73, tokens seen: 1835008000, grad norm: 0.3246
+[iter 7010]loss: 3.4707, tokens/sec: 203302.30 ± 2326.11, tokens seen: 1837629440, grad norm: 0.3166
+[iter 7020]loss: 3.3876, tokens/sec: 203302.56 ± 2324.49, tokens seen: 1840250880, grad norm: 0.3188
+[iter 7030]loss: 3.5480, tokens/sec: 203302.69 ± 2322.86, tokens seen: 1842872320, grad norm: 0.3138
+[iter 7040]loss: 3.4636, tokens/sec: 203302.73 ± 2321.24, tokens seen: 1845493760, grad norm: 0.2851
+[iter 7050]loss: 3.5069, tokens/sec: 203302.82 ± 2319.63, tokens seen: 1848115200, grad norm: 0.3181
+[iter 7060]loss: 3.2631, tokens/sec: 203302.79 ± 2318.02, tokens seen: 1850736640, grad norm: 0.2860
+[iter 7070]loss: 3.4615, tokens/sec: 203302.89 ± 2316.40, tokens seen: 1853358080, grad norm: 0.3110
+[iter 7080]loss: 3.4047, tokens/sec: 203303.01 ± 2314.78, tokens seen: 1855979520, grad norm: 0.3204
+[iter 7090]loss: 3.5830, tokens/sec: 203303.09 ± 2313.18, tokens seen: 1858600960, grad norm: 0.3002
+[iter 7100]loss: 3.5271, tokens/sec: 203303.15 ± 2311.56, tokens seen: 1861222400, grad norm: 0.3224
+[iter 7110]loss: 3.5204, tokens/sec: 203303.24 ± 2309.96, tokens seen: 1863843840, grad norm: 0.3014
+[iter 7120]loss: 3.4259, tokens/sec: 203303.35 ± 2308.35, tokens seen: 1866465280, grad norm: 0.2904
+[iter 7130]loss: 3.3634, tokens/sec: 203303.48 ± 2306.75, tokens seen: 1869086720, grad norm: 0.2686
+[iter 7140]loss: 3.4870, tokens/sec: 203303.35 ± 2305.16, tokens seen: 1871708160, grad norm: 0.3222
+[iter 7150]loss: 3.2974, tokens/sec: 203303.49 ± 2303.58, tokens seen: 1874329600, grad norm: 0.3261
+[iter 7160]loss: 3.3654, tokens/sec: 203303.50 ± 2301.98, tokens seen: 1876951040, grad norm: 0.2933
+[iter 7170]loss: 3.2360, tokens/sec: 203303.42 ± 2300.41, tokens seen: 1879572480, grad norm: 0.3257
+[iter 7180]loss: 3.4015, tokens/sec: 203303.42 ± 2298.84, tokens seen: 1882193920, grad norm: 0.2754
+[iter 7190]loss: 3.5011, tokens/sec: 203303.45 ± 2297.26, tokens seen: 1884815360, grad norm: 0.3007
+[iter 7200]loss: 3.4963, tokens/sec: 203303.41 ± 2295.69, tokens seen: 1887436800, grad norm: 0.2833
+[iter 7210]loss: 3.4123, tokens/sec: 203303.37 ± 2294.12, tokens seen: 1890058240, grad norm: 0.3043
+[iter 7220]loss: 3.5108, tokens/sec: 203303.16 ± 2292.55, tokens seen: 1892679680, grad norm: 0.3184
+[iter 7230]loss: 3.4665, tokens/sec: 203303.12 ± 2290.98, tokens seen: 1895301120, grad norm: 0.3068
+[iter 7240]loss: 3.4048, tokens/sec: 203302.96 ± 2289.41, tokens seen: 1897922560, grad norm: 0.2844
+[iter 7250]loss: 3.2671, tokens/sec: 203302.86 ± 2287.86, tokens seen: 1900544000, grad norm: 0.3012
+[iter 7260]loss: 3.5041, tokens/sec: 203302.79 ± 2286.30, tokens seen: 1903165440, grad norm: 0.3433
+[iter 7270]loss: 3.4524, tokens/sec: 203302.76 ± 2284.75, tokens seen: 1905786880, grad norm: 0.2971
+[iter 7280]loss: 3.5473, tokens/sec: 203302.57 ± 2283.20, tokens seen: 1908408320, grad norm: 0.3087
+[iter 7290]loss: 3.5268, tokens/sec: 203302.43 ± 2281.65, tokens seen: 1911029760, grad norm: 0.3110
+[iter 7300]loss: 3.4907, tokens/sec: 203302.48 ± 2280.12, tokens seen: 1913651200, grad norm: 0.3245
+[iter 7310]loss: 3.4476, tokens/sec: 203302.52 ± 2278.59, tokens seen: 1916272640, grad norm: 0.2851
+[iter 7320]loss: 3.5083, tokens/sec: 203302.55 ± 2277.05, tokens seen: 1918894080, grad norm: 0.3207
+[iter 7330]loss: 3.4642, tokens/sec: 203302.59 ± 2275.51, tokens seen: 1921515520, grad norm: 0.2906
+[iter 7340]loss: 3.3457, tokens/sec: 203302.62 ± 2273.97, tokens seen: 1924136960, grad norm: 0.3133
+[iter 7350]loss: 3.3450, tokens/sec: 203302.61 ± 2272.46, tokens seen: 1926758400, grad norm: 0.2935
+[iter 7360]loss: 3.4207, tokens/sec: 203302.64 ± 2270.94, tokens seen: 1929379840, grad norm: 0.3015
+[iter 7370]loss: 3.3286, tokens/sec: 203302.57 ± 2269.42, tokens seen: 1932001280, grad norm: 0.3094
+[iter 7380]loss: 3.4065, tokens/sec: 203302.56 ± 2267.90, tokens seen: 1934622720, grad norm: 0.3269
+[iter 7390]loss: 3.4871, tokens/sec: 203302.58 ± 2266.39, tokens seen: 1937244160, grad norm: 0.3363
+[iter 7400]loss: 3.3586, tokens/sec: 203302.64 ± 2264.88, tokens seen: 1939865600, grad norm: 0.3110
+[iter 7410]loss: 3.3896, tokens/sec: 203302.58 ± 2263.36, tokens seen: 1942487040, grad norm: 0.2939
+[iter 7420]loss: 3.3589, tokens/sec: 203302.49 ± 2261.84, tokens seen: 1945108480, grad norm: 0.3106
+[iter 7430]loss: 3.4224, tokens/sec: 203302.44 ± 2260.34, tokens seen: 1947729920, grad norm: 0.2940
+[iter 7440]loss: 3.3618, tokens/sec: 203302.49 ± 2258.84, tokens seen: 1950351360, grad norm: 0.2996
+[iter 7450]loss: 3.4775, tokens/sec: 203302.62 ± 2257.34, tokens seen: 1952972800, grad norm: 0.3145
+[iter 7460]loss: 3.4563, tokens/sec: 203302.76 ± 2255.84, tokens seen: 1955594240, grad norm: 0.3038
+[iter 7470]loss: 3.4073, tokens/sec: 203302.74 ± 2254.36, tokens seen: 1958215680, grad norm: 0.3193
+[iter 7480]loss: 3.4012, tokens/sec: 203302.72 ± 2252.86, tokens seen: 1960837120, grad norm: 0.3044
+[iter 7490]loss: 3.3346, tokens/sec: 203302.71 ± 2251.37, tokens seen: 1963458560, grad norm: 0.2895
+[step 7500]train loss: 3.4167, val loss: 3.4228, (avg train loss: 0.8545 ± 0.0181), (avg grad norm: 0.3084 ± 0.0168)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 7500]loss: 3.3208, tokens/sec: 203303.55 ± 2250.92, tokens seen: 1966080000, grad norm: 0.3404
+[iter 7510]loss: 3.3174, tokens/sec: 203303.81 ± 2249.45, tokens seen: 1968701440, grad norm: 0.2878
+[iter 7520]loss: 3.4578, tokens/sec: 203304.06 ± 2247.99, tokens seen: 1971322880, grad norm: 0.3002
+[iter 7530]loss: 3.3253, tokens/sec: 203304.11 ± 2246.53, tokens seen: 1973944320, grad norm: 0.2973
+[iter 7540]loss: 3.3572, tokens/sec: 203304.17 ± 2245.07, tokens seen: 1976565760, grad norm: 0.3088
+[iter 7550]loss: 3.4886, tokens/sec: 203304.39 ± 2243.62, tokens seen: 1979187200, grad norm: 0.3109
+[iter 7560]loss: 3.3482, tokens/sec: 203304.17 ± 2242.17, tokens seen: 1981808640, grad norm: 0.3136
+[iter 7570]loss: 3.3930, tokens/sec: 203304.32 ± 2240.70, tokens seen: 1984430080, grad norm: 0.3139
+[iter 7580]loss: 3.3866, tokens/sec: 203304.25 ± 2239.25, tokens seen: 1987051520, grad norm: 0.3064
+[iter 7590]loss: 3.3775, tokens/sec: 203304.24 ± 2237.79, tokens seen: 1989672960, grad norm: 0.3177
+[iter 7600]loss: 3.5915, tokens/sec: 203304.31 ± 2236.33, tokens seen: 1992294400, grad norm: 0.2939
+[iter 7610]loss: 3.3114, tokens/sec: 203304.39 ± 2234.88, tokens seen: 1994915840, grad norm: 0.3000
+[iter 7620]loss: 3.4871, tokens/sec: 203304.45 ± 2233.42, tokens seen: 1997537280, grad norm: 0.3014
+[iter 7630]loss: 3.2822, tokens/sec: 203304.48 ± 2231.98, tokens seen: 2000158720, grad norm: 0.2982
+[iter 7640]loss: 3.4635, tokens/sec: 203304.24 ± 2230.56, tokens seen: 2002780160, grad norm: 0.3146
+[iter 7650]loss: 3.4451, tokens/sec: 203304.22 ± 2229.12, tokens seen: 2005401600, grad norm: 0.3174
+[iter 7660]loss: 3.3483, tokens/sec: 203304.26 ± 2227.68, tokens seen: 2008023040, grad norm: 0.3206
+[iter 7670]loss: 3.2974, tokens/sec: 203304.39 ± 2226.24, tokens seen: 2010644480, grad norm: 0.2691
+[iter 7680]loss: 3.3577, tokens/sec: 203304.46 ± 2224.80, tokens seen: 2013265920, grad norm: 0.2991
+[iter 7690]loss: 3.4245, tokens/sec: 203304.53 ± 2223.36, tokens seen: 2015887360, grad norm: 0.3149
+[iter 7700]loss: 3.4314, tokens/sec: 203304.60 ± 2221.93, tokens seen: 2018508800, grad norm: 0.2864
+[iter 7710]loss: 3.4296, tokens/sec: 203304.40 ± 2220.53, tokens seen: 2021130240, grad norm: 0.2906
+[iter 7720]loss: 3.4500, tokens/sec: 203304.27 ± 2219.11, tokens seen: 2023751680, grad norm: 0.3172
+[iter 7730]loss: 3.3402, tokens/sec: 203304.13 ± 2217.68, tokens seen: 2026373120, grad norm: 0.3270
+[iter 7740]loss: 3.4897, tokens/sec: 203303.99 ± 2216.27, tokens seen: 2028994560, grad norm: 0.3044
+[iter 7750]loss: 3.4194, tokens/sec: 203304.00 ± 2214.84, tokens seen: 2031616000, grad norm: 0.3105
+[iter 7760]loss: 3.3490, tokens/sec: 203303.89 ± 2213.44, tokens seen: 2034237440, grad norm: 0.2968
+[iter 7770]loss: 3.5969, tokens/sec: 203303.80 ± 2212.04, tokens seen: 2036858880, grad norm: 0.2973
+[iter 7780]loss: 3.4187, tokens/sec: 203303.76 ± 2210.63, tokens seen: 2039480320, grad norm: 0.2884
+[iter 7790]loss: 3.3131, tokens/sec: 203303.74 ± 2209.21, tokens seen: 2042101760, grad norm: 0.2939
+[iter 7800]loss: 3.4599, tokens/sec: 203303.54 ± 2207.81, tokens seen: 2044723200, grad norm: 0.2824
+[iter 7810]loss: 3.5265, tokens/sec: 203303.41 ± 2206.41, tokens seen: 2047344640, grad norm: 0.2954
+[iter 7820]loss: 3.4014, tokens/sec: 203303.48 ± 2205.04, tokens seen: 2049966080, grad norm: 0.3129
+[iter 7830]loss: 3.3433, tokens/sec: 203303.44 ± 2203.65, tokens seen: 2052587520, grad norm: 0.3248
+[iter 7840]loss: 3.4341, tokens/sec: 203303.46 ± 2202.25, tokens seen: 2055208960, grad norm: 0.3100
+[iter 7850]loss: 3.4509, tokens/sec: 203303.57 ± 2200.86, tokens seen: 2057830400, grad norm: 0.2887
+[iter 7860]loss: 3.4644, tokens/sec: 203303.66 ± 2199.48, tokens seen: 2060451840, grad norm: 0.2939
+[iter 7870]loss: 3.3997, tokens/sec: 203303.61 ± 2198.11, tokens seen: 2063073280, grad norm: 0.3059
+[iter 7880]loss: 3.3647, tokens/sec: 203303.52 ± 2196.72, tokens seen: 2065694720, grad norm: 0.3201
+[iter 7890]loss: 3.3957, tokens/sec: 203303.44 ± 2195.34, tokens seen: 2068316160, grad norm: 0.3423
+[iter 7900]loss: 3.4174, tokens/sec: 203303.27 ± 2193.97, tokens seen: 2070937600, grad norm: 0.2995
+[iter 7910]loss: 3.4950, tokens/sec: 203303.02 ± 2192.61, tokens seen: 2073559040, grad norm: 0.3086
+[iter 7920]loss: 3.3762, tokens/sec: 203302.94 ± 2191.25, tokens seen: 2076180480, grad norm: 0.3287
+[iter 7930]loss: 3.4108, tokens/sec: 203302.80 ± 2189.89, tokens seen: 2078801920, grad norm: 0.3147
+[iter 7940]loss: 3.4174, tokens/sec: 203302.69 ± 2188.53, tokens seen: 2081423360, grad norm: 0.2833
+[iter 7950]loss: 3.5210, tokens/sec: 203302.65 ± 2187.17, tokens seen: 2084044800, grad norm: 0.3152
+[iter 7960]loss: 3.4360, tokens/sec: 203302.65 ± 2185.81, tokens seen: 2086666240, grad norm: 0.3060
+[iter 7970]loss: 3.4217, tokens/sec: 203302.64 ± 2184.46, tokens seen: 2089287680, grad norm: 0.3073
+[iter 7980]loss: 3.4929, tokens/sec: 203302.53 ± 2183.11, tokens seen: 2091909120, grad norm: 0.3042
+[iter 7990]loss: 3.3764, tokens/sec: 203302.47 ± 2181.77, tokens seen: 2094530560, grad norm: 0.3153
+[step 8000]train loss: 3.4085, val loss: 3.4140, (avg train loss: 0.8537 ± 0.0184), (avg grad norm: 0.3094 ± 0.0156)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 8000]loss: 3.4141, tokens/sec: 203303.19 ± 2181.32, tokens seen: 2097152000, grad norm: 0.3147
+[iter 8010]loss: 3.3458, tokens/sec: 203303.48 ± 2179.99, tokens seen: 2099773440, grad norm: 0.3043
+[iter 8020]loss: 3.5434, tokens/sec: 203303.67 ± 2178.65, tokens seen: 2102394880, grad norm: 0.2927
+[iter 8030]loss: 3.3438, tokens/sec: 203303.85 ± 2177.31, tokens seen: 2105016320, grad norm: 0.2789
+[iter 8040]loss: 3.4172, tokens/sec: 203303.99 ± 2175.97, tokens seen: 2107637760, grad norm: 0.3213
+[iter 8050]loss: 3.4041, tokens/sec: 203304.18 ± 2174.64, tokens seen: 2110259200, grad norm: 0.3284
+[iter 8060]loss: 3.4862, tokens/sec: 203304.23 ± 2173.31, tokens seen: 2112880640, grad norm: 0.2922
+[iter 8070]loss: 3.4677, tokens/sec: 203304.37 ± 2171.98, tokens seen: 2115502080, grad norm: 0.2958
+[iter 8080]loss: 3.3554, tokens/sec: 203304.58 ± 2170.65, tokens seen: 2118123520, grad norm: 0.2988
+[iter 8090]loss: 3.4398, tokens/sec: 203304.68 ± 2169.32, tokens seen: 2120744960, grad norm: 0.3162
+[iter 8100]loss: 3.3473, tokens/sec: 203304.68 ± 2168.01, tokens seen: 2123366400, grad norm: 0.2790
+[iter 8110]loss: 3.3871, tokens/sec: 203304.63 ± 2166.68, tokens seen: 2125987840, grad norm: 0.2882
+[iter 8120]loss: 3.3767, tokens/sec: 203304.72 ± 2165.38, tokens seen: 2128609280, grad norm: 0.3058
+[iter 8130]loss: 3.4095, tokens/sec: 203304.48 ± 2164.08, tokens seen: 2131230720, grad norm: 0.2970
+[iter 8140]loss: 3.3906, tokens/sec: 203304.57 ± 2162.76, tokens seen: 2133852160, grad norm: 0.2967
+[iter 8150]loss: 3.4957, tokens/sec: 203304.58 ± 2161.45, tokens seen: 2136473600, grad norm: 0.2946
+[iter 8160]loss: 3.3728, tokens/sec: 203304.54 ± 2160.14, tokens seen: 2139095040, grad norm: 0.2951
+[iter 8170]loss: 3.4442, tokens/sec: 203304.52 ± 2158.84, tokens seen: 2141716480, grad norm: 0.3034
+[iter 8180]loss: 3.3907, tokens/sec: 203304.53 ± 2157.54, tokens seen: 2144337920, grad norm: 0.3110
+[iter 8190]loss: 3.5044, tokens/sec: 203304.55 ± 2156.24, tokens seen: 2146959360, grad norm: 0.3224
+[iter 8200]loss: 3.5262, tokens/sec: 203304.54 ± 2154.93, tokens seen: 2149580800, grad norm: 0.2991
+[iter 8210]loss: 3.4306, tokens/sec: 203304.47 ± 2153.63, tokens seen: 2152202240, grad norm: 0.2929
+[iter 8220]loss: 3.4280, tokens/sec: 203304.41 ± 2152.35, tokens seen: 2154823680, grad norm: 0.2960
+[iter 8230]loss: 3.4486, tokens/sec: 203304.46 ± 2151.05, tokens seen: 2157445120, grad norm: 0.2936
+[iter 8240]loss: 3.4312, tokens/sec: 203304.43 ± 2149.75, tokens seen: 2160066560, grad norm: 0.2856
+[iter 8250]loss: 3.2377, tokens/sec: 203304.39 ± 2148.47, tokens seen: 2162688000, grad norm: 0.3063
+[iter 8260]loss: 3.4705, tokens/sec: 203304.35 ± 2147.19, tokens seen: 2165309440, grad norm: 0.2927
+[iter 8270]loss: 3.4249, tokens/sec: 203304.18 ± 2145.92, tokens seen: 2167930880, grad norm: 0.2822
+[iter 8280]loss: 3.3457, tokens/sec: 203304.01 ± 2144.65, tokens seen: 2170552320, grad norm: 0.3317
+[iter 8290]loss: 3.3679, tokens/sec: 203303.99 ± 2143.37, tokens seen: 2173173760, grad norm: 0.2993
+[iter 8300]loss: 3.3902, tokens/sec: 203303.96 ± 2142.10, tokens seen: 2175795200, grad norm: 0.2928
+[iter 8310]loss: 3.2976, tokens/sec: 203303.87 ± 2140.83, tokens seen: 2178416640, grad norm: 0.3459
+[iter 8320]loss: 3.2934, tokens/sec: 203303.90 ± 2139.56, tokens seen: 2181038080, grad norm: 0.3088
+[iter 8330]loss: 3.5111, tokens/sec: 203303.84 ± 2138.29, tokens seen: 2183659520, grad norm: 0.2863
+[iter 8340]loss: 3.3658, tokens/sec: 203303.97 ± 2137.03, tokens seen: 2186280960, grad norm: 0.2839
+[iter 8350]loss: 3.4615, tokens/sec: 203303.79 ± 2135.78, tokens seen: 2188902400, grad norm: 0.3014
+[iter 8360]loss: 3.3006, tokens/sec: 203303.74 ± 2134.52, tokens seen: 2191523840, grad norm: 0.2801
+[iter 8370]loss: 3.4217, tokens/sec: 203303.70 ± 2133.26, tokens seen: 2194145280, grad norm: 0.4890
+[iter 8380]loss: 3.5424, tokens/sec: 203303.66 ± 2132.00, tokens seen: 2196766720, grad norm: 0.2887
+[iter 8390]loss: 3.3662, tokens/sec: 203303.71 ± 2130.74, tokens seen: 2199388160, grad norm: 0.3081
+[iter 8400]loss: 3.4318, tokens/sec: 203303.52 ± 2129.51, tokens seen: 2202009600, grad norm: 0.3125
+[iter 8410]loss: 3.3855, tokens/sec: 203303.41 ± 2128.27, tokens seen: 2204631040, grad norm: 0.3188
+[iter 8420]loss: 3.3458, tokens/sec: 203303.31 ± 2127.02, tokens seen: 2207252480, grad norm: 0.3198
+[iter 8430]loss: 3.2679, tokens/sec: 203303.26 ± 2125.79, tokens seen: 2209873920, grad norm: 0.3262
+[iter 8440]loss: 3.3496, tokens/sec: 203303.19 ± 2124.55, tokens seen: 2212495360, grad norm: 0.2920
+[iter 8450]loss: 3.4222, tokens/sec: 203303.11 ± 2123.30, tokens seen: 2215116800, grad norm: 0.2881
+[iter 8460]loss: 3.3373, tokens/sec: 203303.11 ± 2122.07, tokens seen: 2217738240, grad norm: 0.2813
+[iter 8470]loss: 3.4034, tokens/sec: 203303.02 ± 2120.85, tokens seen: 2220359680, grad norm: 0.3034
+[iter 8480]loss: 3.3199, tokens/sec: 203303.02 ± 2119.63, tokens seen: 2222981120, grad norm: 0.3074
+[iter 8490]loss: 3.4294, tokens/sec: 203303.08 ± 2118.40, tokens seen: 2225602560, grad norm: 0.2849
+[step 8500]train loss: 3.3989, val loss: 3.4021, (avg train loss: 0.8486 ± 0.0162), (avg grad norm: 0.3035 ± 0.0210)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 8500]loss: 3.3660, tokens/sec: 203303.71 ± 2118.09, tokens seen: 2228224000, grad norm: 0.3413
+[iter 8510]loss: 3.4274, tokens/sec: 203304.03 ± 2116.88, tokens seen: 2230845440, grad norm: 0.3198
+[iter 8520]loss: 3.3651, tokens/sec: 203304.26 ± 2115.66, tokens seen: 2233466880, grad norm: 0.3106
+[iter 8530]loss: 3.3834, tokens/sec: 203304.46 ± 2114.44, tokens seen: 2236088320, grad norm: 0.2928
+[iter 8540]loss: 3.3190, tokens/sec: 203304.68 ± 2113.22, tokens seen: 2238709760, grad norm: 0.2998
+[iter 8550]loss: 3.5023, tokens/sec: 203304.79 ± 2112.00, tokens seen: 2241331200, grad norm: 0.3066
+[iter 8560]loss: 3.4791, tokens/sec: 203304.89 ± 2110.78, tokens seen: 2243952640, grad norm: 0.3064
+[iter 8570]loss: 3.3511, tokens/sec: 203304.98 ± 2109.56, tokens seen: 2246574080, grad norm: 0.2840
+[iter 8580]loss: 3.3089, tokens/sec: 203305.20 ± 2108.36, tokens seen: 2249195520, grad norm: 0.2770
+[iter 8590]loss: 3.4211, tokens/sec: 203305.30 ± 2107.14, tokens seen: 2251816960, grad norm: 0.3128
+[iter 8600]loss: 3.3960, tokens/sec: 203305.39 ± 2105.93, tokens seen: 2254438400, grad norm: 0.3021
+[iter 8610]loss: 3.4468, tokens/sec: 203305.34 ± 2104.72, tokens seen: 2257059840, grad norm: 0.2849
+[iter 8620]loss: 3.5114, tokens/sec: 203305.25 ± 2103.52, tokens seen: 2259681280, grad norm: 0.2957
+[iter 8630]loss: 3.3693, tokens/sec: 203305.42 ± 2102.31, tokens seen: 2262302720, grad norm: 0.3046
+[iter 8640]loss: 3.4445, tokens/sec: 203305.23 ± 2101.12, tokens seen: 2264924160, grad norm: 0.3406
+[iter 8650]loss: 3.5782, tokens/sec: 203305.07 ± 2099.92, tokens seen: 2267545600, grad norm: 0.2912
+[iter 8660]loss: 3.3805, tokens/sec: 203305.09 ± 2098.73, tokens seen: 2270167040, grad norm: 0.3376
+[iter 8670]loss: 3.4109, tokens/sec: 203305.24 ± 2097.55, tokens seen: 2272788480, grad norm: 0.2989
+[iter 8680]loss: 3.2718, tokens/sec: 203305.19 ± 2096.35, tokens seen: 2275409920, grad norm: 0.3050
+[iter 8690]loss: 3.4016, tokens/sec: 203305.20 ± 2095.16, tokens seen: 2278031360, grad norm: 0.3160
+[iter 8700]loss: 3.4932, tokens/sec: 203305.15 ± 2093.97, tokens seen: 2280652800, grad norm: 0.3052
+[iter 8710]loss: 3.3241, tokens/sec: 203305.00 ± 2092.80, tokens seen: 2283274240, grad norm: 0.2882
+[iter 8720]loss: 3.5460, tokens/sec: 203304.97 ± 2091.62, tokens seen: 2285895680, grad norm: 0.2974
+[iter 8730]loss: 3.3834, tokens/sec: 203304.97 ± 2090.44, tokens seen: 2288517120, grad norm: 0.3221
+[iter 8740]loss: 3.4530, tokens/sec: 203305.02 ± 2089.27, tokens seen: 2291138560, grad norm: 0.2956
+[iter 8750]loss: 3.2601, tokens/sec: 203304.91 ± 2088.09, tokens seen: 2293760000, grad norm: 0.3324
+[iter 8760]loss: 3.5429, tokens/sec: 203304.95 ± 2086.91, tokens seen: 2296381440, grad norm: 0.2958
+[iter 8770]loss: 3.2008, tokens/sec: 203304.85 ± 2085.73, tokens seen: 2299002880, grad norm: 0.3049
+[iter 8780]loss: 3.3075, tokens/sec: 203304.98 ± 2084.55, tokens seen: 2301624320, grad norm: 0.2939
+[iter 8790]loss: 3.2888, tokens/sec: 203305.08 ± 2083.37, tokens seen: 2304245760, grad norm: 0.2858
+[iter 8800]loss: 3.4377, tokens/sec: 203305.06 ± 2082.20, tokens seen: 2306867200, grad norm: 0.3229
+[iter 8810]loss: 3.3387, tokens/sec: 203304.98 ± 2081.04, tokens seen: 2309488640, grad norm: 0.3125
+[iter 8820]loss: 3.3871, tokens/sec: 203304.95 ± 2079.87, tokens seen: 2312110080, grad norm: 0.3118
+[iter 8830]loss: 3.4261, tokens/sec: 203304.97 ± 2078.71, tokens seen: 2314731520, grad norm: 0.2908
+[iter 8840]loss: 3.3296, tokens/sec: 203304.95 ± 2077.54, tokens seen: 2317352960, grad norm: 0.3166
+[iter 8850]loss: 3.4607, tokens/sec: 203304.87 ± 2076.39, tokens seen: 2319974400, grad norm: 0.3269
+[iter 8860]loss: 3.2670, tokens/sec: 203304.82 ± 2075.23, tokens seen: 2322595840, grad norm: 0.3177
+[iter 8870]loss: 3.4215, tokens/sec: 203304.71 ± 2074.07, tokens seen: 2325217280, grad norm: 0.2926
+[iter 8880]loss: 3.4902, tokens/sec: 203304.69 ± 2072.91, tokens seen: 2327838720, grad norm: 0.3037
+[iter 8890]loss: 3.2882, tokens/sec: 203304.76 ± 2071.75, tokens seen: 2330460160, grad norm: 0.2880
+[iter 8900]loss: 3.3998, tokens/sec: 203304.70 ± 2070.61, tokens seen: 2333081600, grad norm: 0.2919
+[iter 8910]loss: 3.3382, tokens/sec: 203304.69 ± 2069.46, tokens seen: 2335703040, grad norm: 0.2858
+[iter 8920]loss: 3.3806, tokens/sec: 203304.72 ± 2068.30, tokens seen: 2338324480, grad norm: 0.2936
+[iter 8930]loss: 3.3911, tokens/sec: 203304.83 ± 2067.16, tokens seen: 2340945920, grad norm: 0.3012
+[iter 8940]loss: 3.3033, tokens/sec: 203304.85 ± 2066.01, tokens seen: 2343567360, grad norm: 0.3051
+[iter 8950]loss: 3.3395, tokens/sec: 203304.87 ± 2064.88, tokens seen: 2346188800, grad norm: 0.3114
+[iter 8960]loss: 3.3256, tokens/sec: 203305.00 ± 2063.73, tokens seen: 2348810240, grad norm: 0.3140
+[iter 8970]loss: 3.4073, tokens/sec: 203304.86 ± 2062.60, tokens seen: 2351431680, grad norm: 0.3065
+[iter 8980]loss: 3.4587, tokens/sec: 203304.91 ± 2061.47, tokens seen: 2354053120, grad norm: 0.2982
+[iter 8990]loss: 3.4008, tokens/sec: 203304.94 ± 2060.33, tokens seen: 2356674560, grad norm: 0.2990
+[step 9000]train loss: 3.3816, val loss: 3.3938, (avg train loss: 0.8477 ± 0.0193), (avg grad norm: 0.3026 ± 0.0132)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 9000]loss: 3.3754, tokens/sec: 203305.63 ± 2060.18, tokens seen: 2359296000, grad norm: 0.3017
+[iter 9010]loss: 3.3651, tokens/sec: 203305.98 ± 2059.07, tokens seen: 2361917440, grad norm: 0.3126
+[iter 9020]loss: 3.5307, tokens/sec: 203306.24 ± 2057.95, tokens seen: 2364538880, grad norm: 0.2874
+[iter 9030]loss: 3.2307, tokens/sec: 203306.31 ± 2056.84, tokens seen: 2367160320, grad norm: 0.2815
+[iter 9040]loss: 3.3409, tokens/sec: 203306.44 ± 2055.72, tokens seen: 2369781760, grad norm: 0.2864
+[iter 9050]loss: 3.3162, tokens/sec: 203306.60 ± 2054.59, tokens seen: 2372403200, grad norm: 0.3104
+[iter 9060]loss: 3.4434, tokens/sec: 203306.60 ± 2053.49, tokens seen: 2375024640, grad norm: 0.2977
+[iter 9070]loss: 3.5255, tokens/sec: 203306.74 ± 2052.37, tokens seen: 2377646080, grad norm: 0.3193
+[iter 9080]loss: 3.2964, tokens/sec: 203306.83 ± 2051.25, tokens seen: 2380267520, grad norm: 0.2937
+[iter 9090]loss: 3.4627, tokens/sec: 203306.87 ± 2050.14, tokens seen: 2382888960, grad norm: 0.2759
+[iter 9100]loss: 3.3575, tokens/sec: 203306.94 ± 2049.03, tokens seen: 2385510400, grad norm: 0.3179
+[iter 9110]loss: 3.4752, tokens/sec: 203306.94 ± 2047.92, tokens seen: 2388131840, grad norm: 0.2853
+[iter 9120]loss: 3.1140, tokens/sec: 203307.00 ± 2046.81, tokens seen: 2390753280, grad norm: 0.2893
+[iter 9130]loss: 3.4380, tokens/sec: 203307.05 ± 2045.70, tokens seen: 2393374720, grad norm: 0.2912
+[iter 9140]loss: 3.2921, tokens/sec: 203307.12 ± 2044.61, tokens seen: 2395996160, grad norm: 0.3077
+[iter 9150]loss: 3.4846, tokens/sec: 203307.14 ± 2043.50, tokens seen: 2398617600, grad norm: 0.3007
+[iter 9160]loss: 3.2701, tokens/sec: 203307.07 ± 2042.40, tokens seen: 2401239040, grad norm: 0.3018
+[iter 9170]loss: 3.2767, tokens/sec: 203306.97 ± 2041.31, tokens seen: 2403860480, grad norm: 0.2995
+[iter 9180]loss: 3.3978, tokens/sec: 203306.83 ± 2040.22, tokens seen: 2406481920, grad norm: 0.3056
+[iter 9190]loss: 3.4104, tokens/sec: 203306.82 ± 2039.13, tokens seen: 2409103360, grad norm: 0.2837
+[iter 9200]loss: 3.3442, tokens/sec: 203306.57 ± 2038.05, tokens seen: 2411724800, grad norm: 0.2875
+[iter 9210]loss: 3.3922, tokens/sec: 203306.42 ± 2036.97, tokens seen: 2414346240, grad norm: 0.2715
+[iter 9220]loss: 3.4765, tokens/sec: 203306.42 ± 2035.89, tokens seen: 2416967680, grad norm: 0.2960
+[iter 9230]loss: 3.3566, tokens/sec: 203306.45 ± 2034.79, tokens seen: 2419589120, grad norm: 0.2922
+[iter 9240]loss: 3.4260, tokens/sec: 203306.49 ± 2033.71, tokens seen: 2422210560, grad norm: 0.2862
+[iter 9250]loss: 3.4488, tokens/sec: 203306.47 ± 2032.64, tokens seen: 2424832000, grad norm: 0.2993
+[iter 9260]loss: 3.3734, tokens/sec: 203306.39 ± 2031.55, tokens seen: 2427453440, grad norm: 0.2899
+[iter 9270]loss: 3.3641, tokens/sec: 203306.36 ± 2030.47, tokens seen: 2430074880, grad norm: 0.2985
+[iter 9280]loss: 3.3589, tokens/sec: 203306.34 ± 2029.39, tokens seen: 2432696320, grad norm: 0.3156
+[iter 9290]loss: 3.2080, tokens/sec: 203306.27 ± 2028.32, tokens seen: 2435317760, grad norm: 0.2866
+[iter 9300]loss: 3.4428, tokens/sec: 203306.04 ± 2027.26, tokens seen: 2437939200, grad norm: 0.3039
+[iter 9310]loss: 3.3440, tokens/sec: 203306.00 ± 2026.18, tokens seen: 2440560640, grad norm: 0.3328
+[iter 9320]loss: 3.4832, tokens/sec: 203305.97 ± 2025.12, tokens seen: 2443182080, grad norm: 0.3099
+[iter 9330]loss: 3.3562, tokens/sec: 203306.05 ± 2024.04, tokens seen: 2445803520, grad norm: 0.2858
+[iter 9340]loss: 3.2949, tokens/sec: 203306.09 ± 2022.98, tokens seen: 2448424960, grad norm: 0.3130
+[iter 9350]loss: 3.4018, tokens/sec: 203306.04 ± 2021.92, tokens seen: 2451046400, grad norm: 0.3203
+[iter 9360]loss: 3.3671, tokens/sec: 203306.09 ± 2020.86, tokens seen: 2453667840, grad norm: 0.3094
+[iter 9370]loss: 3.4396, tokens/sec: 203305.98 ± 2019.80, tokens seen: 2456289280, grad norm: 0.2963
+[iter 9380]loss: 3.3404, tokens/sec: 203306.00 ± 2018.74, tokens seen: 2458910720, grad norm: 0.3046
+[iter 9390]loss: 3.3406, tokens/sec: 203305.97 ± 2017.68, tokens seen: 2461532160, grad norm: 0.2867
+[iter 9400]loss: 3.3694, tokens/sec: 203306.06 ± 2016.63, tokens seen: 2464153600, grad norm: 0.3075
+[iter 9410]loss: 3.5232, tokens/sec: 203306.06 ± 2015.57, tokens seen: 2466775040, grad norm: 0.3391
+[iter 9420]loss: 3.3396, tokens/sec: 203306.05 ± 2014.51, tokens seen: 2469396480, grad norm: 0.3160
+[iter 9430]loss: 3.4081, tokens/sec: 203306.04 ± 2013.47, tokens seen: 2472017920, grad norm: 0.3227
+[iter 9440]loss: 3.5189, tokens/sec: 203306.12 ± 2012.42, tokens seen: 2474639360, grad norm: 0.3109
+[iter 9450]loss: 3.4945, tokens/sec: 203305.94 ± 2011.38, tokens seen: 2477260800, grad norm: 0.3046
+[iter 9460]loss: 3.4032, tokens/sec: 203305.91 ± 2010.35, tokens seen: 2479882240, grad norm: 0.2936
+[iter 9470]loss: 3.3472, tokens/sec: 203305.82 ± 2009.33, tokens seen: 2482503680, grad norm: 0.3145
+[iter 9480]loss: 3.4286, tokens/sec: 203305.88 ± 2008.28, tokens seen: 2485125120, grad norm: 0.2966
+[iter 9490]loss: 3.5518, tokens/sec: 203305.94 ± 2007.23, tokens seen: 2487746560, grad norm: 0.3071
+[step 9500]train loss: 3.3827, val loss: 3.3892, (avg train loss: 0.8432 ± 0.0187), (avg grad norm: 0.3041 ± 0.0141)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 9500]loss: 3.3087, tokens/sec: 203306.44 ± 2007.00, tokens seen: 2490368000, grad norm: 0.3033
+[iter 9510]loss: 3.4108, tokens/sec: 203306.73 ± 2005.97, tokens seen: 2492989440, grad norm: 0.2998
+[iter 9520]loss: 3.3889, tokens/sec: 203307.04 ± 2004.95, tokens seen: 2495610880, grad norm: 0.3108
+[iter 9530]loss: 3.2476, tokens/sec: 203307.28 ± 2003.92, tokens seen: 2498232320, grad norm: 0.3165
+[iter 9540]loss: 3.3419, tokens/sec: 203307.49 ± 2002.89, tokens seen: 2500853760, grad norm: 0.2946
+[iter 9550]loss: 3.4846, tokens/sec: 203307.55 ± 2001.85, tokens seen: 2503475200, grad norm: 0.2892
+[iter 9560]loss: 3.3634, tokens/sec: 203307.60 ± 2000.82, tokens seen: 2506096640, grad norm: 0.3034
+[iter 9570]loss: 3.4913, tokens/sec: 203307.63 ± 1999.80, tokens seen: 2508718080, grad norm: 0.2999
+[iter 9580]loss: 3.3964, tokens/sec: 203307.67 ± 1998.77, tokens seen: 2511339520, grad norm: 0.3009
+[iter 9590]loss: 3.4679, tokens/sec: 203307.77 ± 1997.75, tokens seen: 2513960960, grad norm: 0.2868
+[iter 9600]loss: 3.2432, tokens/sec: 203307.91 ± 1996.72, tokens seen: 2516582400, grad norm: 0.3009
+[iter 9610]loss: 3.3774, tokens/sec: 203307.96 ± 1995.70, tokens seen: 2519203840, grad norm: 0.3108
+[iter 9620]loss: 3.4025, tokens/sec: 203307.77 ± 1994.70, tokens seen: 2521825280, grad norm: 0.3146
+[iter 9630]loss: 3.3271, tokens/sec: 203307.79 ± 1993.67, tokens seen: 2524446720, grad norm: 0.3087
+[iter 9640]loss: 3.4417, tokens/sec: 203307.81 ± 1992.65, tokens seen: 2527068160, grad norm: 0.2984
+[iter 9650]loss: 3.3550, tokens/sec: 203307.83 ± 1991.62, tokens seen: 2529689600, grad norm: 0.3381
+[iter 9660]loss: 3.3011, tokens/sec: 203307.90 ± 1990.60, tokens seen: 2532311040, grad norm: 0.3183
+[iter 9670]loss: 3.3401, tokens/sec: 203307.83 ± 1989.58, tokens seen: 2534932480, grad norm: 0.3270
+[iter 9680]loss: 3.5240, tokens/sec: 203307.74 ± 1988.57, tokens seen: 2537553920, grad norm: 0.2933
+[iter 9690]loss: 3.3397, tokens/sec: 203307.71 ± 1987.55, tokens seen: 2540175360, grad norm: 0.3226
+[iter 9700]loss: 3.3222, tokens/sec: 203307.65 ± 1986.55, tokens seen: 2542796800, grad norm: 0.3026
+[iter 9710]loss: 3.4495, tokens/sec: 203307.61 ± 1985.55, tokens seen: 2545418240, grad norm: 0.3184
+[iter 9720]loss: 3.5232, tokens/sec: 203307.48 ± 1984.54, tokens seen: 2548039680, grad norm: 0.3268
+[iter 9730]loss: 3.3870, tokens/sec: 203307.38 ± 1983.55, tokens seen: 2550661120, grad norm: 0.2913
+[iter 9740]loss: 3.3627, tokens/sec: 203307.43 ± 1982.54, tokens seen: 2553282560, grad norm: 0.2974
+[iter 9750]loss: 3.3071, tokens/sec: 203307.57 ± 1981.55, tokens seen: 2555904000, grad norm: 0.3087
+[iter 9760]loss: 3.3882, tokens/sec: 203307.55 ± 1980.54, tokens seen: 2558525440, grad norm: 0.2995
+[iter 9770]loss: 3.3695, tokens/sec: 203307.56 ± 1979.55, tokens seen: 2561146880, grad norm: 0.3271
+[iter 9780]loss: 3.3532, tokens/sec: 203307.51 ± 1978.55, tokens seen: 2563768320, grad norm: 0.3320
+[iter 9790]loss: 3.4330, tokens/sec: 203307.51 ± 1977.56, tokens seen: 2566389760, grad norm: 0.2939
+[iter 9800]loss: 3.3445, tokens/sec: 203307.51 ± 1976.56, tokens seen: 2569011200, grad norm: 0.2984
+[iter 9810]loss: 3.4109, tokens/sec: 203307.54 ± 1975.57, tokens seen: 2571632640, grad norm: 0.3044
+[iter 9820]loss: 3.4023, tokens/sec: 203307.56 ± 1974.59, tokens seen: 2574254080, grad norm: 0.3012
+[iter 9830]loss: 3.3853, tokens/sec: 203307.34 ± 1973.60, tokens seen: 2576875520, grad norm: 0.3181
+[iter 9840]loss: 3.2458, tokens/sec: 203307.31 ± 1972.61, tokens seen: 2579496960, grad norm: 0.3045
+[iter 9850]loss: 3.4562, tokens/sec: 203307.36 ± 1971.62, tokens seen: 2582118400, grad norm: 0.2896
+[iter 9860]loss: 3.3682, tokens/sec: 203307.31 ± 1970.63, tokens seen: 2584739840, grad norm: 0.2871
+[iter 9870]loss: 3.3775, tokens/sec: 203307.35 ± 1969.64, tokens seen: 2587361280, grad norm: 0.3083
+[iter 9880]loss: 3.4168, tokens/sec: 203307.24 ± 1968.67, tokens seen: 2589982720, grad norm: 0.3221
+[iter 9890]loss: 3.3004, tokens/sec: 203307.16 ± 1967.69, tokens seen: 2592604160, grad norm: 0.3119
+[iter 9900]loss: 3.3905, tokens/sec: 203307.07 ± 1966.71, tokens seen: 2595225600, grad norm: 0.2936
+[iter 9910]loss: 3.3635, tokens/sec: 203307.14 ± 1965.74, tokens seen: 2597847040, grad norm: 0.2964
+[iter 9920]loss: 3.1391, tokens/sec: 203307.13 ± 1964.76, tokens seen: 2600468480, grad norm: 0.3053
+[iter 9930]loss: 3.2096, tokens/sec: 203307.14 ± 1963.80, tokens seen: 2603089920, grad norm: 0.3048
+[iter 9940]loss: 3.3609, tokens/sec: 203307.15 ± 1962.83, tokens seen: 2605711360, grad norm: 0.3033
+[iter 9950]loss: 3.4459, tokens/sec: 203307.11 ± 1961.87, tokens seen: 2608332800, grad norm: 0.3015
+[iter 9960]loss: 3.4110, tokens/sec: 203307.20 ± 1960.90, tokens seen: 2610954240, grad norm: 0.3176
+[iter 9970]loss: 3.3213, tokens/sec: 203307.22 ± 1959.93, tokens seen: 2613575680, grad norm: 0.2937
+[iter 9980]loss: 3.4208, tokens/sec: 203307.35 ± 1958.97, tokens seen: 2616197120, grad norm: 0.2857
+[iter 9990]loss: 3.3789, tokens/sec: 203307.43 ± 1958.01, tokens seen: 2618818560, grad norm: 0.3140
+[step 10000]train loss: 3.3757, val loss: 3.3766, (avg train loss: 0.8426 ± 0.0186), (avg grad norm: 0.3047 ± 0.0112)
+saving checkpoint to ./out-owt-small-mhc-lite-bs32-10000step
+[iter 10000]loss: 3.4794, tokens/sec: 203307.96 ± 1957.91, tokens seen: 2621440000, grad norm: 0.3041
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mS-mhc-lite-owt-bs32ga8-10kstep-3257[0m at: [34mhttps://wandb.ai/guotzzz-peking-university/mhc-lite/runs/nt8vpf5v[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20260813_115710-nt8vpf5v/logs[0m

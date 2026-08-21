@@ -1,0 +1,18 @@
+{
+  "dir": "out-owt-large-mhc-group-embedding-bs8-30000step",
+  "tier": null,
+  "branch": "round2last",
+  "ckpt": "/home/work/data/guotianzizhe/data/test/out-owt-large-mhc-group-embedding-bs8-30000step/ckpt_last.pt",
+  "hyper_conn_type": "mhc_group_embedding",
+  "n_layer": 24,
+  "n_embd": 1024,
+  "iter": 30000,
+  "block_size": 1024,
+  "owt_val_ce": 2.990993,
+  "owt_val_ppl": 19.9054,
+  "owt_val_tokens": 4433920,
+  "owt_val_windows": 4330,
+  "wt103_ce": 3.519673,
+  "wt103_ppl": 33.7734,
+  "wt103_tokens": 287643
+}

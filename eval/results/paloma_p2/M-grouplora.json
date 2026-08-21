@@ -1,0 +1,39 @@
+{
+  "ckpt": "/home/work/data/guotianzizhe/data/test/out-owt-medium-mhc-group-lora-midnorm-bs24-18000step/ckpt_last.pt",
+  "label": "M-grouplora",
+  "iter": 18000,
+  "hyper_conn_type": "mhc_group_lora_midnorm",
+  "n_layer": 12,
+  "n_embd": 768,
+  "block_size": 1024,
+  "vocab_size": 50304,
+  "batch_size": 8,
+  "limit": null,
+  "results": {
+    "c4": {
+      "word_perplexity": 147.898567,
+      "byte_perplexity": 2.299578,
+      "bits_per_byte": 1.201369
+    },
+    "dolma": {
+      "word_perplexity": 360.351057,
+      "byte_perplexity": 2.472955,
+      "bits_per_byte": 1.306236
+    },
+    "falcon": {
+      "word_perplexity": 214.746129,
+      "byte_perplexity": 2.467217,
+      "bits_per_byte": 1.302884
+    },
+    "redpajama": {
+      "word_perplexity": 1464.052538,
+      "byte_perplexity": 2.750838,
+      "bits_per_byte": 1.459871
+    },
+    "wikitext": {
+      "word_perplexity": 77.727838,
+      "byte_perplexity": 2.255979,
+      "bits_per_byte": 1.173754
+    }
+  }
+}

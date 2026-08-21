@@ -12,3 +12,9 @@ env/
 venv/
 wandb
 
+# large paloma per-doc raw dumps (~87MB each); keep only *_summary.csv and small json
+eval/results/**/raw/
+# internal-host rsync notes (contain internal IPs)
+eval/ckpt_rsync.md
+mhc_equiv/pull_ckpts.sh
+

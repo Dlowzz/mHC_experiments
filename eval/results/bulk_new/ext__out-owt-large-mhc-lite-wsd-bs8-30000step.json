@@ -1,0 +1,18 @@
+{
+  "dir": "out-owt-large-mhc-lite-wsd-bs8-30000step",
+  "tier": null,
+  "branch": "ext",
+  "ckpt": "/home/work/data/guotianzizhe/project/mhc-lite/out-owt-large-mhc-lite-wsd-bs8-30000step/ckpt.pt",
+  "hyper_conn_type": "mhc_lite",
+  "n_layer": 24,
+  "n_embd": 1024,
+  "iter": 29500,
+  "block_size": 1024,
+  "owt_val_ce": 2.898119,
+  "owt_val_ppl": 18.14,
+  "owt_val_tokens": 4433920,
+  "owt_val_windows": 4330,
+  "wt103_ce": 3.403194,
+  "wt103_ppl": 30.06,
+  "wt103_tokens": 287643
+}

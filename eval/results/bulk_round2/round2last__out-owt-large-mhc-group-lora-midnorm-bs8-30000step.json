@@ -1,0 +1,18 @@
+{
+  "dir": "out-owt-large-mhc-group-lora-midnorm-bs8-30000step",
+  "tier": null,
+  "branch": "round2last",
+  "ckpt": "/home/work/data/guotianzizhe/data/test/out-owt-large-mhc-group-lora-midnorm-bs8-30000step/ckpt_last.pt",
+  "hyper_conn_type": "mhc_group_lora_midnorm",
+  "n_layer": 24,
+  "n_embd": 1024,
+  "iter": 30000,
+  "block_size": 1024,
+  "owt_val_ce": 2.980707,
+  "owt_val_ppl": 19.7017,
+  "owt_val_tokens": 4433920,
+  "owt_val_windows": 4330,
+  "wt103_ce": 3.441369,
+  "wt103_ppl": 31.2297,
+  "wt103_tokens": 287643
+}

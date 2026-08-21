@@ -1,0 +1,39 @@
+{
+  "ckpt": "/home/work/data/guotianzizhe/project/mhc-lite/out-owt-large-mhc-lite-wsd-bs8-30000step/ckpt.pt",
+  "label": "L-mhc_lite",
+  "iter": 29500,
+  "hyper_conn_type": "mhc_lite",
+  "n_layer": 24,
+  "n_embd": 1024,
+  "block_size": 1024,
+  "vocab_size": 50304,
+  "batch_size": 8,
+  "limit": null,
+  "results": {
+    "c4": {
+      "word_perplexity": 112.29374,
+      "byte_perplexity": 2.196413,
+      "bits_per_byte": 1.135149
+    },
+    "dolma": {
+      "word_perplexity": 262.664317,
+      "byte_perplexity": 2.355571,
+      "bits_per_byte": 1.236077
+    },
+    "falcon": {
+      "word_perplexity": 156.013202,
+      "byte_perplexity": 2.338129,
+      "bits_per_byte": 1.225355
+    },
+    "redpajama": {
+      "word_perplexity": 1085.146738,
+      "byte_perplexity": 2.638809,
+      "bits_per_byte": 1.399887
+    },
+    "wikitext": {
+      "word_perplexity": 69.212629,
+      "byte_perplexity": 2.207585,
+      "bits_per_byte": 1.142469
+    }
+  }
+}
